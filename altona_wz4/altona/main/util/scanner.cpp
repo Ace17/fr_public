@@ -52,7 +52,7 @@ sScannerSourceFile::sScannerSourceFile()
 sScannerSourceFile::~sScannerSourceFile()
 {
   delete File;
-  delete ScanBuffer;
+  delete [] ScanBuffer;
 }
 
 sBool sScannerSourceFile::Load(const sChar* filename)
