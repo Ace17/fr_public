@@ -147,210 +147,210 @@ void sRenderTargetManager_::Flush()
       if(sExitFlag)
         sLogF(L"RTM", L"Flush: texture->RefCount != 0 released\n");  // ignore this on shutdown, we don't use the texture anymore (emergency shutdown may happen in a discipline while a render target is in use)
       else
-        assert(t->RefCount == 0)
-        }
-
-        delete t->Texture;
+        assert(t->RefCount == 0);
     }
 
-    Targets.Clear();
-    Refs.Clear();
-
-    // reset to avoid memleaks
-    Targets.Reset();
-    Refs.Reset();
+    delete t->Texture;
   }
 
-  void sRenderTargetManager_::ResolutionCheck(void* ref, sInt xs, sInt ys)
+  Targets.Clear();
+  Refs.Clear();
+
+  // reset to avoid memleaks
+  Targets.Reset();
+  Refs.Reset();
+}
+
+void sRenderTargetManager_::ResolutionCheck(void* ref, sInt xs, sInt ys)
+{
+  Reference* r = sFind(Refs, &Reference::Ref, ref);
+
+  if(r)
   {
-    Reference* r = sFind(Refs, &Reference::Ref, ref);
-
-    if(r)
+    if(r->SizeX != xs || r->SizeY != ys)
     {
-      if(r->SizeX != xs || r->SizeY != ys)
-      {
-        Flush();
-        sLogF(L"wz4", L"flush rendertargets\n");
-        r = 0;
-      }
-    }
-
-    if(!r)
-    {
-      r = Refs.AddMany(1);
-      r->Ref = ref;
-      r->SizeX = xs;
-      r->SizeY = ys;
+      Flush();
+      sLogF(L"wz4", L"flush rendertargets\n");
+      r = 0;
     }
   }
+
+  if(!r)
+  {
+    r = Refs.AddMany(1);
+    r->Ref = ref;
+    r->SizeX = xs;
+    r->SizeY = ys;
+  }
+}
 
 /****************************************************************************/
 
-  void sRenderTargetManager_::SetScreen(const sRect* window)
+void sRenderTargetManager_::SetScreen(const sRect* window)
+{
+  Window = window;
+  ScreenProxy = 0;
+  ScreenProxyDirty = 0;
+  Release(ToTexture);
+  ToTexture = 0;
+
+  if(window)
   {
-    Window = window;
-    ScreenProxy = 0;
-    ScreenProxyDirty = 0;
-    Release(ToTexture);
+    ScreenX = window->SizeX();
+    ScreenY = window->SizeY();
+  }
+  else
+  {
+    sGetScreenSize(ScreenX, ScreenY);
+  }
+}
+
+void sRenderTargetManager_::SetScreen(const sTargetSpec& spec)
+{
+  ScreenProxy = 0;
+  ScreenProxyDirty = 0;
+  Release(ToTexture);
+  ToTexture = 0;
+
+  if(spec.Color2D != sGetScreenColorBuffer())
+  {
+    Target* t;
     ToTexture = 0;
-
-    if(window)
+    sFORALL(Targets, t)
     {
-      ScreenX = window->SizeX();
-      ScreenY = window->SizeY();
-    }
-    else
-    {
-      sGetScreenSize(ScreenX, ScreenY);
-    }
-  }
-
-  void sRenderTargetManager_::SetScreen(const sTargetSpec& spec)
-  {
-    ScreenProxy = 0;
-    ScreenProxyDirty = 0;
-    Release(ToTexture);
-    ToTexture = 0;
-
-    if(spec.Color2D != sGetScreenColorBuffer())
-    {
-      Target* t;
-      ToTexture = 0;
-      sFORALL(Targets, t)
+      if(t->Texture == spec.Color2D)
       {
-        if(t->Texture == spec.Color2D)
-        {
-          ToTexture = spec.Color2D;
-          AddRef(ToTexture);
-        }
+        ToTexture = spec.Color2D;
+        AddRef(ToTexture);
       }
-
-      if(ToTexture == 0)
-        ToTexture = (sTexture2D*)AcquireProxy(spec.Color2D);
     }
 
-    if(spec.Window.IsEmpty())
-    {
-      Window = 0;
-      sInt z;
-      spec.Color->GetSize(ScreenX, ScreenY, z);
-    }
-    else
-    {
-      Window = &spec.Window;
-      ScreenX = Window->SizeX();
-      ScreenY = Window->SizeY();
-    }
+    if(ToTexture == 0)
+      ToTexture = (sTexture2D*)AcquireProxy(spec.Color2D);
   }
 
-  sTexture2D* sRenderTargetManager_::ReadScreen()
+  if(spec.Window.IsEmpty())
   {
-    if(!ScreenProxy)
-    {
-      if(ToTexture)
-      {
-        AddRef(ToTexture);    // this will silently fail if the texture is not managed by sRTMan. good.
-        return ToTexture;
-      }
-
-      ScreenProxy = Acquire(ScreenX, ScreenY);
-      sRect dr(0, 0, ScreenX, ScreenY);
-
-      sCopyTexturePara ctp;
-      ctp.Source = sGetScreenColorBuffer();
-      ctp.SourceRect = Window ? *Window : dr;
-      ctp.Dest = ScreenProxy;
-      ctp.DestRect = dr;
-      ctp.Flags = 0;
-      sCopyTexture(ctp);
-    }
-
-    AddRef(ScreenProxy);
-    return ScreenProxy;
+    Window = 0;
+    sInt z;
+    spec.Color->GetSize(ScreenX, ScreenY, z);
   }
-
-  sTexture2D* sRenderTargetManager_::WriteScreen(sBool finish)
+  else
   {
-    if(ToTexture && finish)
+    Window = &spec.Window;
+    ScreenX = Window->SizeX();
+    ScreenY = Window->SizeY();
+  }
+}
+
+sTexture2D* sRenderTargetManager_::ReadScreen()
+{
+  if(!ScreenProxy)
+  {
+    if(ToTexture)
     {
-      AddRef(ToTexture);
+      AddRef(ToTexture);    // this will silently fail if the texture is not managed by sRTMan. good.
       return ToTexture;
     }
 
-    if(ScreenProxy)
+    ScreenProxy = Acquire(ScreenX, ScreenY);
+    sRect dr(0, 0, ScreenX, ScreenY);
+
+    sCopyTexturePara ctp;
+    ctp.Source = sGetScreenColorBuffer();
+    ctp.SourceRect = Window ? *Window : dr;
+    ctp.Dest = ScreenProxy;
+    ctp.DestRect = dr;
+    ctp.Flags = 0;
+    sCopyTexture(ctp);
+  }
+
+  AddRef(ScreenProxy);
+  return ScreenProxy;
+}
+
+sTexture2D* sRenderTargetManager_::WriteScreen(sBool finish)
+{
+  if(ToTexture && finish)
+  {
+    AddRef(ToTexture);
+    return ToTexture;
+  }
+
+  if(ScreenProxy)
+  {
+    Release(ScreenProxy);
+    ScreenProxy = 0;
+    ScreenProxyDirty = 0;
+  }
+
+  if(!finish)
+  {
+    ScreenProxy = Acquire(ScreenX, ScreenY);
+    AddRef(ScreenProxy);
+    ScreenProxyDirty = 1;
+  }
+
+  return ScreenProxy;
+}
+
+void sRenderTargetManager_::SetTarget(sTexture2D* tex, sInt clrflags, sU32 clrcol, sTexture2D* dep)
+{
+  if(tex)
+    sSetTarget(sTargetPara((clrflags & 3) | sST_NOMSAA, clrcol, 0, tex, dep));
+  else
+    sSetTarget(sTargetPara((clrflags & 3) | sST_NOMSAA, clrcol, Window, sGetScreenColorBuffer(), dep));
+}
+
+void sRenderTargetManager_::FinishScreen()
+{
+#if sPLATFORM == sPLAT_WINDOWS  // Until sSetScreen is available on all platforms
+
+  if(ScreenProxy)
+  {
+    if(ScreenProxyDirty)
     {
-      Release(ScreenProxy);
-      ScreenProxy = 0;
+      const sRect sr(0, 0, ScreenX, ScreenY);
+      sInt z;
+      sCopyTexturePara ctp;
+      ctp.Source = ScreenProxy;
+      ctp.SourceRect = sr;
+      ctp.Dest = ToTexture ? ToTexture : sGetScreenColorBuffer();
+
+      if(ScreenProxy)
+        ctp.DestRect = *Window;
+      else
+        ctp.Dest->GetSize(ctp.DestRect.x1, ctp.DestRect.y1, z);
+
+      sCopyTexture(ctp);
+      // sSetScreen(ScreenProxy,sGFF_NONE,Window,);
       ScreenProxyDirty = 0;
     }
 
-    if(!finish)
-    {
-      ScreenProxy = Acquire(ScreenX, ScreenY);
-      AddRef(ScreenProxy);
-      ScreenProxyDirty = 1;
-    }
-
-    return ScreenProxy;
+    Release(ScreenProxy);
+    ScreenProxy = 0;
   }
 
-  void sRenderTargetManager_::SetTarget(sTexture2D* tex, sInt clrflags, sU32 clrcol, sTexture2D* dep)
-  {
-    if(tex)
-      sSetTarget(sTargetPara((clrflags & 3) | sST_NOMSAA, clrcol, 0, tex, dep));
-    else
-      sSetTarget(sTargetPara((clrflags & 3) | sST_NOMSAA, clrcol, Window, sGetScreenColorBuffer(), dep));
-  }
-
-  void sRenderTargetManager_::FinishScreen()
-  {
-#if sPLATFORM == sPLAT_WINDOWS  // Until sSetScreen is available on all platforms
-
-    if(ScreenProxy)
-    {
-      if(ScreenProxyDirty)
-      {
-        const sRect sr(0, 0, ScreenX, ScreenY);
-        sInt z;
-        sCopyTexturePara ctp;
-        ctp.Source = ScreenProxy;
-        ctp.SourceRect = sr;
-        ctp.Dest = ToTexture ? ToTexture : sGetScreenColorBuffer();
-
-        if(ScreenProxy)
-          ctp.DestRect = *Window;
-        else
-          ctp.Dest->GetSize(ctp.DestRect.x1, ctp.DestRect.y1, z);
-
-        sCopyTexture(ctp);
-        // sSetScreen(ScreenProxy,sGFF_NONE,Window,);
-        ScreenProxyDirty = 0;
-      }
-
-      Release(ScreenProxy);
-      ScreenProxy = 0;
-    }
-
-    Release(ToTexture);
-    ToTexture = 0;
+  Release(ToTexture);
+  ToTexture = 0;
 #endif
-  }
+}
 
 /****************************************************************************/
 
-  sRenderTargetManager_* sRTMan;
-  void sInitRenderTargetManager()
-  {
-    sRTMan = new sRenderTargetManager_;
-  }
+sRenderTargetManager_* sRTMan;
+void sInitRenderTargetManager()
+{
+  sRTMan = new sRenderTargetManager_;
+}
 
-  void sExitRenderTargetManager()
-  {
-    delete sRTMan;
-    sRTMan = 0;
-  }
+void sExitRenderTargetManager()
+{
+  delete sRTMan;
+  sRTMan = 0;
+}
 
-  sADDSUBSYSTEM(sRTMan, 0xc0, sInitRenderTargetManager, sExitRenderTargetManager);
+sADDSUBSYSTEM(sRTMan, 0xc0, sInitRenderTargetManager, sExitRenderTargetManager);
 
 /****************************************************************************/
 
