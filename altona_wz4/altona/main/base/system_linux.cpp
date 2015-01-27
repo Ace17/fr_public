@@ -1149,7 +1149,7 @@ sThread::~sThread()
     pthread_join(*(pthread_t*)ThreadHandle, sNULL);
 
   delete (pthread_t*)ThreadHandle;
-  delete Context;
+  delete [] (sU8*)Context;
 }
 
 /****************************************************************************/
