@@ -551,7 +551,7 @@ public:
   void Copy(sTextureBase* tex, sU8*& src, sInt spitch, sInt w, sInt h)
   {
     sTexture2D* t2d = tex->CastTex2D();
-    sVERIFY(t2d);
+    assert(t2d);
     sU8* dest;
     sInt dpitch;
     t2d->BeginLoad(dest, dpitch);
@@ -578,7 +578,7 @@ public:
   void Fill(sTextureBase* tex, sU8 v, sInt w, sInt h)
   {
     sTexture2D* t2d = tex->CastTex2D();
-    sVERIFY(t2d);
+    assert(t2d);
     sU8* dest;
     sInt dpitch;
     t2d->BeginLoad(dest, dpitch);
@@ -604,7 +604,7 @@ public:
   {
     sRelease(NextVideoSample);
     HRESULT hr = SourceReader->ReadSample(MF_SOURCE_READER_FIRST_VIDEO_STREAM, 0, 0, 0, 0, 0);
-    sVERIFY(SUCCEEDED(hr));
+    assert(SUCCEEDED(hr));
   }
 
   // start decoding of next frame
@@ -613,12 +613,12 @@ public:
     if(!Audio)
       return;
 
-    sVERIFY(!GettingAudio);
+    assert(!GettingAudio);
 
     GettingAudio = true;
     HRESULT hr = SourceReader->ReadSample(MF_SOURCE_READER_FIRST_AUDIO_STREAM, 0, 0, 0, 0, 0);
 
-    sVERIFY(SUCCEEDED(hr));
+    assert(SUCCEEDED(hr));
   }
 
   // start decoding of first frame (after open or seek)
@@ -632,15 +632,15 @@ public:
   // blit decoded sample into texture(s)
   void BlitSample()
   {
-    sVERIFY(NextVideoSample);
+    assert(NextVideoSample);
 
     DWORD bc = 0;
     NextVideoSample->GetBufferCount(&bc);
-    sVERIFY(bc >= 1);
+    assert(bc >= 1);
 
     IMFMediaBuffer* buffer = 0;
     NextVideoSample->GetBufferByIndex(0, &buffer);
-    sVERIFY(buffer);
+    assert(buffer);
 
     BYTE* data;
     DWORD size;
@@ -703,7 +703,7 @@ public:
     default: break;
     }
 
-    sVERIFY(SourceReader);
+    assert(SourceReader);
     sInt time = sGetTime();
 
     if(!LastTime)
@@ -818,9 +818,9 @@ public:
 
     // find the first supported video format
     hr = MFCreateMediaType(&VideoType);
-    sVERIFY(SUCCEEDED(hr));
+    assert(SUCCEEDED(hr));
     hr = VideoType->SetGUID(MF_MT_MAJOR_TYPE, MFMediaType_Video);
-    sVERIFY(SUCCEEDED(hr));
+    assert(SUCCEEDED(hr));
 
     const sChar* fmt = 0;
 
@@ -834,7 +834,7 @@ public:
 
       VideoFormat = supported[i];
       hr = VideoType->SetGUID(MF_MT_SUBTYPE, VideoFormat);
-      sVERIFY(SUCCEEDED(hr));
+      assert(SUCCEEDED(hr));
 
       if(SUCCEEDED(SourceReader->SetCurrentMediaType(MF_SOURCE_READER_FIRST_VIDEO_STREAM, 0, VideoType)))
       {
@@ -867,9 +867,9 @@ public:
     {
       // find the first supported video format
       hr = MFCreateMediaType(&AudioType);
-      sVERIFY(SUCCEEDED(hr));
+      assert(SUCCEEDED(hr));
       hr = AudioType->SetGUID(MF_MT_MAJOR_TYPE, MFMediaType_Audio);
-      sVERIFY(SUCCEEDED(hr));
+      assert(SUCCEEDED(hr));
       hr = AudioType->SetGUID(MF_MT_SUBTYPE, MFAudioFormat_PCM);
 
       if(FAILED(hr = SourceReader->SetCurrentMediaType(MF_SOURCE_READER_FIRST_AUDIO_STREAM, NULL, AudioType)))
@@ -883,10 +883,10 @@ public:
       {
         sRelease(AudioType);
         hr = SourceReader->GetCurrentMediaType(MF_SOURCE_READER_FIRST_AUDIO_STREAM, &AudioType);
-        sVERIFY(SUCCEEDED(hr));
+        assert(SUCCEEDED(hr));
         UINT32 cbFormat;
         hr = MFCreateWaveFormatExFromMFMediaType(AudioType, &AudioFormat, &cbFormat);
-        sVERIFY(SUCCEEDED(hr));
+        assert(SUCCEEDED(hr));
         Audio = new sMPSoundOutput;
 
         if(!Audio->Init(AudioFormat))

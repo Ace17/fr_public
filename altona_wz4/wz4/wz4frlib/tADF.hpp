@@ -154,7 +154,7 @@ public:
 
   inline sF32 GetDistance(const sVector31& pos)
   {
-    // sVERIFY(SDF);
+    // assert(SDF);
     sF32 d = 0;
     sVector31 p = pos;
 
@@ -166,7 +166,7 @@ public:
       // p.y = sClamp(p.y, Box.Min.y, InBox.Max.y);
       // p.z = sClamp(p.z, Box.Min.z, InBox.Max.z);
       return d;
-      // sVERIFY(0);
+      // assert(0);
     }
 
     // Scale position into 3D grid
@@ -182,9 +182,9 @@ public:
     int y2 = y1 + 1;
     int z2 = z1 + 1;
 
-    sVERIFY(x1 >= 0 && x1 <= (DimX - 1));
-    sVERIFY(y1 >= 0 && y1 <= (DimY - 1));
-    sVERIFY(z1 >= 0 && z1 <= (DimZ - 1));
+    assert(x1 >= 0 && x1 <= (DimX - 1));
+    assert(y1 >= 0 && y1 <= (DimY - 1));
+    assert(z1 >= 0 && z1 <= (DimZ - 1));
 
     y1 *= DimX;
     y2 *= DimX;

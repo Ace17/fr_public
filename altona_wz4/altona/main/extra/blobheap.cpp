@@ -58,8 +58,8 @@ void sBlobHeap::AddBuffer()
 
 sBlobHeap::sBlobHeap(sDInt totalsize, sDInt chunksize, sDInt blocksize)
 {
-  sVERIFY(chunksize % blocksize == 0);
-  sVERIFY(blocksize >= sizeof(FreeRange));
+  assert(chunksize % blocksize == 0);
+  assert(blocksize >= sizeof(FreeRange));
   BlockSize = blocksize;
   ChunkSize = chunksize;
   Buffers.HintSize(1 + totalsize / chunksize);
@@ -71,7 +71,7 @@ sBlobHeap::sBlobHeap(sDInt totalsize, sDInt chunksize, sDInt blocksize)
     totalsize -= chunksize;
   }
 
-  sVERIFY(sIsPower2(BlockSize));
+  assert(sIsPower2(BlockSize));
 
   TempUseRange.HintSize(512);
   TempUseRange2.HintSize(512);
@@ -126,23 +126,23 @@ void sBlobHeap::CheckFree()
   {
     // should be larger than zero and aligned to blocksize
 
-    sVERIFY(sPtr(fr) == fr->Start);
-    sVERIFY(fr->Start < fr->End);
-    sVERIFY((fr->Start & (BlockSize - 1)) == 0);
-    sVERIFY((fr->End & (BlockSize - 1)) == 0);
+    assert(sPtr(fr) == fr->Start);
+    assert(fr->Start < fr->End);
+    assert((fr->Start & (BlockSize - 1)) == 0);
+    assert((fr->End & (BlockSize - 1)) == 0);
 
     // should be inside buffer
 
     while(!(fr->Start<Buffers[bn].End && fr->End> Buffers[bn].Start))
     {
       bn++;
-      sVERIFY(bn < Buffers.GetCount());
+      assert(bn < Buffers.GetCount());
     }
 
     // should be sorted and not zusammenhängend
 
     if(last)
-      sVERIFY(last->End < fr->Start);
+      assert(last->End < fr->Start);
 
     last = fr;
   }
@@ -159,9 +159,9 @@ void sBlobHeap::CheckUsed(sBlobHeapHandle* hnd)
 
     // should be larger than zero and aligned by blocksize
 
-    sVERIFY(ur->Start < ur->End);
-    sVERIFY((ur->Start & (BlockSize - 1)) == 0);
-    sVERIFY((ur->End & (BlockSize - 1)) == 0);
+    assert(ur->Start < ur->End);
+    assert((ur->Start & (BlockSize - 1)) == 0);
+    assert((ur->End & (BlockSize - 1)) == 0);
 
     // should be inside buffer
 
@@ -175,7 +175,7 @@ void sBlobHeap::CheckUsed(sBlobHeapHandle* hnd)
 
     // should be sorted and not zusammenhängend
 
-// sVERIFY(ur->Start > last);   // not any more
+// assert(ur->Start > last);   // not any more
     last = ur->End;
   }
 }
@@ -202,7 +202,7 @@ sBlobHeap::FreeRange* sBlobHeap::Alloc(FreeRange* fr, UseRange& ur, sPtr min, sP
         }
         else                              // just steal some
         {
-          sVERIFY(fr->End > chunk);
+          assert(fr->End > chunk);
           fr->End -= chunk;
           return fr;
         }
@@ -211,7 +211,7 @@ sBlobHeap::FreeRange* sBlobHeap::Alloc(FreeRange* fr, UseRange& ur, sPtr min, sP
       fr = FreeList.GetPrev(fr);
     }
 
-    sVERIFY(max * 2 < ChunkSize);
+    assert(max * 2 < ChunkSize);
     sDPrintF(L"sBlobHeap eats more memory\n");
     AddBuffer();
     fr = FreeList.GetTail();
@@ -396,7 +396,7 @@ void sBlobHeap::Free(sBlobHeapHandle* hnd)
 #if TESTALL
   CheckFree();
   GetStats(free, frags);
-  sVERIFY(free == totalfree);
+  assert(free == totalfree);
 #endif
 
   Lock.Unlock();
@@ -409,7 +409,7 @@ void sBlobHeap::CopyFrom(sBlobHeapHandle* hnd, void* d_, sPtr sn, sPtr size)
   sn += hnd->DataOffset;
   sU8* d = (sU8*)d_;
 
-  sVERIFY(sn + size <= hnd->Size);
+  assert(sn + size <= hnd->Size);
 
   UseRange* ur = hnd->Ranges;
 
@@ -417,19 +417,19 @@ void sBlobHeap::CopyFrom(sBlobHeapHandle* hnd, void* d_, sPtr sn, sPtr size)
 
   while(sn >= ur->End - ur->Start)
   {
-    sVERIFY(ur - hnd->Ranges < hnd->RangeCount);
+    assert(ur - hnd->Ranges < hnd->RangeCount);
 
     sn -= (ur->End - ur->Start);
     ur++;
   }
 
-  sVERIFY(sn < ur->End - ur->Start);
+  assert(sn < ur->End - ur->Start);
 
   // copy
 
   while(size > 0)
   {
-    sVERIFY(ur - hnd->Ranges < hnd->RangeCount);
+    assert(ur - hnd->Ranges < hnd->RangeCount);
 
     sDInt batch = sMin(size, ur->End - (ur->Start + sn));
     sCopyMem(d, (sU8*)(ur->Start + sn), batch);
@@ -445,7 +445,7 @@ void sBlobHeap::CopyFrom_UnpackIndex(sBlobHeapHandle* hnd, void* d_, sPtr sn, sP
   sn += hnd->DataOffset;
   sU8* d = (sU8*)d_;
 
-  sVERIFY(sn + size <= hnd->Size);
+  assert(sn + size <= hnd->Size);
 
   UseRange* ur = hnd->Ranges;
 
@@ -453,19 +453,19 @@ void sBlobHeap::CopyFrom_UnpackIndex(sBlobHeapHandle* hnd, void* d_, sPtr sn, sP
 
   while(sn >= ur->End - ur->Start)
   {
-    sVERIFY(ur - hnd->Ranges < hnd->RangeCount);
+    assert(ur - hnd->Ranges < hnd->RangeCount);
 
     sn -= (ur->End - ur->Start);
     ur++;
   }
 
-  sVERIFY(sn < ur->End - ur->Start);
+  assert(sn < ur->End - ur->Start);
 
   // copy
 
   while(size > 0)
   {
-    sVERIFY(ur - hnd->Ranges < hnd->RangeCount);
+    assert(ur - hnd->Ranges < hnd->RangeCount);
 
     sDInt batch = sMin(size, ur->End - (ur->Start + sn));
 
@@ -489,7 +489,7 @@ void sBlobHeap::CopyInto(sBlobHeapHandle* hnd, sPtr dn, const void* s_, sPtr siz
   dn += hnd->DataOffset;
   const sU8* s = (const sU8*)s_;
 
-  sVERIFY(dn + size <= hnd->Size);
+  assert(dn + size <= hnd->Size);
 
   // seek to required range
 
@@ -497,19 +497,19 @@ void sBlobHeap::CopyInto(sBlobHeapHandle* hnd, sPtr dn, const void* s_, sPtr siz
 
   while(dn >= ur->End - ur->Start)
   {
-    sVERIFY(ur - hnd->Ranges < hnd->RangeCount);
+    assert(ur - hnd->Ranges < hnd->RangeCount);
 
     dn -= (ur->End - ur->Start);
     ur++;
   }
 
-  sVERIFY(dn < ur->End - ur->Start);
+  assert(dn < ur->End - ur->Start);
 
   // copy
 
   while(size > 0)
   {
-    sVERIFY(ur - hnd->Ranges < hnd->RangeCount);
+    assert(ur - hnd->Ranges < hnd->RangeCount);
 
     sDInt batch = sMin(size, ur->End - (ur->Start + dn));
     sCopyMem((sU8*)(ur->Start + dn), s, batch);

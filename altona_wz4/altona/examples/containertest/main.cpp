@@ -48,13 +48,13 @@ static void InitTest(sInt* arr)
 static void VerifySorted(sInt* x, sInt count)
 {
   for(sInt i = 1; i < count; i++)
-    sVERIFY(x[i] >= x[i - 1]);
+    assert(x[i] >= x[i - 1]);
 }
 
 static void VerifyRevSorted(sInt* x, sInt count)
 {
   for(sInt i = 0; i < count - 1; i++)
-    sVERIFY(x[i] >= x[i + 1]);
+    assert(x[i] >= x[i + 1]);
 }
 
 /****************************************************************************/
@@ -211,31 +211,31 @@ static void TestBinarySearch()
   for(sInt i = 0; i < sCOUNTOF(tests); i++)
   {
     sInt v = tests[i][0];
-    sVERIFY(sLowerBound(rng, v) == tests[i][1]);
-    sVERIFY(sUpperBound(rng, v) == tests[i][2]);
+    assert(sLowerBound(rng, v) == tests[i][1]);
+    assert(sUpperBound(rng, v) == tests[i][2]);
   }
 
   // Same with predicate variants
   for(sInt i = 0; i < sCOUNTOF(tests); i++)
   {
     sInt v = tests[i][0];
-    sVERIFY(sLowerBound(rng, v, sCmpLess<sInt>()) == tests[i][1]);
-    sVERIFY(sUpperBound(rng, v, sCmpLess<sInt>()) == tests[i][2]);
+    assert(sLowerBound(rng, v, sCmpLess<sInt>()) == tests[i][1]);
+    assert(sUpperBound(rng, v, sCmpLess<sInt>()) == tests[i][2]);
   }
 
   // Tests for sAllEqual
-  sVERIFY(sAllEqual(rng, -1).IsEmpty());
-  sVERIFY(sAllEqual(rng, 30) == sArrayRange<const sInt>(arr + 2, arr + 4));
-  sVERIFY(!sAllEqual(rng, 40).IsEmpty());
-  sVERIFY(sAllEqual(rng, 40).GetHead() == 40);
-  sVERIFY(sAllEqual(rng, 40).GetTail() == 40);
+  assert(sAllEqual(rng, -1).IsEmpty());
+  assert(sAllEqual(rng, 30) == sArrayRange<const sInt>(arr + 2, arr + 4));
+  assert(!sAllEqual(rng, 40).IsEmpty());
+  assert(sAllEqual(rng, 40).GetHead() == 40);
+  assert(sAllEqual(rng, 40).GetTail() == 40);
 
   // And the predicate variants
-  sVERIFY(sAllEqual(rng, -1, sCmpLess<sInt>()).IsEmpty());
-  sVERIFY(sAllEqual(rng, 30, sCmpLess<sInt>()) == sArrayRange<const sInt>(arr + 2, arr + 4));
-  sVERIFY(!sAllEqual(rng, 40, sCmpLess<sInt>()).IsEmpty());
-  sVERIFY(sAllEqual(rng, 40, sCmpLess<sInt>()).GetHead() == 40);
-  sVERIFY(sAllEqual(rng, 40, sCmpLess<sInt>()).GetTail() == 40);
+  assert(sAllEqual(rng, -1, sCmpLess<sInt>()).IsEmpty());
+  assert(sAllEqual(rng, 30, sCmpLess<sInt>()) == sArrayRange<const sInt>(arr + 2, arr + 4));
+  assert(!sAllEqual(rng, 40, sCmpLess<sInt>()).IsEmpty());
+  assert(sAllEqual(rng, 40, sCmpLess<sInt>()).GetHead() == 40);
+  assert(sAllEqual(rng, 40, sCmpLess<sInt>()).GetTail() == 40);
 }
 
 /****************************************************************************/
@@ -497,7 +497,7 @@ static void TestSequence2(const sChar* desc, sArrayRange<FakeVertex>& seq)
 
       // verify that the sorted sequence is nondecreasing
       for(sInt i = 1; i < arr.GetCount(); i++)
-        sVERIFY(!(arr[i] < arr[i - 1]));
+        assert(!(arr[i] < arr[i - 1]));
     }
 
     sPrintF(L"%10d ", minTime);

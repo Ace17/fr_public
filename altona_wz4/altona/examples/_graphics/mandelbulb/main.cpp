@@ -162,7 +162,7 @@ void MyApp::OnPaint3D()
     if(!n)
       break;
 
-    sVERIFY(n->Evictable);
+    assert(n->Evictable);
 
     if(n->Area >= MANDEL_DROP)
       break;

@@ -190,7 +190,7 @@ sInt sSplitFrame::SplitDrag(const sWindowDrag& dd, sInt mousedelta, sInt mousepo
 void sSplitFrame::Preset(sInt splitter, sInt value, sBool align)
 {
   MakeChildData();
-  sVERIFY(splitter >= 1 && splitter < Count);
+  assert(splitter >= 1 && splitter < Count);
   ChildData[splitter].StartPos = value;
   ChildData[splitter].Align = align;
 }
@@ -198,14 +198,14 @@ void sSplitFrame::Preset(sInt splitter, sInt value, sBool align)
 void sSplitFrame::PresetPos(sInt splitter, sInt value)
 {
   MakeChildData();
-  sVERIFY(splitter >= 1 && splitter < Count);
+  assert(splitter >= 1 && splitter < Count);
   ChildData[splitter].StartPos = value;
 }
 
 void sSplitFrame::PresetAlign(sInt splitter, sBool align)
 {
   MakeChildData();
-  sVERIFY(splitter >= 1 && splitter < Count);
+  assert(splitter >= 1 && splitter < Count);
   ChildData[splitter].Align = align;
 }
 
@@ -244,7 +244,7 @@ void sHSplitFrame::OnLayout()
 
   sFORALL(Childs, w)
   {
-    sVERIFY(_i >= 0 && _i + 1 < ChildData.GetCount())
+    assert(_i >= 0 && _i + 1 < ChildData.GetCount())
     w->Outer.x0 = Client.x0;
     w->Outer.x1 = Client.x1;
     w->Outer.y0 = Client.y0 + ChildData[_i + 0].Pos;
@@ -306,7 +306,7 @@ void sVSplitFrame::OnLayout()
 
   sFORALL(Childs, w)
   {
-    sVERIFY(_i >= 0 && _i + 1 < ChildData.GetCount())
+    assert(_i >= 0 && _i + 1 < ChildData.GetCount())
     w->Outer.y0 = Client.y0;
     w->Outer.y1 = Client.y1;
     w->Outer.x0 = Client.x0 + ChildData[_i + 0].Pos;
@@ -389,7 +389,7 @@ void sMenuFrame::OnCalcSize()
   sFORALL(Items, item)
   {
     sInt c = item->Column;
-    sVERIFY(c >= 0 && c < MaxColumn);
+    assert(c >= 0 && c < MaxColumn);
     ColumnHeight[c] += item->Window->DecoratedSizeY;
     ColumnWidth[c] = sMax(ColumnWidth[c], item->Window->DecoratedSizeX);
   }
@@ -840,9 +840,9 @@ void sLayoutFrameWindow::Layout(sWindow* parent, sLayoutFrame* root)
   switch(Mode)
   {
   case sLFWM_WINDOW:
-    sVERIFY(Window);
-    sVERIFY(sFindPtr(root->Windows, Window));
-    sVERIFY(Window->Temp == 0);
+    assert(Window);
+    assert(sFindPtr(root->Windows, Window));
+    assert(Window->Temp == 0);
     Window->Temp = 1;
 
     parent->AddChild(Window);
@@ -851,9 +851,9 @@ void sLayoutFrameWindow::Layout(sWindow* parent, sLayoutFrame* root)
     break;
 
   case sLFWM_BORDER:
-    sVERIFY(Window);
-    sVERIFY(sFindPtr(root->Windows, Window));
-    sVERIFY(Window->Temp == 0);
+    assert(Window);
+    assert(sFindPtr(root->Windows, Window));
+    assert(Window->Temp == 0);
     Window->Temp = 1;
 
     parent->AddBorder(Window);
@@ -862,9 +862,9 @@ void sLayoutFrameWindow::Layout(sWindow* parent, sLayoutFrame* root)
     break;
 
   case sLFWM_BORDERPRE:
-    sVERIFY(Window);
-    sVERIFY(sFindPtr(root->Windows, Window));
-    sVERIFY(Window->Temp == 0);
+    assert(Window);
+    assert(sFindPtr(root->Windows, Window));
+    assert(Window->Temp == 0);
     Window->Temp = 1;
 
     parent->AddBorderHead(Window);
@@ -873,16 +873,16 @@ void sLayoutFrameWindow::Layout(sWindow* parent, sLayoutFrame* root)
     break;
 
   case sLFWM_SWITCH:
-    sVERIFY(Switch >= 0 && Switch < Childs.GetCount());
+    assert(Switch >= 0 && Switch < Childs.GetCount());
     Childs[Switch]->Layout(parent, root);
     break;
 
   case sLFWM_HORIZONTAL:
   case sLFWM_VERTICAL:
 
-    sVERIFY(Window);
-    sVERIFY(sFindPtr(root->Windows, Window));
-    sVERIFY(Window->Temp == 0);
+    assert(Window);
+    assert(sFindPtr(root->Windows, Window));
+    assert(Window->Temp == 0);
     Window->Temp = 1;
 
     parent->AddChild(Window);
@@ -1208,7 +1208,7 @@ sGridFrameHelper::sGridFrameHelper(sGridFrame* grid)
 
 sGridFrameHelper::~sGridFrameHelper()
 {
-  sVERIFY(TieMode == 0);
+  assert(TieMode == 0);
 }
 
 void sGridFrameHelper::InitControl(sControl* con)
@@ -1354,7 +1354,7 @@ void sGridFrameHelper::BoxFileDialog(const sStringDesc& string, const sChar* tex
 
 void sGridFrameHelper::BeginTied()
 {
-  sVERIFY(TieMode == 0);
+  assert(TieMode == 0);
   TieMode = 1;
   TieFirst = 0;
   TiePrev = 0;
@@ -1362,7 +1362,7 @@ void sGridFrameHelper::BeginTied()
 
 void sGridFrameHelper::EndTied()
 {
-  sVERIFY(TieMode == 2);
+  assert(TieMode == 2);
   TiePrev->DragTogether = TieFirst;
   TieMode = 0;
 }
@@ -1523,7 +1523,7 @@ sControl* sGridFrameHelper::Flags(sInt* val, const sChar* choices)
     con = new sChoiceControl();
     InitControl(con);
     con->InitChoices(choices, val);
-    sVERIFY((mask & con->ValueMask) == 0);
+    assert((mask & con->ValueMask) == 0);
     con->ValueMask |= mask;
 
     if(Static)
@@ -1557,7 +1557,7 @@ void sGridFrameHelper::Flags(sInt* val, const sChar* choices, const sMessage& ms
     sChoiceControl* con = new sChoiceControl();
     InitControl(con);
     con->InitChoices(choices, val);
-    sVERIFY((mask & con->ValueMask) == 0);
+    assert((mask & con->ValueMask) == 0);
     con->ValueMask |= mask;
     con->DoneMsg = msg;
     con->ChangeMsg = msg;

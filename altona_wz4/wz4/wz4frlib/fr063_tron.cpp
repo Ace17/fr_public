@@ -2325,7 +2325,7 @@ void FR063_SpritesExt::Prepare(Wz4RenderContext* ctx)
   const sF32 uvcountf = uvcounti;
 
   Geo->BeginLoadVB(nbp, sGD_FRAME, &vp1, 1);
-  sVERIFY(nbp == Particles.GetCount());
+  assert(nbp == Particles.GetCount());
 
   sFORALL(Particles, part)
   {

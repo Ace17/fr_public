@@ -312,12 +312,12 @@ const sChar* sMiniFTPClient::GetLastErrorMessage() const
 sBool sMiniFTPClient::SendCommand(sInt command, const sChar* filename, sSize extra)
 {
   static const sInt maxFilenameLen = 1024;
-  sVERIFY(filename != 0);
+  assert(filename != 0);
 
   Error = sMFE_OK;
 
   sInt filenameLen = sGetStringLen(filename);
-  sVERIFY(filenameLen < maxFilenameLen);
+  assert(filenameLen < maxFilenameLen);
   sVERIFYSTATIC(sizeof(sChar) == 2);
 
   sU8 header[16];

@@ -143,7 +143,7 @@ sBool sIsSubsystemRunning(const sChar* name)
 
 void sAddSubsystem(const sChar* name, sInt priority, void (* init)(), void (* exit)())
 {
-  sVERIFY(SubsystemCount < sCOUNTOF(Subsystems));
+  assert(SubsystemCount < sCOUNTOF(Subsystems));
   Subsystems[SubsystemCount].Name = name;
   Subsystems[SubsystemCount].Priority = priority;
   Subsystems[SubsystemCount].Init = init;
@@ -311,13 +311,13 @@ sBool sIsLeapYear(sU16 year)
 {
   // Every 4th year is a leap year.
   // Years that are multiple of 100 are special. Only those that are multiple of 400 are leap years.
-  sVERIFY(year > 0 && year <= sMAX_U16);
+  assert(year > 0 && year <= sMAX_U16);
   return year % 4 == 0 && (year % 100 != 0 || year % 400 == 0);
 }
 
 sInt sGetDaysInMonth(sU16 year, sU8 month)
 {
-  sVERIFY((year >= 1 || year <= sMAX_U16) && (month >= 1 || month <= 12));
+  assert((year >= 1 || year <= sMAX_U16) && (month >= 1 || month <= 12));
 
   if(month == 2 && !sIsLeapYear(year))
     return 28;
@@ -354,7 +354,7 @@ sU8 sGetDayOfWeek(const sDateAndTime& date)
   sU16 year = date.Year;
   sU8 month = date.Month;
   sU8 day = date.Day;
-  sVERIFY(sIsDateValid(year, month, day));
+  assert(sIsDateValid(year, month, day));
   sU8 a = (14 - month) / 12;
   year -= a;
   return (day + year + 31 * (month + 12 * a - 2) / 12 + year / 4 - year / 100 + year / 400) % 7;
@@ -522,7 +522,7 @@ sInt sFile::CopyFrom(sFile* f, sS64 max)
 sFailsafeFile::sFailsafeFile(sFile* host, const sChar* name, const sChar* tgt)
 {
   Host = host;
-  sVERIFY(Host != 0);
+  assert(Host != 0);
   CurrentName = name;
   TargetName = tgt;
 }
@@ -627,7 +627,7 @@ sBool sCheckFile(const sChar* name)
 
 void sAddFileHandler(sFileHandler* h)
 {
-  sVERIFY(FileHandlerCount < sCOUNTOF(FileHandlers));
+  assert(FileHandlerCount < sCOUNTOF(FileHandlers));
   FileHandlers[FileHandlerCount++] = h;
 }
 
@@ -771,7 +771,7 @@ sS64 sMemFile::GetSize()
 
 sFileReadHandle sMemFile::BeginRead(sS64 offset, sDInt size, void* destbuffer, sFilePriorityFlags prio)
 {
-  sVERIFY(destbuffer);
+  assert(destbuffer);
 
   sInt alignedsize = sAlign(Size, BlockSize);
 
@@ -783,7 +783,7 @@ sFileReadHandle sMemFile::BeginRead(sS64 offset, sDInt size, void* destbuffer, s
     return 1;
   }
 
-  sVERIFY(offset + size <= Size);
+  assert(offset + size <= Size);
 
   sCopyMem(destbuffer, Data + offset, size);
   return 1;
@@ -1005,7 +1005,7 @@ sBool sCalcMD5File::Write(const void* data, sDInt size)
 
     if(done < TempCount)
     {
-      sVERIFY(add == size);
+      assert(add == size);
       // size was smaller than tempbuffer, we are done
       sCopyMem(TempBuf, TempBuf + done, TempCount - done);
       TempCount -= done;
@@ -1025,7 +1025,7 @@ sBool sCalcMD5File::Write(const void* data, sDInt size)
   if(count > 0)
   {
     TempCount = count;
-    sVERIFY(TempCount > 0 && TempCount < sCOUNTOF(TempBuf));
+    assert(TempCount > 0 && TempCount < sCOUNTOF(TempBuf));
     sCopyMem(TempBuf, ptr, TempCount);
   }
 
@@ -1079,7 +1079,7 @@ sU8* sLoadFile(const sChar* name, sDInt& size)
     return 0;
 
   size = file->GetSize();
-  sVERIFY(size <= 0x7fffffff);
+  assert(size <= 0x7fffffff);
 
   const sInt align = 16;
   sU8* mem = (sU8*)sAllocMem(size, align, 0);
@@ -1800,7 +1800,7 @@ sPtr sAllocTls(sPtr bytes, sInt align)
   sThreadContext::TlsOffset = sAlign(sThreadContext::TlsOffset, align);
   sPtr result = sThreadContext::TlsOffset;
   sThreadContext::TlsOffset += bytes;
-  sVERIFY(sThreadContext::TlsOffset <= sTLsMaxSize);   // increase sMAX_APP_TLS
+  assert(sThreadContext::TlsOffset <= sTLsMaxSize);   // increase sMAX_APP_TLS
   return result;
 }
 

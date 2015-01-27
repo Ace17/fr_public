@@ -1415,7 +1415,7 @@ void Document::OutputMain()
   Sep(CPP);
   CPP.PrintF(L"void AddTypes_%s(sBool secondary)\n", ProjectName);
   CPP.Print(L"{\n");
-  CPP.Print(L"  sVERIFY(Doc);\n");
+  CPP.Print(L"  assert(Doc);\n");
   CPP.Print(L"\n");
   sFORALL(Types, type)
   {
@@ -1435,7 +1435,7 @@ void Document::OutputMain()
   Sep(CPP);
   CPP.PrintF(L"void AddOps_%s(sBool secondary)\n", ProjectName);
   CPP.Print(L"{\n");
-  CPP.Print(L"  sVERIFY(Doc);\n");
+  CPP.Print(L"  assert(Doc);\n");
   CPP.Print(L"\n");
   CPP.Print(L"  wClass sUNUSED *cl=0; cl;\n");
   CPP.Print(L"  wClassInputInfo sUNUSED *in=0; in;\n");

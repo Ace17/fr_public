@@ -264,7 +264,7 @@ void sMessage::Post() const
   if(this && Target)
   {
     sMessageQueue->AddTail(*this);
-// sVERIFY(sMessageUsed < sCOUNTOF(sMessagePool));
+// assert(sMessageUsed < sCOUNTOF(sMessagePool));
 // sMessagePool[sMessageUsed++] = *this;
   }
 }
@@ -395,7 +395,7 @@ sTextBuffer & sTextBuffer::operator = (const sChar* t)
 template<class streamer>
 void sTextBuffer::Serialize_(streamer& s)
 {
-  sVERIFY(sizeof(sChar) == sizeof(sU16));
+  assert(sizeof(sChar) == sizeof(sU16));
   sInt len = Used;
   s | len;
 
@@ -466,7 +466,7 @@ void sTextBuffer::SetSize(sInt count)
 
 const sChar* sTextBuffer::Get() const
 {
-  sVERIFY(Used < Alloc);
+  assert(Used < Alloc);
   const_cast<sChar*>(Buffer)[Used] = 0;
   return Buffer;
 }
@@ -478,14 +478,14 @@ sChar* sTextBuffer::Get()
   if(Used == 0 && Buffer == 0)
     return empty;
 
-  sVERIFY(Used < Alloc);
+  assert(Used < Alloc);
   const_cast<sChar*>(Buffer)[Used] = 0;
   return Buffer;
 }
 
 void sTextBuffer::Insert(sInt pos, sChar c)
 {
-  sVERIFY(pos >= 0 && pos <= Used);
+  assert(pos >= 0 && pos <= Used);
   Grow(1);
 
   Used++;
@@ -498,7 +498,7 @@ void sTextBuffer::Insert(sInt pos, sChar c)
 
 void sTextBuffer::Insert(sInt pos, const sChar* c, sInt len)
 {
-  sVERIFY(pos >= 0 && pos <= Used);
+  assert(pos >= 0 && pos <= Used);
 
   if(len == -1)
     len = sGetStringLen(c);
@@ -516,7 +516,7 @@ void sTextBuffer::Insert(sInt pos, const sChar* c, sInt len)
 
 void sTextBuffer::Delete(sInt pos)
 {
-  sVERIFY(pos >= 0 && pos < Used);
+  assert(pos >= 0 && pos < Used);
   Used--;
 
   for(sInt i = pos; i < Used; i++)
@@ -525,7 +525,7 @@ void sTextBuffer::Delete(sInt pos)
 
 void sTextBuffer::Delete(sInt pos, sInt count)
 {
-  sVERIFY(pos >= 0 && pos < Used);
+  assert(pos >= 0 && pos < Used);
   Used -= count;
 
   for(sInt i = pos; i < Used; i++)
@@ -534,7 +534,7 @@ void sTextBuffer::Delete(sInt pos, sInt count)
 
 void sTextBuffer::Set(sInt pos, sChar c)
 {
-  sVERIFY(pos >= 0 && pos < Used);
+  assert(pos >= 0 && pos < Used);
   Buffer[pos] = c;
 }
 
@@ -1388,7 +1388,7 @@ void sBitVector::Assign(sInt n, sInt v)
 
 sBool sBitVector::NextBit(sInt& n)
 {
-  sVERIFY(NewVal == 0);
+  assert(NewVal == 0);
 
   n++;
   sPtr word = n >> BITSHIFT;
@@ -1423,8 +1423,8 @@ sBool sBitVector::NextBit(sInt& n)
 
   // find bit
 
-  sVERIFY(bit == 0);
-  sVERIFY(Data[word] != 0);
+  assert(bit == 0);
+  assert(Data[word] != 0);
 
   while(!(Data[word] & (1 << bit)))
     bit++;

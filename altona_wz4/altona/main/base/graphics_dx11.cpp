@@ -273,7 +273,7 @@ void InitGFX(sInt flags_, sInt xs_, sInt ys_)
     DXErr(DXGI->MakeWindowAssociation(sHWND, 0));
   }
 
-  sVERIFY(DXScreenMode.Display < MAXSCREENS);
+  assert(DXScreenMode.Display < MAXSCREENS);
   sScreenInfoX* display = DXScreenInfos[sMax(0, DXScreenMode.Display)];
 
   if(DXDev == 0)
@@ -407,9 +407,9 @@ void InitGFX(sInt flags_, sInt xs_, sInt ys_)
       sFatal(L"could not load D3DCompiler_42.dll");
 
     DXCompLibCompile = (DXCompLibCompileType)GetProcAddress(DXCompLib, "D3DCompile");
-    sVERIFY(DXCompLibCompile);
+    assert(DXCompLibCompile);
     DXCompLibDisassemble = (DXCompLibDisassembleType)GetProcAddress(DXCompLib, "D3DDisassemble");
-    sVERIFY(DXCompLibDisassemble);
+    assert(DXCompLibDisassemble);
 
     GeoBufferManager = new sGeoBufferManager;
     CBufferManager = new sCBufferManager;
@@ -479,7 +479,7 @@ void InitGFX(sInt flags_, sInt xs_, sInt ys_)
   }
   else    // just updating existing device
   {
-    sVERIFY(DXScreenCount == 1);
+    assert(DXScreenCount == 1);
     sInt xs = DXScreenMode.ScreenX;
     sInt ys = DXScreenMode.ScreenY;
 
@@ -673,7 +673,7 @@ void ExitGFX()
     sDXRELEASE(DXSwapChain[i]);
   }
 
-  sVERIFY(GTCBase == GTC);
+  assert(GTCBase == GTC);
   sDelete(GTCBase);
   GTC = 0;
 // sDXRELEASE(DXBaseCtx);
@@ -764,8 +764,8 @@ void sGfxThreadContext::EndUse()
 
 void sGfxThreadContext::Draw()
 {
-  sVERIFY(GTC == GTCBase);
-  sVERIFY(this != GTCBase);
+  assert(GTC == GTCBase);
+  assert(this != GTCBase);
 
   DXBaseCtx->ExecuteCommandList(DXCmd, 0);
   GTCBase->Flush();
@@ -791,7 +791,7 @@ void sSetRenderClipping(sRect* r, sInt count)
   RGNDATAHEADER* hdr;
   sRect* rd;
 
-  sVERIFY(count * sizeof(sRect) + sizeof(RGNDATAHEADER) <= sizeof(RenderClippingData));
+  assert(count * sizeof(sRect) + sizeof(RGNDATAHEADER) <= sizeof(RenderClippingData));
 
   hdr = (RGNDATAHEADER*)RenderClippingData;
   rd = (sRect*)(((sU8*)RenderClippingData) + (sizeof(RGNDATAHEADER)));
@@ -823,7 +823,7 @@ sBool sRender3DBegin()
       return 0;
   }
 
-  sVERIFY(DXRendering == 0);
+  assert(DXRendering == 0);
   DXRendering = 1;
 
   GTC->Flush();
@@ -845,7 +845,7 @@ void sRender3DEnd(sBool flip)
 {
   // checking sRender3DBEgin / End nesting
 
-  sVERIFY(DXRendering == 1);
+  assert(DXRendering == 1);
 
   sResolveTarget();
 
@@ -879,7 +879,7 @@ void sRender3DEnd(sBool flip)
     }
   }
 
-  sVERIFY(GTC == GTCBase);
+  assert(GTC == GTCBase);
   GTC->Flush();
 
   BufferedStats = Stats;
@@ -1299,7 +1299,7 @@ void sSetTarget(const sTargetPara& para)
         rt[i] = ms ? para.Target[i]->MultiSampled->DXRenderView : para.Target[i]->DXRenderView;
         break;
       case sTEX_CUBE:
-        sVERIFY(para.Cubeface >= 0 && para.Cubeface < 6);
+        assert(para.Cubeface >= 0 && para.Cubeface < 6);
         rt[i] = para.Target[i]->DXCubeRenderView[para.Cubeface];
         break;
       }
@@ -1405,8 +1405,8 @@ void sEnlargeRTDepthBuffer(sInt x, sInt y)
 static ID3D11Texture2D* DXReadTexture;
 void sBeginReadTexture(const sU8*& data, sS32& pitch, enum sTextureFlags& flags, sTexture2D* tex)
 {
-  sVERIFY(DXReadTexture == 0);
-  sVERIFY((tex->Flags & sTEX_TYPE_MASK) == sTEX_2D);
+  assert(DXReadTexture == 0);
+  assert((tex->Flags & sTEX_TYPE_MASK) == sTEX_2D);
 
   if(tex->DXReadTex == 0)
   {
@@ -1436,7 +1436,7 @@ void sBeginReadTexture(const sU8*& data, sS32& pitch, enum sTextureFlags& flags,
 
 void sEndReadTexture()
 {
-  sVERIFY(DXReadTexture);
+  assert(DXReadTexture);
   GTC->DXCtx->Unmap(DXReadTexture, 0);
   DXReadTexture = 0;
 }
@@ -1445,8 +1445,8 @@ void sEndReadTexture()
 
 sGpuToCpu::sGpuToCpu(sInt flags, sInt xs, sInt ys)
 {
-  sVERIFY(xs > 0 && ys > 0);
-  sVERIFY((flags & sTEX_TYPE_MASK) == sTEX_2D);
+  assert(xs > 0 && ys > 0);
+  assert((flags & sTEX_TYPE_MASK) == sTEX_2D);
 
   SizeX = xs;
   SizeY = ys;
@@ -1480,13 +1480,13 @@ sGpuToCpu::sGpuToCpu(sInt flags, sInt xs, sInt ys)
 
 sGpuToCpu::~sGpuToCpu()
 {
-  sVERIFY(!Locked);
+  assert(!Locked);
   sDXRELEASE(Dest);
 }
 
 void sGpuToCpu::CopyFrom(sTexture2D* tex, sInt miplevel)
 {
-  sVERIFY(!Locked);
+  assert(!Locked);
   tex->ResolvePrivate();
 
   if(tex->Mipmaps == 1 && miplevel == 0)
@@ -1497,7 +1497,7 @@ void sGpuToCpu::CopyFrom(sTexture2D* tex, sInt miplevel)
 
 const void* sGpuToCpu::BeginRead(sDInt& pitch)
 {
-  sVERIFY(!Locked);
+  assert(!Locked);
   Locked = 1;
 
   D3D11_MAPPED_SUBRESOURCE map;
@@ -1508,7 +1508,7 @@ const void* sGpuToCpu::BeginRead(sDInt& pitch)
 
 void sGpuToCpu::EndRead()
 {
-  sVERIFY(Locked);
+  assert(Locked);
   Locked = 0;
   GTC->DXCtx->Unmap(Dest, 0);
 }
@@ -1652,7 +1652,7 @@ void sVertexFormatHandle::Create()
       decl[i].InstanceDataStepRate = 1;
     }
 
-    sVERIFY(count < 31);
+    assert(count < 31);
     switch(Data[i] & sVF_USEMASK)
     {
     case sVF_NOP:   break;
@@ -2001,7 +2001,7 @@ sCBufferManager::~sCBufferManager()
     }
   }
 
-  sVERIFY(Mapped.IsEmpty());
+  assert(Mapped.IsEmpty());
 }
 
 void sCBufferManager::Map(sCBufferMap& map, sInt size)
@@ -2051,7 +2051,7 @@ void sCBufferManager::Map(sCBufferMap& map, sInt size)
 void sCBufferManager::Unmap(sCBufferMap& map)
 {
   sCBuffer11* cb = map.Buffer;
-  sVERIFY(cb->IsMapped);
+  assert(cb->IsMapped);
 
   GTC->DXCtx->Unmap(cb->DXBuffer, 0);
 
@@ -2061,7 +2061,7 @@ void sCBufferManager::Unmap(sCBufferMap& map)
 
 void sCBufferManager::Flush()
 {
-  sVERIFY(Mapped.IsEmpty());
+  assert(Mapped.IsEmpty());
 
   while(!Used.IsEmpty())
   {
@@ -2246,7 +2246,7 @@ void sClearCurrentCBuffers()
 
 sCBufferBase* sGetCurrentCBuffer(sInt slot)
 {
-  sVERIFY(slot < sCBUFFER_MAXSLOT * sCBUFFER_SHADERTYPES);
+  assert(slot < sCBUFFER_MAXSLOT * sCBUFFER_SHADERTYPES);
   return GTC->CurrentCBs[slot];
 }
 
@@ -2393,7 +2393,7 @@ void sGeoBufferManager::Map(sGeoMapHandle& map, sDInt bytes)
 
   gb = Current;
 
-  sVERIFY(gb && gb->Free >= bytes);
+  assert(gb && gb->Free >= bytes);
 
   // now map
 
@@ -2407,7 +2407,7 @@ void sGeoBufferManager::Map(sGeoMapHandle& map, sDInt bytes)
   map.Ptr = gb->MapPtr + gb->Used;
   map.Buffer = gb;
   map.Offset = gb->Used;
-  sVERIFY(gb->Used <= gb->Alloc);
+  assert(gb->Used <= gb->Alloc);
   gb->Used += bytes;
   gb->Free = gb->Alloc - gb->Used;
   gb->MappedCount++;
@@ -2544,7 +2544,7 @@ void sGeometry::Draw(const sGeometryDrawInfo& di)
 
   if((Flags & sGF_PRIMMASK) == sGF_QUADLIST)
   {
-    sVERIFY(IndexSize == 0);
+    assert(IndexSize == 0);
     sDrawRange dr;
 
     if(ir == 0)
@@ -2559,7 +2559,7 @@ void sGeometry::Draw(const sGeometryDrawInfo& di)
     {
       sInt start = ir[i].Start;
       sInt end = ir[i].End;
-      sVERIFY(di.Indirect == 0);
+      assert(di.Indirect == 0);
 
       while(start < end)
       {
@@ -2759,7 +2759,7 @@ void sGeometryPrivate::EndLoadPrv(Buffer* b, sInt count, sInt bindflag)
     if(count != -1)
       b->ElementCount = count;
 
-    sVERIFY(b->DynMap.Buffer);
+    assert(b->DynMap.Buffer);
     GeoBufferManager->Unmap(b->DynMap);
   }
 }
@@ -2783,7 +2783,7 @@ void sGeometry::EndLoad(sInt vc, sInt ic)
 
 void sGeometry::Merge(sGeometry* geo0, sGeometry* geo1)
 {
-  sVERIFY(geo1 != this);
+  assert(geo1 != this);
 
   if(geo0 != this)
   {
@@ -2806,7 +2806,7 @@ void sGeometry::Merge(sGeometry* geo0, sGeometry* geo1)
 
 void sGeometry::MergeVertexStream(sInt DestStream, sGeometry* src, sInt SrcStream)
 {
-  sVERIFY(src != this);
+  assert(src != this);
   VB[DestStream].CloneFrom(&src->VB[SrcStream]);
 }
 
@@ -2999,8 +2999,8 @@ void ConvertFlags(sU32 flags, sInt& mm, D3D11_BIND_FLAG& bind, D3D11_USAGE& usag
 
   if(flags & sTEX_RENDERTARGET)
   {
-    sVERIFY(!(flags & sTEX_DYNAMIC));
-    sVERIFY((flags & sTEX_NOMIPMAPS) || (flags & sTEX_AUTOMIPMAP) || mm != 0);
+    assert(!(flags & sTEX_DYNAMIC));
+    assert((flags & sTEX_NOMIPMAPS) || (flags & sTEX_AUTOMIPMAP) || mm != 0);
 
     if(ds)
       bind = D3D11_BIND_FLAG(bind | D3D11_BIND_DEPTH_STENCIL);
@@ -3096,7 +3096,7 @@ sOccQuery::sOccQuery()
 
 sOccQuery::~sOccQuery()
 {
-  sVERIFY(Current == 0);
+  assert(Current == 0);
 
   for(;;)
   {
@@ -3112,7 +3112,7 @@ sOccQuery::~sOccQuery()
 void sOccQuery::Begin(sInt pixels)
 {
   Poll();
-  sVERIFY(Current == 0);
+  assert(Current == 0);
   Current = GetOccQueryNode();
   Current->Pixels = pixels;
   GTC->DXCtx->Begin(Current->Query);
@@ -3121,7 +3121,7 @@ void sOccQuery::Begin(sInt pixels)
 
 void sOccQuery::End()
 {
-  sVERIFY(Current);
+  assert(Current);
   GTC->DXCtx->End(Current->Query);
   Current = 0;
 }
@@ -3326,13 +3326,13 @@ void sTexture2D::Destroy2()
   sDXRELEASE(DXRenderView);
   sDXRELEASE(DXDepthView);
   sDXRELEASE(DXReadTex);
-  sVERIFY(!LoadPtr); // forgot EndLoad()
+  assert(!LoadPtr); // forgot EndLoad()
 }
 
 void sTexture2D::BeginLoad(sU8*& data, sInt& pitch, sInt mipmap)
 {
-  sVERIFY(LoadPtr == 0);
-  sVERIFY(LoadMipmap == -1);
+  assert(LoadPtr == 0);
+  assert(LoadMipmap == -1);
 
   LoadMipmap = mipmap;
 
@@ -3361,7 +3361,7 @@ void sTexture2D::BeginLoadPartial(const sRect& rect, sU8*& data, sInt& pitch, sI
 
 void sTexture2D::EndLoad()
 {
-  sVERIFY(LoadMipmap >= 0)
+  assert(LoadMipmap >= 0)
 
   if(Dynamic)
   {
@@ -3369,7 +3369,7 @@ void sTexture2D::EndLoad()
   }
   else
   {
-    sVERIFY(LoadPtr);
+    assert(LoadPtr);
 
     sInt pitch = (SizeX * BitsPerPixel) >> (3 + LoadMipmap);
 
@@ -3433,7 +3433,7 @@ void sTextureCube::Create2(sInt flags)
     Dynamic = 1;
 
   DXFormat = fmt_res;
-  sVERIFY(!ds);
+  assert(!ds);
 
   // create it
 
@@ -3491,13 +3491,13 @@ void sTextureCube::Destroy2()
     sDXRELEASE(DXCubeRenderView[i]);
 
   sDXRELEASE(DXDepthView);
-  sVERIFY(!LoadPtr); // forgot EndLoad()
+  assert(!LoadPtr); // forgot EndLoad()
 }
 
 void sTextureCube::BeginLoad(sTexCubeFace cf, sU8*& data, sInt& pitch, sInt mipmap /*=0*/)
 {
-  sVERIFY(LoadPtr == 0);
-  sVERIFY(LoadMipmap == -1);
+  assert(LoadPtr == 0);
+  assert(LoadMipmap == -1);
 
   LoadMipmap = mipmap;
   LoadCubeFace = cf;
@@ -3508,8 +3508,8 @@ void sTextureCube::BeginLoad(sTexCubeFace cf, sU8*& data, sInt& pitch, sInt mipm
 
 void sTextureCube::EndLoad()
 {
-  sVERIFY(LoadPtr);
-  sVERIFY(LoadMipmap >= 0)
+  assert(LoadPtr);
+  assert(LoadMipmap >= 0)
 
   GTC->DXCtx->UpdateSubresource(DXTex2D, D3D11CalcSubresource(LoadMipmap, LoadCubeFace, Mipmaps), 0, LoadPtr, (SizeXY * BitsPerPixel) >> (3 + LoadMipmap), 0);
   LoadMipmap = -1;
@@ -3570,14 +3570,14 @@ sTexture3D::sTexture3D(sInt xs, sInt ys, sInt zs, sU32 flags)
     Dynamic = 1;
 
   DXFormat = fmt_res;
-  sVERIFY(!ds);
+  assert(!ds);
 
   // some checks
 
   if(Mipmaps == 0)
     Mipmaps = 1;
 
-  sVERIFY(!(Flags & sTEX_RENDERTARGET));
+  assert(!(Flags & sTEX_RENDERTARGET));
 
   // create it
 
@@ -3609,13 +3609,13 @@ sTexture3D::~sTexture3D()
 {
   sDXRELEASE(DXTex3D);
   sDXRELEASE(DXTexView);
-  sVERIFY(!LoadPtr); // forgot EndLoad()
+  assert(!LoadPtr); // forgot EndLoad()
 }
 
 void sTexture3D::BeginLoad(sU8*& data, sInt& rpitch, sInt& spitch, sInt mipmap /*=0*/)
 {
-  sVERIFY(LoadPtr == 0);
-  sVERIFY(LoadMipmap == -1);
+  assert(LoadPtr == 0);
+  assert(LoadMipmap == -1);
 
   LoadMipmap = mipmap;
   sDInt size = (sU64(SizeX) * SizeY * SizeZ * BitsPerPixel) >> (3 + 3 * mipmap);
@@ -3626,8 +3626,8 @@ void sTexture3D::BeginLoad(sU8*& data, sInt& rpitch, sInt& spitch, sInt mipmap /
 
 void sTexture3D::EndLoad()
 {
-  sVERIFY(LoadPtr);
-  sVERIFY(LoadMipmap >= 0)
+  assert(LoadPtr);
+  assert(LoadMipmap >= 0)
 
   GTC->DXCtx->UpdateSubresource(DXTex3D, LoadMipmap, 0, LoadPtr, (SizeX * BitsPerPixel) >> (3 + LoadMipmap), (SizeX * SizeY * BitsPerPixel) >> (3 + LoadMipmap + LoadMipmap));
   LoadMipmap = -1;
@@ -3769,11 +3769,11 @@ void sMaterial::Prepare(sVertexFormatHandle* format)
 
     if(shader == sMTB_VS)
     {
-      sVERIFY(sampler < sMTRL_MAXVSTEX);
+      assert(sampler < sMTRL_MAXVSTEX);
     }
     else if(shader == sMTB_PS)
     {
-      sVERIFY(sampler < sMTRL_MAXPSTEX);
+      assert(sampler < sMTRL_MAXPSTEX);
     }
     else
     {
@@ -3797,7 +3797,7 @@ void sMaterial::Set(sCBufferBase** cbuffers, sInt cbcount, sInt variant)
 
 void sMaterial::SetStates(sInt var)
 {
-  sVERIFY(var >= 0 && var < StateVariants);
+  assert(var >= 0 && var < StateVariants);
 
   // set states
 
@@ -3851,7 +3851,7 @@ void sMaterial::SetStates(sInt var)
 
 void sMaterial::InitVariants(sInt max)
 {
-  sVERIFY(StateVariants == 0);
+  assert(StateVariants == 0);
   StateVariants = max;
   Variants = new StateObjects[max];
 
@@ -3877,7 +3877,7 @@ void sMaterial::DiscardVariants()
 
 void sMaterial::SetVariant(sInt var)
 {
-  sVERIFY(var >= 0 && var < StateVariants);
+  assert(var >= 0 && var < StateVariants);
 
   // get ready
 
@@ -4159,7 +4159,7 @@ sCSBuffer::sCSBuffer(sInt flags, sInt elements, sInt elementsize, const void* in
     elementsize = sGetBitsPerPixel(Flags) / 8;
   }
 
-  sVERIFY(elementsize != 0);
+  assert(elementsize != 0);
 
   bd.BindFlags = bind;
   bd.ByteWidth = elements * elementsize;
@@ -4223,7 +4223,7 @@ void sCSBuffer::GetSize(sInt& xs, sInt& ys, sInt& zs)
 
 void sCSBuffer::BeginLoad(void** p)
 {
-  sVERIFY(LoadMipmap == -1);
+  assert(LoadMipmap == -1);
   LoadMipmap = 1;
 
   D3D11_MAPPED_SUBRESOURCE mr;
@@ -4234,7 +4234,7 @@ void sCSBuffer::BeginLoad(void** p)
 
 void sCSBuffer::EndLoad()
 {
-  sVERIFY(LoadMipmap == 1);
+  assert(LoadMipmap == 1);
   LoadMipmap = -1;
 
   GTC->DXCtx->Unmap(DXBuffer, 0);
@@ -4252,7 +4252,7 @@ void sGeometry::SetVB(sCSBuffer* cb, sInt i)
 
 void sGeometry::SetIB(sCSBuffer* cb)
 {
-  sVERIFY(IndexSize == 4);
+  assert(IndexSize == 4);
   IB.ElementSize = IndexSize;
   IB.ElementCount = cb->SizeX * 4 / IndexSize;
   IB.DXBuffer = cb->DXBuffer;
@@ -4295,7 +4295,7 @@ sComputeShader::~sComputeShader()
 
 void sComputeShader::Prepare()
 {
-  sVERIFY(LastTexture == 0);
+  assert(LastTexture == 0);
 
   for(sInt i = 0; i < MaxTexture; i++)
   {

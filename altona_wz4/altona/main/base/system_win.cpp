@@ -826,7 +826,7 @@ sInt sRootFileHandler::AllocReadHandle()
 
 void sRootFileHandler::FreeReadHandle(sInt rh)
 {
-  sVERIFY(ReadEntries[rh].Next == rh); // avoid double deletes
+  assert(ReadEntries[rh].Next == rh); // avoid double deletes
   ReadEntries[rh].Next = FirstFreeEntry;
   FirstFreeEntry = rh;
 
@@ -956,7 +956,7 @@ sRootFile::~sRootFile()
 
 sBool sRootFile::Close()
 {
-  sVERIFY(File != INVALID_HANDLE_VALUE);
+  assert(File != INVALID_HANDLE_VALUE);
 
   if(MapPtr)
     if(!UnmapViewOfFile(MapPtr))
@@ -975,9 +975,9 @@ sBool sRootFile::Close()
 
 sBool sRootFile::Read(void* data, sDInt size)
 {
-  sVERIFY(File != INVALID_HANDLE_VALUE)
+  assert(File != INVALID_HANDLE_VALUE)
   DWORD read = 0;
-  sVERIFY(size <= 0x7fffffff);
+  assert(size <= 0x7fffffff);
 
   sBool result;
 
@@ -1047,8 +1047,8 @@ sBool sRootFile::Read(void* data, sDInt size)
 
 sBool sRootFile::Write(const void* data, sDInt size)
 {
-  sVERIFY(!IsOverlapped)
-  sVERIFY(File != INVALID_HANDLE_VALUE)
+  assert(!IsOverlapped)
+  assert(File != INVALID_HANDLE_VALUE)
 
   // do not write more than 16MB at a time.
   // there is a limit for network files at 33524976 bytes (!)
@@ -1059,7 +1059,7 @@ sBool sRootFile::Write(const void* data, sDInt size)
   if(size <= chunk)
   {
     DWORD written;
-    sVERIFY(size <= 0x7fffffff);
+    assert(size <= 0x7fffffff);
     sBool result = WriteFile(File, data, size, &written, 0);
 
     if(written != sU32(size))
@@ -1084,7 +1084,7 @@ sBool sRootFile::Write(const void* data, sDInt size)
       size -= chunk;
     }
 
-    sVERIFY(size > 0);
+    assert(size > 0);
     return Write(ptr, size);
   }
 }
@@ -1145,7 +1145,7 @@ sU8* sRootFile::Map(sS64 offset, sDInt size)
 
 sBool sRootFile::SetOffset(sS64 offset)
 {
-  sVERIFY(File != INVALID_HANDLE_VALUE)
+  assert(File != INVALID_HANDLE_VALUE)
 
   Offset = offset;
 
@@ -1171,8 +1171,8 @@ sS64 sRootFile::GetOffset()
 
 sBool sRootFile::SetSize(sS64 size)
 {
-  sVERIFY(File != INVALID_HANDLE_VALUE)
-  sVERIFY(!IsOverlapped)
+  assert(File != INVALID_HANDLE_VALUE)
+  assert(!IsOverlapped)
 
   if(Ok)
   {
@@ -1203,7 +1203,7 @@ sFileReadHandle sRootFile::BeginRead(sS64 offset, sDInt size, void* destbuffer, 
   if(!destbuffer)
     destbuffer = e.Buffer = new sU8[size];
 
-  sVERIFY(offset + size <= Size);
+  assert(offset + size <= Size);
 
   e.Ovl.Offset = sU32(offset);
   e.Ovl.OffsetHigh = sU32(offset >> 32);
@@ -1235,14 +1235,14 @@ sBool sRootFile::DataAvailable(sFileReadHandle handle)
 
 #endif
 
-  sVERIFY(handle >= 0 && handle < sRootFileHandler::MAX_READENTRIES);
+  assert(handle >= 0 && handle < sRootFileHandler::MAX_READENTRIES);
   sRootFileHandler::ReadEntry& e = Handler->ReadEntries[handle];
 
   DWORD read;
 
   if(GetOverlappedResult(File, &e.Ovl, &read, FALSE))
   {
-    sVERIFY((sDInt)read == e.Size);
+    assert((sDInt)read == e.Size);
     e.Active = sFALSE;
     return sTRUE;
   }
@@ -1257,7 +1257,7 @@ sBool sRootFile::DataAvailable(sFileReadHandle handle)
 
 void* sRootFile::GetData(sFileReadHandle handle)
 {
-  sVERIFY(handle >= 0 && handle < sRootFileHandler::MAX_READENTRIES);
+  assert(handle >= 0 && handle < sRootFileHandler::MAX_READENTRIES);
   sRootFileHandler::ReadEntry& e = Handler->ReadEntries[handle];
 
   if(e.Active)
@@ -1279,7 +1279,7 @@ void sRootFile::EndRead(sFileReadHandle handle)
 
 #endif
 
-  sVERIFY(handle >= 0 && handle < sRootFileHandler::MAX_READENTRIES);
+  assert(handle >= 0 && handle < sRootFileHandler::MAX_READENTRIES);
   sRootFileHandler::ReadEntry& e = Handler->ReadEntries[handle];
 
   if(e.Active)
@@ -2611,7 +2611,7 @@ void sExternMainInit(void* p_instance, void* p_hwnd)
     ReleaseDC(sExternalWindow, hdc);
   }
 
-  sVERIFY(sizeof(sChar) == 2);
+  assert(sizeof(sChar) == 2);
 
   // initialize
   CoInitialize(NULL);
@@ -2846,7 +2846,7 @@ INT WINAPI WinMain(HINSTANCE inst, HINSTANCE, LPSTR, INT)
 
   WInstance = inst;
 
-  sVERIFY(sizeof(sChar) == 2);
+  assert(sizeof(sChar) == 2);
   sInitEmergencyThread();
 
   // initialize
@@ -3110,7 +3110,7 @@ sBool sGetEnvironmentVariable(const sStringDesc& dst, const sChar* var)
   if(result && result <= sU32(dst.Size))
     return sTRUE;
 
-  sVERIFY(!result && GetLastError() == ERROR_ENVVAR_NOT_FOUND);
+  assert(!result && GetLastError() == ERROR_ENVVAR_NOT_FOUND);
   return sFALSE;
 }
 
@@ -3356,7 +3356,7 @@ void sSetTimerEvent(sInt time, sBool loop)
 
 void sTriggerEvent(sInt event)
 {
-  sVERIFY(event >= 0 && event < 0x8000);
+  assert(event >= 0 && event < 0x8000);
   PostMessage(sHWND, WM_COMMAND, event | 0x8000, 0);
 }
 
@@ -3756,7 +3756,7 @@ unsigned long sSTDCALL sThreadTrunk(void* ptr)
 
 sThread::sThread(void(*code)(sThread*, void*), sInt pri, sInt stacksize, void* userdata, sInt flags /*=0*/)
 {
-  sVERIFY(sizeof(ULONG) == sizeof(sU32));
+  assert(sizeof(ULONG) == sizeof(sU32));
 
   TerminateFlag = 0;
   Code = code;

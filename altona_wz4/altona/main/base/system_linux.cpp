@@ -634,7 +634,7 @@ sRootFile::~sRootFile()
 
 sBool sRootFile::Close()
 {
-  sVERIFY(File != -1);
+  assert(File != -1);
 
   if(MapPtr && munmap(MapPtr, MapSize) != 0)
     Ok = 0;
@@ -648,8 +648,8 @@ sBool sRootFile::Close()
 
 sBool sRootFile::Read(void* data, sDInt size)
 {
-  sVERIFY(File != -1)
-  sVERIFY(size <= 0x7fffffff);
+  assert(File != -1)
+  assert(size <= 0x7fffffff);
 
   sBool result = sTRUE;
   ssize_t rd = read(File, data, size);
@@ -666,8 +666,8 @@ sBool sRootFile::Read(void* data, sDInt size)
 
 sBool sRootFile::Write(const void* data, sDInt size)
 {
-  sVERIFY(File != -1);
-  sVERIFY(size <= 0x7fffffff);
+  assert(File != -1);
+  assert(size <= 0x7fffffff);
 
   sBool result = sTRUE;
   ssize_t wr = write(File, data, size);
@@ -684,7 +684,7 @@ sBool sRootFile::Write(const void* data, sDInt size)
 
 sU8* sRootFile::Map(sS64 offset, sDInt size)
 {
-  sVERIFY(File != -1);
+  assert(File != -1);
 
   // try mapping only once
   if(MapFailed)
@@ -726,7 +726,7 @@ sU8* sRootFile::Map(sS64 offset, sDInt size)
 
 sBool sRootFile::SetOffset(sS64 offset)
 {
-  sVERIFY(File != -1)
+  assert(File != -1)
 
   Offset = offset;
   sBool result = (lseek64(File, offset, SEEK_SET) == offset);
@@ -744,7 +744,7 @@ sS64 sRootFile::GetOffset()
 
 sBool sRootFile::SetSize(sS64 size)
 {
-  sVERIFY(File != -1);
+  assert(File != -1);
 
   if(Ok)
   {
@@ -1082,7 +1082,7 @@ void* sSTDCALL sThreadTrunk_pthread(void* ptr)
   sU64 self = pthread_self();
   sLogF(L"sys", L"New sThread started. 0x%x, id is 0x%x\n", self, th->ThreadId);
 
-  sVERIFY(pthread_equal(self, th->ThreadId));
+  assert(pthread_equal(self, th->ThreadId));
 
   th->Code(th, th->Userdata);
 
@@ -1106,7 +1106,7 @@ void* sSTDCALL sThreadTrunk_pthread(void* ptr)
 
 sThread::sThread(void(*code)(sThread*, void*), sInt pri, sInt stacksize, void* userdata, sInt flags /*=0*/)
 {
-  sVERIFY(sizeof(pthread_t) == sCONFIG_PTHREAD_T_SIZE);
+  assert(sizeof(pthread_t) == sCONFIG_PTHREAD_T_SIZE);
 
   TerminateFlag = 0;
   Code = code;
@@ -1120,7 +1120,7 @@ sThread::sThread(void(*code)(sThread*, void*), sInt pri, sInt stacksize, void* u
   // windows: ThreadHandle = CreateThread(0,stacksize,sThreadTrunk,this,0,(ULONG *)&ThreadId);
 
   int result = pthread_create((pthread_t*)ThreadHandle, sNULL, sThreadTrunk_pthread, this);
-  sVERIFY(result == 0);
+  assert(result == 0);
 
   ThreadId = *(pthread_t*)ThreadHandle;
 
@@ -2020,7 +2020,7 @@ void sLinuxJoypad::Open(const sChar* filename)
 
     if(ind >= ABS_X && ind < ABS_HAT0X) // analog axis with index ind (max 16)
     {
-      sVERIFY(ind < 16);
+      assert(ind < 16);
       State.AnalogMask |= 1 << ind;
     }
     else if(ind >= ABS_HAT0X && ind <= ABS_HAT3Y) // POV hats
@@ -2282,7 +2282,7 @@ void sInitMem1()
     {
       sInt size = DebugHeapSize;
       sDebugHeapBase = (sU8*)mmap(0, size, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS, 0, 0);
-      sVERIFY(sDebugHeapBase != (sU8*)MAP_FAILED);
+      assert(sDebugHeapBase != (sU8*)MAP_FAILED);
       sDebugHeap.Init(sDebugHeapBase, size);
       sRegisterMemHandler(sAMF_DEBUG, &sDebugHeap);
     }
@@ -2293,7 +2293,7 @@ void sInitMem1()
   if((flags & sIMF_NORTL) && sMemoryInitSize > 0)
   {
     sMainHeapBase = (sU8*)mmap(0, sMemoryInitSize, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS, 0, 0);
-    sVERIFY(sMainHeapBase != (sU8*)MAP_FAILED);
+    assert(sMainHeapBase != (sU8*)MAP_FAILED);
 
     if(flags & sIMF_CLEAR)
       sSetMem(sMainHeapBase, 0x77, sMemoryInitSize);

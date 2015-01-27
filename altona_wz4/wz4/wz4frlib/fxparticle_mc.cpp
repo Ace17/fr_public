@@ -527,7 +527,7 @@ void RNMarchingCubesBase<T>::RenderT(sInt start, sInt count, sInt thread)
       cp = cp->Next;
     }
 
-    sVERIFY(i4 == fi.pn4);
+    assert(i4 == fi.pn4);
 
     // pass 1: skip every second vertex
 
@@ -757,7 +757,7 @@ void RNMarchingCubesBase<T>::Render()
     }
   }
 
-  sVERIFY(code);
+  assert(code);
 
   // finish work
 

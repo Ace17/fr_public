@@ -269,7 +269,7 @@ protected:
 
     const sChar* GetParamName(sInt n)
     {
-      sVERIFY(n < PCount);
+      assert(n < PCount);
       return Params[n].Name;
     }
 

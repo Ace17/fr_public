@@ -225,7 +225,7 @@ sBool sHTTPClient::Connect(const sChar* url, ConnMethod method)
   }
 
   // send request
-  sVERIFY(Method == CM_GET);
+  assert(Method == CM_GET);
   static const sChar* methods[] =
   {
     L"GET ", L"PUT ", L"POST "
@@ -349,7 +349,7 @@ sBool sHTTPClient::Connect(const sChar* url, ConnMethod method)
 
 sBool sHTTPClient::Send8(const sChar* str)
 {
-  sVERIFY(!Fill);
+  assert(!Fill);
 
   if(!str)
     return sTRUE;

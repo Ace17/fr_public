@@ -998,7 +998,7 @@ static void CleanName(const sChar* s, const sStringDesc& dest)
   sChar* d = dest.Buffer;
   const sChar* ss = s;
 
-  sVERIFY(sGetStringLen(s) < dest.Size);
+  assert(sGetStringLen(s) < dest.Size);
 
   ss = s;
 
@@ -1290,8 +1290,8 @@ void XSILoader::_Mesh(sPoolString modelname, sInt jointid, sBool animated)
   ScanXSIName(meshname);
   Scan.Match('{');
 
-  sVERIFY(Shape == 0);
-  sVERIFY(Attributes.GetCount() == 0);
+  assert(Shape == 0);
+  assert(Attributes.GetCount() == 0);
 
   Shape = new ChaosMesh;
 
@@ -1581,7 +1581,7 @@ void XSILoader::_Mesh(sPoolString modelname, sInt jointid, sBool animated)
     // material
 
     ScanString(name);
-    sVERIFY(cl->Material == 0);
+    assert(cl->Material == 0);
     sPoolString mtrlName = name;
 
     if(animated && !ForceAnim && !sCheckSuffix(name, L"-anim"))
@@ -1656,8 +1656,8 @@ void XSILoader::_Mesh(sPoolString modelname, sInt jointid, sBool animated)
       if(poly)
         vertices = ScanInt();
 
-      sVERIFY(vertices < 256);
-      sVERIFY(elements < 15);
+      assert(vertices < 256);
+      assert(elements < 15);
 
       sInt pi = Shape->Properties.GetCount();
       ChaosMeshVertexProperty* prop = Shape->Properties.AddMany(vertices);

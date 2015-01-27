@@ -181,7 +181,7 @@ sBool sShaderCompile(sCompileResult& result, sInt stype, sInt dtype, const sChar
 
 void sRegisterCompiler(sInt stype, sInt dtype, sCompilerFunc func)
 {
-  sVERIFY(CompilerCount < MaxCompilerCount);
+  assert(CompilerCount < MaxCompilerCount);
   sShaderCompiler* c = &ShaderCompiler[CompilerCount++];
   c->Func = func;
   c->SrcType = stype;
@@ -206,7 +206,7 @@ const sChar8* GetProfile(sInt type)
     case sSTF_NVIDIA:   return "vp40";
     }
 
-    sVERIFY(0);
+    assert(0);
     break;
   case sSTF_PIXEL:
     switch(type & (sSTF_PLATFORM | sSTF_PROFILE))
@@ -222,10 +222,10 @@ const sChar8* GetProfile(sInt type)
     case sSTF_NVIDIA:   return "fp40";
     }
 
-    sVERIFY(0);
+    assert(0);
     break;
   case sSTF_GEOMETRY:
-    sVERIFY(0);
+    assert(0);
     break;
   }
 

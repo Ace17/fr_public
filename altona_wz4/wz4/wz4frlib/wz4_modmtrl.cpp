@@ -686,7 +686,7 @@ void ModMtrlParaAssign::Init(sInt max)
 sInt ModMtrlParaAssign::Assign(sInt count, sInt index)
 {
   ModPara* p;
-// sVERIFY(count<=16 && count>=1);
+// assert(count<=16 && count>=1);
   p = CopyLoop.AddMany(1);
   p->SourceOffset = index;
   p->Count = count;

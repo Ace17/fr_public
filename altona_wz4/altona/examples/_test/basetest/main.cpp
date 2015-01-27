@@ -662,7 +662,7 @@ sBool ArrayEngine(const sChar* cmd)
       else if(*cmd >= 'a' && *cmd <= 'z')
       {
         e = sFind(a, &TAE::Symbol, *cmd++);
-        sVERIFY(e);
+        assert(e);
         a.Rem(e);
         delete e;
       }
@@ -874,7 +874,7 @@ sBool DListEngine(const sChar* cmd)
     {
       cmd++;
       e = sFindX(a, &LN::Symbol, *cmd++);
-      sVERIFY(e);
+      assert(e);
       a.Rem(e);
       delete e;
     }
@@ -970,7 +970,7 @@ sBool DList2Engine(const sChar* cmd)
     {
       cmd++;
       e = sFindX(a, &LN::Symbol, *cmd++);
-      sVERIFY(e);
+      assert(e);
       a.Rem(e);
       delete e;
     }

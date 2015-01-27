@@ -131,7 +131,7 @@ void sColorGradient::CalcUnwarped(sF32 time, sVector4& col)
 {
   sInt max = Keys.GetCount();
   sInt pos;
-  sVERIFY(max >= 2);
+  assert(max >= 2);
 
   if(time <= Keys[0].Time)
   {
@@ -147,7 +147,7 @@ void sColorGradient::CalcUnwarped(sF32 time, sVector4& col)
       if(time <= Keys[pos + 1].Time)
         break;
 
-    sVERIFY(pos < max - 1);
+    assert(pos < max - 1);
 
     sVector4 dif(Keys[pos + 1].Color - Keys[pos].Color);
     sVector4 d0, d1;
@@ -353,7 +353,7 @@ void sColorPickerWindow::Init(sU32* u, sObject* tagref, sBool alpha)
 
 void sColorPickerWindow::Init(sColorGradient* grad, sBool alpha)
 {
-  sVERIFY(grad->Keys.GetCount() >= 2);
+  assert(grad->Keys.GetCount() >= 2);
   Gradient = grad;
 
   if(0)   // test serialisation

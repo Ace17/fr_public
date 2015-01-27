@@ -116,7 +116,7 @@ sBool wBuilder::Parse(wOp* root)
   CallOp = 0;
   CurrentCallId = 0;
   LoopFlag = 0;
-  sVERIFY((CallId & 0x80000000) == 0)   // hope two billion is enough. if this fails, we have to reset all callid's everywhere. would not be that bad.
+  assert((CallId & 0x80000000) == 0)   // hope two billion is enough. if this fails, we have to reset all callid's everywhere. would not be that bad.
 
   while(root && root->Bypass)
     root = root->Inputs.GetCount() > 0 ? root->Inputs[0] : 0;
@@ -356,7 +356,7 @@ wNode* wBuilder::ParseR(wOp* op, sInt recursion)
       node->ScriptOp = op;
 // node->OutType = CallOp->Class->OutputType;
       node->Inputs[0] = CallInputs->Inputs[n];
-      sVERIFY(node->Inputs[0])
+      assert(node->Inputs[0])
       node->OutType = node->Inputs[0]->OutType;
       wNode* fn;
       sFORALL(FakeInputs, fn)
@@ -413,7 +413,7 @@ wNode* wBuilder::ParseR(wOp* op, sInt recursion)
       {
         if(inputloop.Get(i) >= 0)
         {
-          sVERIFY(inputs[i]->Class->Flags & wCF_LOOP)
+          assert(inputs[i]->Class->Flags & wCF_LOOP)
 
           if(inputs[i]->Inputs.GetCount() > 0 && inputs[i]->Inputs[0])
           {
@@ -554,7 +554,7 @@ sBool wBuilder::Optimize(sBool cache)
   wNode* node;
   wNode* in;
 
-  sVERIFY(Root);
+  assert(Root);
 
   // remove nops
 
@@ -752,8 +752,8 @@ wCommand* wBuilder::MakeCommand(wExecutive& exe, wOp* op, wCommand** inputs, sIn
 
 wCommand* wBuilder::OutputR(wExecutive& exe, wNode* node)
 {
-  sVERIFY(node);
-  sVERIFY(node->LoadCache == 0);
+  assert(node);
+  assert(node->LoadCache == 0);
 
   sInt ic = 0;
   sInt fc = 0;
@@ -780,7 +780,7 @@ wCommand* wBuilder::OutputR(wExecutive& exe, wNode* node)
       {
         if(node->Inputs[i]->LoadCache)
         {
-          sVERIFY(node->Inputs[i]->Op->Cache);
+          assert(node->Inputs[i]->Op->Cache);
           wCommand* lc = exe.MemPool->Alloc<wCommand>();
           lc->Init();
           lc->Output = node->Inputs[i]->Op->Cache;
@@ -800,7 +800,7 @@ wCommand* wBuilder::OutputR(wExecutive& exe, wNode* node)
           objs[i] = node->Inputs[i]->StoreCacheDone;
         }
 
-        sVERIFY(objs[i]);
+        assert(objs[i]);
       }
     }
 
@@ -811,7 +811,7 @@ wCommand* wBuilder::OutputR(wExecutive& exe, wNode* node)
   cmd->LoopName = node->LoopName;
   cmd->LoopValue = node->LoopValue;
   cmd->LoopFlag = node->LoopFlag;
-  sVERIFY(cmd);
+  assert(cmd);
 
   if(node->StoreCache)
     cmd->StoreCacheOp = node->Op;
@@ -979,7 +979,7 @@ wObject* wBuilder::Execute(wExecutive& exe, wOp* root, sBool honorslow, sBool pr
   if(Root->LoadCache)             // bypass execution when loading directly
   {
     result = Root->Op->Cache;
-    sVERIFY(result);
+    assert(result);
     result->AddRef();
   }
   else
@@ -1074,7 +1074,7 @@ wObject* wBuilder::FindCache(wOp* root)
   if(Root->LoadCache)             // bypass execution when loading directly
   {
     result = Root->Op->Cache;
-    sVERIFY(result);
+    assert(result);
     result->AddRef();
   }
 

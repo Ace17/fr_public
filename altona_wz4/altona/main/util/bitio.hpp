@@ -54,8 +54,8 @@ public:
   sINLINE void PutBits(sU32 bits, sInt count) // never write more than 24 bits at once!
   {
 #if sCONFIG_BUILD_DEBUG // yes, not sDEBUG - only check in actual debug builds.
-    sVERIFY(count <= 24);
-    sVERIFY(bits < (1u << count));
+    assert(count <= 24);
+    assert(bits < (1u << count));
 #endif
 
     BitsLeft -= count;
@@ -113,7 +113,7 @@ public:
   sINLINE void SkipBits(sInt count)
   {
 #if sCONFIG_BUILD_DEBUG
-    sVERIFY(count <= 24);
+    assert(count <= 24);
 #endif
 
     BitBuffer <<= count;
@@ -194,7 +194,7 @@ public:
   sINLINE void SkipBits(sInt count)
   {
 #if sCONFIG_BUILD_DEBUG
-    sVERIFY(count <= 24);
+    assert(count <= 24);
 #endif
 
     BitBuffer <<= count;

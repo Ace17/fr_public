@@ -360,7 +360,7 @@ RPMesh::~RPMesh()
 
 void RPMesh::Init(Wz4Mesh* mesh)
 {
-  sVERIFY(mesh != 0);
+  assert(mesh != 0);
   Mesh = mesh;
   Mesh->AddRef();
 }
@@ -1255,7 +1255,7 @@ void RNChunks::Prepare(Wz4RenderContext* ctx)
 
   sInt mode = Mode & 15;
   sInt animmode = Para.Direction & 16;
-  sVERIFY(mode == 0 || mode == 1 || mode == 2);
+  assert(mode == 0 || mode == 1 || mode == 2);
 
   sBool dorot = !(Para.RotStart.LengthSq() == 0.0f && Para.RotSpeed.LengthSq() == 0.0f && Para.RotRand.LengthSq() == 0.0f);
   sBool dospiral = !(Para.SpiralRand == 0.0f && Para.SpiralSpeed == 0.0f && Para.SpiralRandSpeed == 0.0f);
@@ -1408,7 +1408,7 @@ void RNChunks::Render(Wz4RenderContext* ctx)
   else if(BoneCount)
   {
     sInt Count = PInfo[0].Alloc;
-    sVERIFY(Count == Parts.GetCount());
+    assert(Count == Parts.GetCount());
     sInt max = (Count * Matrices.GetCount() + BoneCount - 1) / BoneCount * BoneCount;
 
     sMatrix34CM* mats = FBMUse(max);
@@ -1459,7 +1459,7 @@ void RNChunks::Render(Wz4RenderContext* ctx)
           sFORALL(Matrices, matp)
           mats[n++] = p->Mat * sMatrix34(*matp);
 
-        sVERIFY(n <= PInfo[0].Used * Matrices.GetCount());
+        assert(n <= PInfo[0].Used * Matrices.GetCount());
 
         Meshes[i]->RenderInst(ctx->RenderMode, Para.LightEnv, n, mats, (Para.Direction & 0x20) ? PInfo[0].Colors : 0);
       }
@@ -1638,7 +1638,7 @@ RNMetaballs::~RNMetaballs()
 void RNMetaballs::Init()
 {
   Para = ParaBase;
-  sVERIFY(Para.Peels <= MaxPeel);
+  assert(Para.Peels <= MaxPeel);
   switch(Para.Flags & 3)
   {
   default:
@@ -1755,7 +1755,7 @@ void RNMetaballs::Prepare(Wz4RenderContext* ctx)
     }
 
     PartGeo->EndLoadVB();
-    sVERIFY(vc == PInfo.Used);
+    assert(vc == PInfo.Used);
   }
 
   // peel
@@ -2708,7 +2708,7 @@ void RNTrails::Prepare(Wz4RenderContext* ctx)
   }
 
   Geo->EndLoadVB();
-  sVERIFY(test == Current);
+  assert(test == Current);
 
   if(faces == 2)
   {
@@ -3615,7 +3615,7 @@ void RPFromVertex::Init(Wz4Mesh* mesh)
   sRandom rnd;
   rnd.Seed(Para.RandomSeed);
 
-  sVERIFY(mesh != 0);
+  assert(mesh != 0);
 
   // build list of all positions (including duplicates)
   sFORALL(mesh->Vertices, vp)
@@ -3686,7 +3686,7 @@ void RPMorph::Init(sArray<Wz4Mesh*> meshArray)
 
   sFORALL(meshArray, meshTmp)
   {
-    sVERIFY(meshTmp != 0);
+    assert(meshTmp != 0);
 
     sFORALL(meshTmp->Vertices, vp)
     {

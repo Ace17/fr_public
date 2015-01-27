@@ -76,8 +76,8 @@ sInt sSolveQuadratic(sF32 t[], sF32 a, sF32 b, sF32 c)
 sF64 sRombergIntegral(sIntegrand f_, void* user, sF64 a, sF64 b, int maxOrder, sF64 maxError)
 {
   sF64 t[20];
-  sVERIFY(0 < maxOrder && maxOrder <= 20);
-  sVERIFY(a <= b);
+  assert(0 < maxOrder && maxOrder <= 20);
+  assert(a <= b);
 
   if(a == b)
     return 0.0f;
@@ -2710,7 +2710,7 @@ sInt sRay::IntersectPlane(sF32& t, sVector4Arg plane) const
 
 sBool sRay::HitBilinearPatch(sF32& dist, const sVector31& p00, const sVector31& p01, const sVector31& p10, const sVector31& p11, sF32* uOut, sF32* vOut) const
 {
-  sVERIFY((uOut && vOut) || (!uOut && !vOut))
+  assert((uOut && vOut) || (!uOut && !vOut))
 
   // Algorithm by Ramsey, Potter, Hansen, "Ray Bilinear Patch Intersections",
   // Journal of Graphics Tools Vol. 9 No. 3 (2004)

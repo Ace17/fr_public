@@ -623,7 +623,7 @@ void sChoiceControl::OnCalcSize()
 void sChoiceControl::OnPaint2D()
 {
   ChoiceInfo* ci;
-  sVERIFY(Values.GetCount() > 0);
+  assert(Values.GetCount() > 0);
   ChoiceMulti* cm;
 
   sInt flags = Pressed ? 1 : 0;
@@ -813,7 +813,7 @@ void sChoiceControl::FakeDropdown(sInt x, sInt y)
 
   sFORALL(Choices, ci)
   {
-    sVERIFY(ci->Value < 0x40000000);
+    assert(ci->Value < 0x40000000);
     mf->AddItem(ci->Label, sMessage(this, &sChoiceControl::SetValue, ci->Value), 0, ci->Length, n++ / max);
   }
   mf->PopupParent = this;
@@ -1968,7 +1968,7 @@ void sFlagControl::MakeChoice(sInt n, const sStringDesc& desc)
   sChar* d = desc.Buffer;
   sChar* e = desc.Buffer + desc.Size;
 
-  sVERIFY(desc.Size > 0);
+  assert(desc.Size > 0);
 
   while(n > 0)
   {

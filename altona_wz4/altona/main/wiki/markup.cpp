@@ -181,8 +181,8 @@ void SpellChecker::AddWords(const sChar* s, sInt len)
 
 void SpellChecker::AddWord(const sChar* word, sInt len)
 {
-  sVERIFY(len >= 0);
-  sVERIFY(sizeof(sChar) == 2);
+  assert(len >= 0);
+  assert(sizeof(sChar) == 2);
   sChar* buffer = Pool->Alloc<sChar>(len + 1);
 
   sInt mode = 0;
@@ -868,7 +868,7 @@ void Markup::ChainWord(sLBWord* word)
   {
     if(ChainLastWord)
     {
-      sVERIFY(ChainLastWord->CursorTextStart <= word->Text);
+      assert(ChainLastWord->CursorTextStart <= word->Text);
       ChainLastWord->CursorTextEnd = word->Text;
     }
 
@@ -1003,7 +1003,7 @@ void Markup::AddTextR(const MarkupStyle& style, const MarkupStyle* oldstyle, sLB
 
     if(s < e)
     {
-      sVERIFY(*s == '[');
+      assert(*s == '[');
       MarkupStyle newstyle(style);
 
       s++;

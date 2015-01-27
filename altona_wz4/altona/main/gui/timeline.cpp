@@ -44,7 +44,7 @@ void sTimerTimeline::OnFrame()
 
     if(LoopEnable)
     {
-      sVERIFY(LoopStart <= LoopEnd);
+      assert(LoopStart <= LoopEnd);
       sInt loopStartMs = sMulDiv(LoopStart, 1000, Speed);
       sInt loopEndMs = sMulDiv(LoopEnd, 1000, Speed);
 
@@ -88,8 +88,8 @@ void sTimerTimeline::AddNotify(sWindow* win)
 
 void sTimerTimeline::SetTimeline(sInt end, sInt speed)
 {
-  sVERIFY(end > 0);
-  sVERIFY(speed > 0);
+  assert(end > 0);
+  assert(speed > 0);
 
   BeatEnd = end;
   Speed = speed;
@@ -99,7 +99,7 @@ void sTimerTimeline::SetTimeline(sInt end, sInt speed)
 
 void sTimerTimeline::SetLoop(sInt start, sInt end)
 {
-  sVERIFY(start <= end);
+  assert(start <= end);
   LoopStart = start;
   LoopEnd = end;
   sGui->Notify(LoopStart);
@@ -196,7 +196,7 @@ sMusicTimeline::sMusicTimeline(sMusicPlayer* music)
   Playing = 0;
   Scratching = 0;
   Music = music;
-  sVERIFY(sMusicTimelinePlayer == 0);
+  assert(sMusicTimelinePlayer == 0);
   sMusicTimelinePlayer = this;
   TotalSamples = 0;
   MusicSamples = 0;
@@ -230,7 +230,7 @@ void sMusicTimeline::OnFrame()
       sBool inloop1 = Time>=LoopStart && Time<LoopEnd;
       if(inloop0 && !inloop1)
       {
-        sVERIFY(LoopStart<LoopEnd);
+        assert(LoopStart<LoopEnd);
         while(Time>=LoopEnd)
           Time -= LoopEnd-LoopStart;
       }
@@ -257,8 +257,8 @@ void sMusicTimeline::AddNotify(sWindow* win)
 
 void sMusicTimeline::SetTimeline(sInt end, sInt speed)
 {
-  sVERIFY(end > 0);
-  sVERIFY(speed > 0);
+  assert(end > 0);
+  assert(speed > 0);
 
   BeatEnd = end;
   Speed = speed;
@@ -268,7 +268,7 @@ void sMusicTimeline::SetTimeline(sInt end, sInt speed)
 
 void sMusicTimeline::SetLoop(sInt start, sInt end)
 {
-  sVERIFY(start <= end);
+  assert(start <= end);
   LoopStart = start;
   LoopEnd = end;
   sGui->Notify(LoopStart);

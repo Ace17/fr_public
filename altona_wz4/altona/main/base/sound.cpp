@@ -210,7 +210,7 @@ static void SoundThreadCode(sThread* thread, void* userdata)
               DXSOReadStart += DXSOSamples;
             }
 
-            sVERIFY((sInt)(count1 + count2) == (size * SAMPLESIZE));
+            assert((sInt)(count1 + count2) == (size * SAMPLESIZE));
 
             if(DXSOHandler)
             {
@@ -487,7 +487,7 @@ void sSoundInput()
 // DXSIReadStart += DXSISamples;
           }
 
-          sVERIFY((sInt)(count1 + count2) == (size * 4));
+          assert((sInt)(count1 + count2) == (size * 4));
 
           if(DXSIHandler)
           {

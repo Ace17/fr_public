@@ -98,7 +98,7 @@ public:
 
   void Release()
   {
-    sVERIFY(RefCount > 0);
+    assert(RefCount > 0);
     RefCount--; /*if(RefCount==0) delete this;*//* do not delete! */
   }
 
@@ -139,7 +139,7 @@ public:
 
   void Release()
   {
-    sVERIFY(RefCount > 0);
+    assert(RefCount > 0);
     RefCount--; /*if(RefCount==0) delete this;*//* do not delete! */
   }
 
@@ -175,7 +175,7 @@ public:
 
   void Release()
   {
-    sVERIFY(RefCount > 0);
+    assert(RefCount > 0);
     RefCount--; /*if(RefCount==0) delete this;*//* do not delete! */
   }
 

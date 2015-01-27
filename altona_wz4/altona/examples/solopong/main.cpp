@@ -28,7 +28,7 @@ static sInput2Scheme* Scheme = 0;
 
 void DrawRect(const sFRect& r, sU32 col)
 {
-  sVERIFY(RectUsed < RectMax);
+  assert(RectUsed < RectMax);
   Rects[RectUsed] = r;
   Colors[RectUsed] = col;
   RectUsed++;
@@ -117,7 +117,7 @@ void MyApp::OnPaint3D()
   for(sInt i = 0; i < Timer.GetSlices(); i++)
     Game->OnTick();
 
-  sVERIFY(RectUsed == 0);
+  assert(RectUsed == 0);
   Game->OnPaint();
 
   const sU32 bc = 0xff202020;

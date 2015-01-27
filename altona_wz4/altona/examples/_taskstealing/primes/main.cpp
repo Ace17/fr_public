@@ -87,7 +87,7 @@ void sMain()
       wl->AddTask(wl->NewTask(task, &datas[datai], c, 0));
       datai++;
       n += c;
-      sVERIFY(datai < max);
+      assert(datai < max);
     }
 
     wl->Start();

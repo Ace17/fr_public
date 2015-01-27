@@ -520,7 +520,7 @@ private:
 public:
   sScopeLock(sThreadLock* l) : Lock(l)
   {
-    sVERIFY(l);
+    assert(l);
     Lock->Lock();
   }
 
@@ -812,7 +812,7 @@ public:
   {
     Write = 0;
     Read = 0;
-    sVERIFY(sIsPower2(max));
+    assert(sIsPower2(max));
   }
 
   ~sLocklessQueue()
@@ -829,7 +829,7 @@ public:
   void AddTail(T* e)
   {
     sInt i = Write;
-    sVERIFY(i < Read + max);
+    assert(i < Read + max);
     Data[i & (max - 1)] = e;
     sWriteBarrier();
     Write = i + 1;
@@ -882,7 +882,7 @@ public:
   {
     Write = 0;
     Read = 0;
-    sVERIFY(sIsPower2(max));
+    assert(sIsPower2(max));
   }
 
   ~sLockQueue()
@@ -931,7 +931,7 @@ public:
   const T& Front()
   {
     ScopeLock s(&Lock);
-    sVERIFY(!IsEmpty());
+    assert(!IsEmpty());
     return Data[Read & (max - 1)];
   } // WARNING: may break when class is used by more than one consumer!
 

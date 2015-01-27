@@ -594,12 +594,12 @@ sF32 tAABBoxOctree::GetDistanceToTriangleSq(sInt _tri, sVector31& _p, sBool& _is
   }
   else if(t == 0.0)
   {
-    sVERIFY(s < 1.0f);
+    assert(s < 1.0f);
     n = edges[tris[_tri].e1].n;
   }
   else if(s == 0.0)
   {
-    sVERIFY(t < 1.0f);
+    assert(t < 1.0f);
     n = edges[tris[_tri].e3].n;
   }
   else if((s + t) == 1.0)
@@ -611,7 +611,7 @@ sF32 tAABBoxOctree::GetDistanceToTriangleSq(sInt _tri, sVector31& _p, sBool& _is
     n = tris[_tri].n;
   }
 
-// sVERIFY( (s+t)<1.0f);
+// assert( (s+t)<1.0f);
 
   sVector30 vd = _a - _p;
   vd.Unit();
@@ -619,7 +619,7 @@ sF32 tAABBoxOctree::GetDistanceToTriangleSq(sInt _tri, sVector31& _p, sBool& _is
   _isneg = sFALSE;
 // if (vd.Length()>0.0f)
   {
-    sVERIFY(n.LengthSq() > 0.0f)
+    assert(n.LengthSq() > 0.0f)
     sF32 angle = vd ^ n;
 
     if(angle >= (0.01f))
@@ -730,7 +730,7 @@ sF32 tAABBoxOctree::GetClosestDistance(sVector31& _p, unsigned int* _id, sBool _
       }
     }
 
-    sVERIFY(id != -1);
+    assert(id != -1);
 
     d = sFSqrt(d);
 
@@ -743,7 +743,7 @@ sF32 tAABBoxOctree::GetClosestDistance(sVector31& _p, unsigned int* _id, sBool _
     sBool isneg = false;
     GetClosestDistance(head, p, d, id, m, isneg);
 
-    // sVERIFY(id!=-1);
+    // assert(id!=-1);
     if(id == -1)
       return 0.0f;
 
@@ -1018,9 +1018,9 @@ tSDF::~tSDF()
 
 void tSDF::Init(sChar* fname)
 {
-  sVERIFY(fname);
+  assert(fname);
   sFile* fp = sCreateFile((const sChar*)fname, sFA_READ);
-  sVERIFY(fp);
+  assert(fp);
 
   sBool b;
   sU32 id;
@@ -1032,9 +1032,9 @@ void tSDF::Init(sChar* fname)
   b = b && fp->Read(&DimZ, 4);
   b = b && fp->Read(&InBox, sizeof(InBox));
 
-  sVERIFY(DimX > 0);
-  sVERIFY(DimY > 0);
-  sVERIFY(DimZ > 0);
+  assert(DimX > 0);
+  assert(DimY > 0);
+  assert(DimZ > 0);
 
   size = DimX * DimY * DimZ;
   SDF = new sF32[size];
@@ -1062,7 +1062,7 @@ void tSDF::Init(sChar* fname)
   STBY = (DimY - 1) / wy;
   STBZ = (DimZ - 1) / wz;
 
-  sVERIFY(b);
+  assert(b);
   delete fp;
 }
 
@@ -1075,7 +1075,7 @@ struct tSDF_Create
 
 void TaskCodeSDF(sStsManager* m, sStsThread* th, sInt start, sInt count, void* data)
 {
-  sVERIFY(count == 1);
+  assert(count == 1);
   sInt z = start;
   sVector31 p;
   tSDF_Create* mi = (tSDF_Create*)data;
@@ -1100,8 +1100,8 @@ void TaskCodeSDF(sStsManager* m, sStsThread* th, sInt start, sInt count, void* d
 
 void tSDF::Init(tAABBoxOctree* oct, sInt depth, sBool bruteforce, sF32 guardband)
 {
-  sVERIFY(oct);
-  sVERIFY(depth >= 0 && depth < 12);
+  assert(oct);
+  assert(depth >= 0 && depth < 12);
 
   GuardBand = guardband;
 
@@ -1112,9 +1112,9 @@ void tSDF::Init(tAABBoxOctree* oct, sInt depth, sBool bruteforce, sF32 guardband
   sF32 wy = Box.Max.y - Box.Min.y;
   sF32 wz = Box.Max.z - Box.Min.z;
 
-  sVERIFY(wx >= 0);
-  sVERIFY(wy >= 0);
-  sVERIFY(wz >= 0);
+  assert(wx >= 0);
+  assert(wy >= 0);
+  assert(wz >= 0);
 
   // Determine max
   sF32 w = sMax(sMax(wx, wy), wz);
@@ -1217,14 +1217,14 @@ void tSDF::Init(tAABBoxOctree* oct, sInt depth, sBool bruteforce, sF32 guardband
 
 void tSDF::Init(sF32* distancefield, sAABBox& box, sInt dimx, sInt dimy, sInt dimz)
 {
-  sVERIFY(0);
+  assert(0);
 }
 
 void tSDF::WriteToFile(sChar* fname)
 {
-  sVERIFY(fname);
+  assert(fname);
   sFile* fp = sCreateFile((const sChar*)fname, sFA_WRITE);
-  sVERIFY(fp);
+  assert(fp);
   char id[4] = "SDF";
   sBool b = fp->Write(id, 4);
   b = b && fp->Write(&DimX, 4);

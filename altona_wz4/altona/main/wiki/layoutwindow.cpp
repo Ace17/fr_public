@@ -351,7 +351,7 @@ void sLBHtmlState::End(sTextBuffer& tb)
 
 void sLBHtmlState::Init(sU32 tc, sU32 bc, sFontResource* f)
 {
-  sVERIFY(!Active);
+  assert(!Active);
   TextColor = tc;
   BackColor = bc;
   Font = f;
@@ -438,7 +438,7 @@ void sLBPdfState::RectFrame(const sRect& r, sU32 color, sInt w)
   Rect(r.x0, r.y0 + w, r.x0 + w, r.y1 - w, color);
   Rect(r.x1 - w, r.y0 + w, r.x1, r.y1 - w, color);
 /*
-   sVERIFY(SX==-SY);
+   assert(SX==-SY);
 
    sFRect rr;
    rr.x0 = r.x0*SX+DX;
@@ -685,7 +685,7 @@ void sLayoutBox::MakePDF(sLBPdfState* pdf)
 
 void sLayoutBox::PrepX()
 {
-  sVERIFY(!Childs);
+  assert(!Childs);
 }
 
 void sLayoutBox::PrepY()
@@ -838,7 +838,7 @@ sLBText::~sLBText()
 
 void sLBText::PrepX()
 {
-  sVERIFY(!Childs);
+  assert(!Childs);
   OptX = Font->Font->GetWidth(Text);
 
   MinX = 0;
@@ -943,7 +943,7 @@ sLBWord::~sLBWord()
 
 void sLBWord::PrepX()
 {
-  sVERIFY(!Childs);
+  assert(!Childs);
   MinX = OptX = Font->Font->GetWidth(EscapedText, EscapedLength);
 }
 
@@ -1108,7 +1108,7 @@ const sChar* sLBGlue::Click(sInt x, sInt y)
 
 void sLBGlue::PrepX()
 {
-  sVERIFY(!Childs);
+  assert(!Childs);
 
   if(GlueWeight)
     MinX = OptX = Font->Font->GetWidth(L" ");
@@ -1644,7 +1644,7 @@ void sLBImage::PrepX()
   if(ScaledX == 0)
     OptX = 1;
 
-  sVERIFY(Childs == 0);
+  assert(Childs == 0);
 }
 
 /*
@@ -1793,7 +1793,7 @@ sLBSpacer::~sLBSpacer()
 void sLBSpacer::PrepX()
 {
   MinX = OptX = SpaceX;
-  sVERIFY(Childs == 0);
+  assert(Childs == 0);
 }
 
 void sLBSpacer::PrepY()
@@ -1909,7 +1909,7 @@ void sLBTable2::PrepX()
     count++;
   }
 
-  sVERIFY(count == CountX * CountY);
+  assert(count == CountX * CountY);
 
   // calc min and opt
 
@@ -2341,7 +2341,7 @@ void sLBBorder::PrepX()
 {
   if(Childs)
   {
-    sVERIFY(!Childs->Next);
+    assert(!Childs->Next);
 
     MinX = Childs->MinX + Extend.x0 + Extend.x1;
     OptX = Childs->OptX + Extend.x0 + Extend.x1;

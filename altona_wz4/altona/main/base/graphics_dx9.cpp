@@ -335,7 +335,7 @@ void InitGFX(sInt flags_, sInt xs_, sInt ys_)
 
   if(flags2 & sSM_MULTISCREEN)
   {
-    sVERIFY(flags2 & sSM_FULLSCREEN);
+    assert(flags2 & sSM_FULLSCREEN);
     DXScreenCount = DXCaps.NumberOfAdaptersInGroup;
 
     if(DXScreenCount < 1)
@@ -365,7 +365,7 @@ void InitGFX(sInt flags_, sInt xs_, sInt ys_)
   {
     RECT r;
     sU32 result = GetClientRect(sHWND, &r);
-    sVERIFY(result);
+    assert(result);
     DXScreenMode.ScreenX = r.right - r.left;
     DXScreenMode.ScreenY = r.bottom - r.top;
 
@@ -402,7 +402,7 @@ void InitGFX(sInt flags_, sInt xs_, sInt ys_)
     DXRTCount = 0;
     sClear(DXRenderTargets);
 
-    sVERIFY(sHWND != 0);
+    assert(sHWND != 0);
     timeBeginPeriod(1);
     restart = 0;
 
@@ -490,7 +490,7 @@ void InitGFX(sInt flags_, sInt xs_, sInt ys_)
     for(sInt i = 0; i < max; i++)
       DXRenderTargets[i]->OnLostDevice(sTRUE);
 
-    sVERIFY(max == DXRTCount);                      // check if the trick really worked...
+    assert(max == DXRTCount);                      // check if the trick really worked...
     sGeoBufferReset1();
     sFORALL(*AllOccQueryNodes, qn)
     DXErr(DXDev->CreateQuery(D3DQUERYTYPE_OCCLUSION, &qn->Query))
@@ -671,7 +671,7 @@ void ExitGFX()
     }
   }
 
-// sVERIFY(DXTotalTextureMem==0);
+// assert(DXTotalTextureMem==0);
 }
 
 void ResizeGFX(sInt x, sInt y)  // this is called when the windows size changes
@@ -1207,7 +1207,7 @@ void sSetRendertargetPrivate(sTextureBase* tex, sInt xs, sInt ys, const sRect* v
   // never use main zbuffer for rendertargets because of fsaa
   // never assume rendertargets can be as big as screen: IPP-algos need no zbuffer
 
-  sVERIFY(Render3DInProgress);
+  assert(Render3DInProgress);
 
   sTexture2D* zb = 0;
 
@@ -1244,18 +1244,18 @@ void sSetRendertargetPrivate(sTextureBase* tex, sInt xs, sInt ys, const sRect* v
     }
     else
     {
-      sVERIFY(tex);
-      sVERIFY((tex->Flags & sTEX_TYPE_MASK) == sTEX_2D);
+      assert(tex);
+      assert((tex->Flags & sTEX_TYPE_MASK) == sTEX_2D);
 
       if(tex->MultiSurf2D && !(flags & sRTF_NO_MULTISAMPLING))
       {
-        sVERIFY(miplevel == 0);
+        assert(miplevel == 0);
         DXTargetSurf = tex->MultiSurf2D;
         DXTargetSurf->AddRef();
       }
       else if(tex->Surf2D)
       {
-        sVERIFY(miplevel == 0);
+        assert(miplevel == 0);
         DXTargetSurf = tex->Surf2D;
         DXTargetSurf->AddRef();
       }
@@ -1286,7 +1286,7 @@ void sSetRendertargetPrivate(sTextureBase* tex, sInt xs, sInt ys, const sRect* v
 
     if(zb)
     {
-      sVERIFY((zb->Flags & sTEX_TYPE_MASK) == sTEX_2D);
+      assert((zb->Flags & sTEX_TYPE_MASK) == sTEX_2D);
 
       if(zb->MultiSurf2D && !(flags & sRTF_NO_MULTISAMPLING))
       {
@@ -1386,15 +1386,15 @@ void sSetRendertarget(const sRect* vrp, sTexture2D* tex, sInt flags, sU32 clearc
 
 void sSetRendertarget(const sRect* vrp, sInt flags, sU32 clearcolor, sTexture2D** tex, sInt count)
 {
-  sVERIFY(count >= 2);
-  sVERIFY(tex);
-  sVERIFY(tex[0]);
+  assert(count >= 2);
+  assert(tex);
+  assert(tex[0]);
 
   for(sInt i = 1; i < count; i++)
   {
-    sVERIFY(tex[0]->SizeX == tex[i]->SizeX);
-    sVERIFY(tex[0]->SizeY == tex[i]->SizeY);
-    sVERIFY(tex[0]->BitsPerPixel == tex[i]->BitsPerPixel);    // most old cards require this!
+    assert(tex[0]->SizeX == tex[i]->SizeX);
+    assert(tex[0]->SizeY == tex[i]->SizeY);
+    assert(tex[0]->BitsPerPixel == tex[i]->BitsPerPixel);    // most old cards require this!
   }
 
   IDirect3DSurface9* dest;
@@ -1432,7 +1432,7 @@ void sSetRendertargetCube(sTextureCube* tex, sTexCubeFace cf, sInt flags, sU32 c
 {
   IDirect3DSurface9* dest;
 
-  sVERIFY(tex);
+  assert(tex);
 
   DXErr(tex->TexCube->GetCubeMapSurface(static_cast<D3DCUBEMAP_FACES>(cf), 0, &dest));
 
@@ -1472,7 +1472,7 @@ void sGrabScreen(class sTexture2D* tex, sGrabFilterFlags filter, const sRect* ds
   const sInt PointMask = (D3DPTFILTERCAPS_MINFPOINT | D3DPTFILTERCAPS_MAGFPOINT);
   const sInt LinearMask = (D3DPTFILTERCAPS_MINFPOINT | D3DPTFILTERCAPS_MAGFPOINT);
 
-  sVERIFY((filter == sGFF_NONE) ||
+  assert((filter == sGFF_NONE) ||
           ((filter == sGFF_POINT) && (DXCaps.StretchRectFilterCaps & PointMask) == PointMask) ||
           ((filter == sGFF_LINEAR) && (DXCaps.StretchRectFilterCaps & LinearMask) == LinearMask));
 
@@ -1492,7 +1492,7 @@ void sSetScreen(class sTexture2D* tex, sGrabFilterFlags filter, const sRect* dst
   const sInt PointMask = (D3DPTFILTERCAPS_MINFPOINT | D3DPTFILTERCAPS_MAGFPOINT);
   const sInt LinearMask = (D3DPTFILTERCAPS_MINFPOINT | D3DPTFILTERCAPS_MAGFPOINT);
 
-  sVERIFY((filter == sGFF_NONE) ||
+  assert((filter == sGFF_NONE) ||
           ((filter == sGFF_POINT) && (DXCaps.StretchRectFilterCaps & PointMask) == PointMask) ||
           ((filter == sGFF_LINEAR) && (DXCaps.StretchRectFilterCaps & LinearMask) == LinearMask));
 
@@ -1521,7 +1521,7 @@ void sSetScreen(const sRect& rect, sU32* data)
 
   screen = DXBackBuffer->Surf2D;
   DXErr(screen->GetDesc(&desc));
-  sVERIFY(desc.Format == D3DFMT_X8R8G8B8);
+  assert(desc.Format == D3DFMT_X8R8G8B8);
 
   xs = rect.SizeX();
   ys = rect.SizeY();
@@ -1572,7 +1572,7 @@ void sSetTarget(const sTargetPara& para)
 {
   IDirect3DSurface9* dest;
   sTextureBase* tex;
-  sVERIFY(Render3DInProgress);
+  assert(Render3DInProgress);
   sBool change = 0;
 
   // clear flags
@@ -1602,7 +1602,7 @@ void sSetTarget(const sTargetPara& para)
   while(para.Target[count] && count < 4)
     count++;
 
-  sVERIFY(count > 0);
+  assert(count > 0);
 
   // will we overwrite all?
 
@@ -1622,9 +1622,9 @@ void sSetTarget(const sTargetPara& para)
 
   for(sInt i = 1; i < count; i++)
   {
-    sVERIFY(para.Target[0]->SizeX == para.Target[i]->SizeX);
-    sVERIFY(para.Target[0]->SizeY == para.Target[i]->SizeY);
-    sVERIFY(para.Target[0]->BitsPerPixel == para.Target[i]->BitsPerPixel);    // most old cards require this!
+    assert(para.Target[0]->SizeX == para.Target[i]->SizeX);
+    assert(para.Target[0]->SizeY == para.Target[i]->SizeY);
+    assert(para.Target[0]->BitsPerPixel == para.Target[i]->BitsPerPixel);    // most old cards require this!
   }
 
   // check for MSAA
@@ -1677,7 +1677,7 @@ void sSetTarget(const sTargetPara& para)
     else if(tex->Surf2D)
     {
       sResolveTargetPrivate(tex);
-      sVERIFY(para.Mipmap == 0);
+      assert(para.Mipmap == 0);
       dest = tex->Surf2D;
       dest->AddRef();
     }
@@ -1867,7 +1867,7 @@ void sResolveTargetPrivate(sTextureBase* tex)
      && !(tex->ResolveFlags & sTextureBasePrivate::RF_SingleValid)
      && (tex->ResolveFlags & sTextureBasePrivate::RF_Resolve))
   {
-    sVERIFY(tex->MultiSurf2D);
+    assert(tex->MultiSurf2D);
     IDirect3DSurface9* dest = tex->Surf2D;
 
     if(dest)
@@ -1968,8 +1968,8 @@ void sCopyTexture(const sCopyTexturePara& para)
 
 sGpuToCpu::sGpuToCpu(sInt flags, sInt xs, sInt ys)
 {
-  sVERIFY(xs > 0 && ys > 0);
-  sVERIFY((flags & sTEX_TYPE_MASK) == sTEX_2D);
+  assert(xs > 0 && ys > 0);
+  assert((flags & sTEX_TYPE_MASK) == sTEX_2D);
 
   SizeX = xs;
   SizeY = ys;
@@ -1990,13 +1990,13 @@ sGpuToCpu::sGpuToCpu(sInt flags, sInt xs, sInt ys)
 
 sGpuToCpu::~sGpuToCpu()
 {
-  sVERIFY(!Locked);
+  assert(!Locked);
   sRelease(Dest);
 }
 
 void sGpuToCpu::CopyFrom(sTexture2D* tex, sInt miplevel)
 {
-  sVERIFY(!Locked);
+  assert(!Locked);
   sResolveTargetPrivate(tex);
 
   SrcTex = tex;
@@ -2006,7 +2006,7 @@ void sGpuToCpu::CopyFrom(sTexture2D* tex, sInt miplevel)
   {
     if(tex->Surf2D)
     {
-      sVERIFY(miplevel == 0);
+      assert(miplevel == 0);
       DXErr(DXDev->GetRenderTargetData(tex->Surf2D, Dest));
     }
     else
@@ -2022,7 +2022,7 @@ void sGpuToCpu::CopyFrom(sTexture2D* tex, sInt miplevel)
 
 const void* sGpuToCpu::BeginRead(sDInt& pitch)
 {
-  sVERIFY(!Locked);
+  assert(!Locked);
 
   if(0)
   {
@@ -2030,7 +2030,7 @@ const void* sGpuToCpu::BeginRead(sDInt& pitch)
 
     if(tex->Surf2D)
     {
-      sVERIFY(SrcMipLevel == 0);
+      assert(SrcMipLevel == 0);
       DXErr(DXDev->GetRenderTargetData(tex->Surf2D, Dest));
     }
     else
@@ -2057,7 +2057,7 @@ const void* sGpuToCpu::BeginRead(sDInt& pitch)
 
 void sGpuToCpu::EndRead()
 {
-  sVERIFY(Locked);
+  assert(Locked);
   Locked = 0;
 
   Dest->UnlockRect();
@@ -2072,7 +2072,7 @@ sInt sGetScreenCount()
 
 sTexture2D* sGetScreenColorBuffer(sInt screen)
 {
-  sVERIFY(screen >= 0 && screen < DXScreenCount);
+  assert(screen >= 0 && screen < DXScreenCount);
   return DXBackBuffer[screen];
 }
 
@@ -2539,7 +2539,7 @@ void sVertexFormatHandle::Create()
     decl[i].Offset = b[stream];
     decl[i].Method = 0;
 
-    sVERIFY(i < 31);
+    assert(i < 31);
     switch(Data[i] & sVF_USEMASK)
     {
     case sVF_NOP:   break;
@@ -2707,16 +2707,16 @@ void sCreateShader2(sShader* shader, sShaderBlob* blob)
   // can this be a directx shader?
   const sU32* start = (const sU32*)(blob->Data);
   const sU32* end = (const sU32*)(blob->Data + blob->Size - 4);
-  sVERIFY((blob->Size & 3) == 0);
-  sVERIFY(*end == 0x0000ffff);
+  assert((blob->Size & 3) == 0);
+  assert(*end == 0x0000ffff);
   switch(shader->Type & sSTF_KIND)
   {
   case sSTF_VERTEX:
-    sVERIFY(((*start) & 0xffff0000) == 0xfffe0000);
+    assert(((*start) & 0xffff0000) == 0xfffe0000);
     DXErr(DXDev->CreateVertexShader((const DWORD*)blob->Data, &shader->vs));
     break;
   case sSTF_PIXEL:
-    sVERIFY(((*start) & 0xffff0000) == 0xffff0000);
+    assert(((*start) & 0xffff0000) == 0xffff0000);
     DXErr(DXDev->CreatePixelShader((const DWORD*)blob->Data, &shader->ps));
     break;
   default:
@@ -2873,7 +2873,7 @@ void sGeoBuffer::Exit()
 
 void sGeoBuffer::Reset()
 {
-  sVERIFY(!LockPtr);
+  assert(!LockPtr);
   sRelease(VB);
   sRelease(IB);
 
@@ -2889,7 +2889,7 @@ void sGeoBuffer::Reset()
 
 void sGeoBuffer::Lock()
 {
-  sVERIFY(LockPtr == 0);
+  assert(LockPtr == 0);
   sGeoBufferLocks++;
 
   sInt lock = (Duration == sGD_STATIC) ? 0 : D3DLOCK_NOOVERWRITE;
@@ -2913,7 +2913,7 @@ void sGeoBuffer::Lock()
 
 void sGeoBuffer::Unlock()
 {
-  sVERIFY(LockPtr);
+  assert(LockPtr);
   sGeoBufferLocks--;
   LockPtr = 0;
   switch(BufferType)
@@ -3023,7 +3023,7 @@ void sGeoBufferReset0()
       gb->Reset();
   }
 
-  sVERIFY(sGeoBufferLocks == 0);
+  assert(sGeoBufferLocks == 0);
 }
 
 sGeoBuffer* sFindFreeGeoBuffer()
@@ -3044,7 +3044,7 @@ sGeoBuffer* sFindFreeGeoBuffer()
     DumpGeoBuffers(sTRUE);
 
 #endif
-  sVERIFY(sGeoBufferCount < sCOUNTOF(sGeoBuffers));
+  assert(sGeoBufferCount < sCOUNTOF(sGeoBuffers));
   return &sGeoBuffers[sGeoBufferCount++];
 }
 
@@ -3062,7 +3062,7 @@ void sGeoBufferFrame()    // called in sRender3DEnd()
 
     if(gb->Duration != sGD_DYNAMIC)
     {
-      sVERIFY(gb->LockPtr == 0);
+      assert(gb->LockPtr == 0);
 
       if(gb->Duration == sGD_STREAM)
       {
@@ -3120,7 +3120,7 @@ void sGeoBufferPart::Clear()
   if(Buffer)
   {
     Buffer->RefCount--;
-    sVERIFY(Buffer->RefCount >= 0);
+    assert(Buffer->RefCount >= 0);
 
     if(Buffer->RefCount == 0 && Buffer->Duration == sGD_STATIC)
       Buffer->Used = 0;
@@ -3218,7 +3218,7 @@ void* sGeoBufferPart::Init(sInt count, sInt size, sGeometryDuration duration, sI
     gb->Alloc = 0;
     gb->Used = 0;
     pos = 0;
-    sVERIFY(gb->RefCount == 0);
+    assert(gb->RefCount == 0);
     gb->RefCount = 0;
     gb->Discard = 0;
     gb->LockPtr = 0;
@@ -3284,12 +3284,12 @@ void sGeoBufferPart::Advance(sInt count, sInt size)
 
   if(count != -1)
   {
-    sVERIFY(count <= Count);
+    assert(count <= Count);
     Count = count;
   }
 
   Buffer->Used += Count * size;
-  sVERIFY(Buffer->Used <= Buffer->Alloc);
+  assert(Buffer->Used <= Buffer->Alloc);
 }
 
 /****************************************************************************/
@@ -3300,7 +3300,7 @@ void sGeoBufferPart::Advance(sInt count, sInt size)
 
 void sGeometry::Init(sInt flags, sVertexFormatHandle* form)
 {
-  sVERIFY(!(flags & sGF_CPU_MEM));
+  assert(!(flags & sGF_CPU_MEM));
   Flags = flags;
   Format = form;
   switch(Flags & sGF_INDEXMASK)
@@ -3315,7 +3315,7 @@ void sGeometry::Init(sInt flags, sVertexFormatHandle* form)
 
 void sGeometry::BeginLoadIB(sInt ic, sGeometryDuration duration, void** ip)
 {
-  sVERIFY(IndexSize > 0)
+  assert(IndexSize > 0)
   IndexPart.Clear();
   *ip = IndexPart.Init(ic, IndexSize, duration, (Flags & sGF_INDEX32) ? 2 : 1);
 }
@@ -3375,7 +3375,7 @@ void sGeometry::BeginLoad(sInt vc, sInt ic, sInt flags, sVertexFormatHandle* vf,
 
 void sGeometry::Merge(sGeometry* geo0, sGeometry* geo1)
 {
-  sVERIFY(geo1 != this);
+  assert(geo1 != this);
 
   if(geo0 != this)
   {
@@ -3398,7 +3398,7 @@ void sGeometry::Merge(sGeometry* geo0, sGeometry* geo1)
 
 void sGeometry::MergeVertexStream(sInt DestStream, sGeometry* src, sInt SrcStream)
 {
-  sVERIFY(src != this);
+  assert(src != this);
   VertexPart[DestStream].CloneFrom(&src->VertexPart[SrcStream]);
 }
 
@@ -3477,8 +3477,8 @@ void sGeometry::EndDynIB()
 
 void sGeometry::BeginQuadrics()
 {
-  sVERIFY(!PrimMode);
-  sVERIFY(Flags == sGF_QUADRICS);
+  assert(!PrimMode);
+  assert(Flags == sGF_QUADRICS);
   PrimMode = 1;
   FirstPrim = 0;
   CurrentPrim = 0;
@@ -3487,7 +3487,7 @@ void sGeometry::BeginQuadrics()
 
 void sGeometry::EndQuadrics()
 {
-  sVERIFY(PrimMode);
+  assert(PrimMode);
   PrimMode = 0;
   sGeoPrim* prim = FirstPrim;
 
@@ -3504,9 +3504,9 @@ void sGeometry::EndQuadrics()
 
 void sGeometry::BeginQuad(void** data, sInt count)
 {
-  sVERIFY(PrimMode)
-  sVERIFY(sGeoPrimCount < sMAX_GEOPRIMS);
-  sVERIFY(!CurrentPrim);
+  assert(PrimMode)
+  assert(sGeoPrimCount < sMAX_GEOPRIMS);
+  assert(!CurrentPrim);
   sGeoPrim* prim = &sGeoPrims[sGeoPrimCount++];
   *LastPrimPtr = prim;
   LastPrimPtr = &prim->Next;
@@ -3528,9 +3528,9 @@ void sGeometry::EndQuad()
 
 void sGeometry::BeginGrid(void** data, sInt xs, sInt ys)
 {
-  sVERIFY(PrimMode)
-  sVERIFY(sGeoPrimCount < sMAX_GEOPRIMS);
-  sVERIFY(!CurrentPrim);
+  assert(PrimMode)
+  assert(sGeoPrimCount < sMAX_GEOPRIMS);
+  assert(!CurrentPrim);
   sGeoPrim* prim = &sGeoPrims[sGeoPrimCount++];
   *LastPrimPtr = prim;
   LastPrimPtr = &prim->Next;
@@ -3552,9 +3552,9 @@ void sGeometry::EndGrid()
 
 void sGeometry::BeginWireGrid(void** data, sInt xs, sInt ys)
 {
-  sVERIFY(PrimMode)
-  sVERIFY(sGeoPrimCount < sMAX_GEOPRIMS);
-  sVERIFY(!CurrentPrim);
+  assert(PrimMode)
+  assert(sGeoPrimCount < sMAX_GEOPRIMS);
+  assert(!CurrentPrim);
   sGeoPrim* prim = &sGeoPrims[sGeoPrimCount++];
   *LastPrimPtr = prim;
   LastPrimPtr = &prim->Next;
@@ -3642,7 +3642,7 @@ void sGeometry::DrawPrim(sGeoPrim* start, sGeoPrim* end, sInt ic, sInt vc)
 
   while(prim != end)
   {
-    sVERIFY(prim->VB.Buffer == verify);
+    assert(prim->VB.Buffer == verify);
     switch(prim->Mode)
     {
     case sGP_GRID:
@@ -3764,7 +3764,7 @@ void sGeometry::Draw(sDrawRange* ir, sInt irc, sInt instancecount, sVertexOffset
 
 void sGeometry::Draw(const sGeometryDrawInfo& di)
 {
-  sVERIFY(DontCheckMtrlPrepare || CurrentMtrlVFormat == Format);    // correct prepared material used?
+  assert(DontCheckMtrlPrepare || CurrentMtrlVFormat == Format);    // correct prepared material used?
   sDrawRange irdata;
   D3DPRIMITIVETYPE type;
   sInt primcount, vertcount;
@@ -3783,28 +3783,28 @@ void sGeometry::Draw(const sGeometryDrawInfo& di)
   {
     if(!(di.Flags & sGDI_Ranges))
     {
-      sVERIFY(di.RangeCount == 0);
-      sVERIFY(di.Ranges == 0);
+      assert(di.RangeCount == 0);
+      assert(di.Ranges == 0);
     }
 
     if(!(di.Flags & sGDI_Instances))
-      sVERIFY(di.InstanceCount == 0);
+      assert(di.InstanceCount == 0);
 
     if(!(di.Flags & sGDI_VertexOffset))
       for(sInt i = 0; i < sVF_STREAMMAX; i++)
-        sVERIFY(di.VertexOffset[0] == 0);
+        assert(di.VertexOffset[0] == 0);
   }
 
   sGeoBufferUnlockAll();
 
   if(Flags == sGF_QUADRICS)
   {
-    sVERIFY((di.Flags & (sGDI_Ranges | sGDI_Instances | sGDI_VertexOffset)) == 0);
+    assert((di.Flags & (sGDI_Ranges | sGDI_Instances | sGDI_VertexOffset)) == 0);
     DrawPrim();
     return;
   }
 
-  sVERIFY(VertexPart[0].Buffer);
+  assert(VertexPart[0].Buffer);
 
   // set blendfacter
 
@@ -3836,8 +3836,8 @@ void sGeometry::Draw(const sGeometryDrawInfo& di)
     break;
   case sGF_QUADLIST:
     type = D3DPT_TRIANGLELIST;
-    sVERIFY(IndexPart.Buffer == 0);
-    sVERIFY(IndexSize == 0);
+    assert(IndexPart.Buffer == 0);
+    assert(IndexSize == 0);
     quads = 1;
     DXErr(DXDev->SetIndices(DXQuadIndex.Buffer->IB));
     break;
@@ -3896,7 +3896,7 @@ void sGeometry::Draw(const sGeometryDrawInfo& di)
     else                        // there is an indexrange, split into sMAX_QUADCOUNT quad parts
     {
       sInt irc_ = 0;
-      sVERIFY(sMAX_QUADCOUNT == DXQuadIndex.Count / 6);
+      assert(sMAX_QUADCOUNT == DXQuadIndex.Count / 6);
 
       for(sInt i = 0; i < irc; i++)
         irc_ += (ir[i].End - ir[i].Start + (sMAX_QUADCOUNT * 4 - 1)) / (sMAX_QUADCOUNT * 4);
@@ -3945,7 +3945,7 @@ void sGeometry::Draw(const sGeometryDrawInfo& di)
 
     if(streamsused == 1)
     {
-      sVERIFY(VertexPart[0].Buffer);
+      assert(VertexPart[0].Buffer);
       DXErr(DXDev->SetStreamSource(0, VertexPart[0].Buffer->VB, 0, Format->GetSize(0)));
       vertexoffset = VertexPart[0].Start + di.VertexOffset[0];
       vertexcount = VertexPart[0].Count - di.VertexOffset[0];
@@ -3957,7 +3957,7 @@ void sGeometry::Draw(const sGeometryDrawInfo& di)
 
       for(sInt i = 0; i < streamsused; i++)
       {
-        sVERIFY(VertexPart[i].Buffer)
+        assert(VertexPart[i].Buffer)
         DXErr(DXDev->SetStreamSource(i, VertexPart[i].Buffer->VB, Format->GetSize(i) * (VertexPart[i].Start + di.VertexOffset[i]), Format->GetSize(i)));
 
         if(di.InstanceCount > 0)
@@ -4075,9 +4075,9 @@ void sGeometry::Draw(const sGeometryDrawInfo& di)
 
   void sCopyCubeFace(sTexture2D* dest, sTextureCube* src, sTexCubeFace cf)
   {
-    sVERIFY(dest->SizeX == dest->SizeY && dest->SizeX == src->SizeXY);
-    sVERIFY((dest->Flags & sTEX_FORMAT) == (src->Flags & sTEX_FORMAT));
-    sVERIFY(cf != sTCF_NONE);
+    assert(dest->SizeX == dest->SizeY && dest->SizeX == src->SizeXY);
+    assert((dest->Flags & sTEX_FORMAT) == (src->Flags & sTEX_FORMAT));
+    assert(cf != sTCF_NONE);
 
     D3DCUBEMAP_FACES face = (D3DCUBEMAP_FACES)cf;
 
@@ -4092,7 +4092,7 @@ void sGeometry::Draw(const sGeometryDrawInfo& di)
 
       D3DLOCKED_RECT ldest;
       DXErr(dest->Tex2D->LockRect(0, &ldest, 0, 0));
-      sVERIFY(ldest.Pitch == pitch);
+      assert(ldest.Pitch == pitch);
 
       for(sInt y = 0; y < dest->SizeY; y++)
       {
@@ -4115,7 +4115,7 @@ void sGeometry::Draw(const sGeometryDrawInfo& di)
       DXErr(dest->Tex2D->LockRect(0, &ldest, 0, 0));
       DXErr(src->TexCube->LockRect(face, 0, &lsrc, 0, 0));
 
-      sVERIFY(ldest.Pitch == lsrc.Pitch);
+      assert(ldest.Pitch == lsrc.Pitch);
 
       for(sInt y = 0; y < dest->SizeY; y++)
       {
@@ -4168,7 +4168,7 @@ void sGeometry::Draw(const sGeometryDrawInfo& di)
       sDelete(qn);
     }
 
-    sVERIFY(AllOccQueryNodes->IsEmpty());
+    assert(AllOccQueryNodes->IsEmpty());
     AllOccQueryNodes->Reset();
   }
 
@@ -4182,7 +4182,7 @@ void sGeometry::Draw(const sGeometryDrawInfo& di)
 
   sOccQuery::~sOccQuery()
   {
-    sVERIFY(Current == 0);
+    assert(Current == 0);
 
     for(;;)
     {
@@ -4198,7 +4198,7 @@ void sGeometry::Draw(const sGeometryDrawInfo& di)
   void sOccQuery::Begin(sInt pixels)
   {
     Poll();
-    sVERIFY(Current == 0);
+    assert(Current == 0);
     Current = GetOccQueryNode();
     Current->Pixels = pixels;
     Current->Query->Issue(D3DISSUE_BEGIN);
@@ -4207,7 +4207,7 @@ void sGeometry::Draw(const sGeometryDrawInfo& di)
 
   void sOccQuery::End()
   {
-    sVERIFY(Current);
+    assert(Current);
     Current->Query->Issue(D3DISSUE_END);
     Current = 0;
   }
@@ -4356,8 +4356,8 @@ void sGeometry::Draw(const sGeometryDrawInfo& di)
 
     if(flags & sTEX_RENDERTARGET)
     {
-      sVERIFY(!(flags & sTEX_DYNAMIC));
-      sVERIFY((flags & sTEX_NOMIPMAPS) || (flags & sTEX_AUTOMIPMAP) || mm != 0);
+      assert(!(flags & sTEX_DYNAMIC));
+      assert((flags & sTEX_NOMIPMAPS) || (flags & sTEX_AUTOMIPMAP) || mm != 0);
       pool = D3DPOOL_DEFAULT;
       usage = rt;
     }
@@ -4560,7 +4560,7 @@ void sGeometry::Draw(const sGeometryDrawInfo& di)
     wr.bottom = ys;
 
     surf = 0;
-    sVERIFY(DXDev);
+    assert(DXDev);
     DXErr(DXDev->CreateOffscreenPlainSurface(xs, ys, d3dformat, D3DPOOL_SCRATCH, &surf, 0));
     DXErr(D3DXLoadSurfaceFromMemory(surf, 0, 0, bmp, srcfmt, xs * 4, 0, &wr, D3DX_FILTER_POINT | (dither ? D3DX_FILTER_DITHER : 0), 0));
 
@@ -4608,7 +4608,7 @@ void sGeometry::Draw(const sGeometryDrawInfo& di)
     D3DPOOL pool;
     sInt usage;
 
-    sVERIFY((flags & sTEX_TYPE_MASK) == sTEX_2D);
+    assert((flags & sTEX_TYPE_MASK) == sTEX_2D);
 
     // create resource
 
@@ -4632,7 +4632,7 @@ void sGeometry::Draw(const sGeometryDrawInfo& di)
 
     if(flags & sTEX_MSAA)
     {
-      sVERIFY(flags & sTEX_RENDERTARGET);
+      assert(flags & sTEX_RENDERTARGET);
 
       D3DMULTISAMPLE_TYPE mst = D3DMULTISAMPLE_NONMASKABLE;
       DWORD msq = sClamp<DWORD>(DXScreenMode.MultiLevel, 0, GraphicsCapsMaster.MaxMultisampleLevel - 1);
@@ -4671,7 +4671,7 @@ void sGeometry::Draw(const sGeometryDrawInfo& di)
 
     if((Flags & sTEX_RENDERTARGET) || (Flags & sTEX_DYNAMIC))
     {
-      sVERIFY(DXRTCount < MAX_RENDERTARGETS);
+      assert(DXRTCount < MAX_RENDERTARGETS);
       DXRenderTargets[DXRTCount++] = this;
     }
   }
@@ -4734,7 +4734,7 @@ void sGeometry::Draw(const sGeometryDrawInfo& di)
   void sTexture2D::BeginLoad(sU8*& data, sInt& pitch, sInt mipmap)
   {
     D3DLOCKED_RECT lr;
-    sVERIFY(Loading == -1);
+    assert(Loading == -1);
 
     sInt lflags = LockFlags;
 
@@ -4750,7 +4750,7 @@ void sGeometry::Draw(const sGeometryDrawInfo& di)
   void sTexture2D::BeginLoadPartial(const sRect& rect, sU8*& data, sInt& pitch, sInt mipmap)
   {
     D3DLOCKED_RECT lr;
-    sVERIFY(Loading == -1);
+    assert(Loading == -1);
 
     DXErr(Tex2D->LockRect(mipmap, &lr, (const RECT*)&rect, LockFlags & ~D3DLOCK_DISCARD));  // you probably don't want to discard the entire texture/mipmap chain with a partial update
     data = (sU8*)lr.pBits;
@@ -4760,7 +4760,7 @@ void sGeometry::Draw(const sGeometryDrawInfo& di)
 
   void sTexture2D::EndLoad()
   {
-    sVERIFY(Loading >= 0);
+    assert(Loading >= 0);
     DXErr(Tex2D->UnlockRect(Loading));
     Loading = -1;
   }
@@ -4777,8 +4777,8 @@ void sGeometry::Draw(const sGeometryDrawInfo& di)
 
   void sTexture2D::CalcOneMiplevel(const sRect& rect)
   {
-    sVERIFY(rect.x0 <= rect.x1 && rect.y0 <= rect.y1);
-    sVERIFY((Flags & sTEX_RENDERTARGET) && Mipmaps > 1);
+    assert(rect.x0 <= rect.x1 && rect.y0 <= rect.y1);
+    assert((Flags & sTEX_RENDERTARGET) && Mipmaps > 1);
 
     IDirect3DSurface9* srcSurf, * dstSurf;
     RECT dstRect;
@@ -4823,7 +4823,7 @@ void sGeometry::Draw(const sGeometryDrawInfo& di)
     // register for lost device handling
     if((Flags & sTEX_RENDERTARGET) || (Flags & sTEX_DYNAMIC))
     {
-      sVERIFY(DXRTCount < MAX_RENDERTARGETS);
+      assert(DXRTCount < MAX_RENDERTARGETS);
       DXRenderTargets[DXRTCount++] = this;
     }
   }
@@ -4860,10 +4860,10 @@ void sGeometry::Draw(const sGeometryDrawInfo& di)
 
   void sTextureCube::BeginLoad(sTexCubeFace cf, sU8*& data, sInt& pitch, sInt mipmap /*=0*/)
   {
-    sVERIFY(cf != sTCF_NONE);
+    assert(cf != sTCF_NONE);
 
     D3DLOCKED_RECT lr;
-    sVERIFY(Loading == -1);
+    assert(Loading == -1);
 
     sInt lflags = LockFlags;
 
@@ -4879,7 +4879,7 @@ void sGeometry::Draw(const sGeometryDrawInfo& di)
 
   void sTextureCube::EndLoad()
   {
-    sVERIFY(Loading >= 0);
+    assert(Loading >= 0);
     DXErr(TexCube->UnlockRect(static_cast<D3DCUBEMAP_FACES>(LockedFace), Loading));
     Loading = -1;
   }
@@ -4970,7 +4970,7 @@ void sGeometry::Draw(const sGeometryDrawInfo& di)
     // register rendertargets
     if((Flags & sTEX_RENDERTARGET) || (Flags & sTEX_DYNAMIC))
     {
-      sVERIFY(DXRTCount < MAX_RENDERTARGETS);
+      assert(DXRTCount < MAX_RENDERTARGETS);
       DXRenderTargets[DXRTCount++] = this;
     }
   }
@@ -4983,7 +4983,7 @@ void sGeometry::Draw(const sGeometryDrawInfo& di)
   void sTexture3D::BeginLoad(sU8*& data, sInt& rpitch, sInt& spitch, sInt mipmap /*=0*/)
   {
     D3DLOCKED_BOX lr;
-    sVERIFY(Loading == -1);
+    assert(Loading == -1);
 
     sInt lflags = LockFlags;
 
@@ -4999,7 +4999,7 @@ void sGeometry::Draw(const sGeometryDrawInfo& di)
 
   void sTexture3D::EndLoad()
   {
-    sVERIFY(Loading >= 0);
+    assert(Loading >= 0);
     DXErr(Tex3D->UnlockBox(Loading));
     Loading = -1;
   }
@@ -5050,11 +5050,11 @@ void sGeometry::Draw(const sGeometryDrawInfo& di)
 
       if(shader == sMTB_VS)
       {
-        sVERIFY(sampler < sMTRL_MAXVSTEX);
+        assert(sampler < sMTRL_MAXVSTEX);
       }
       else if(shader == sMTB_PS)
       {
-        sVERIFY(sampler < sMTRL_MAXPSTEX);
+        assert(sampler < sMTRL_MAXPSTEX);
       }
       else
       {
@@ -5082,8 +5082,8 @@ void sGeometry::Draw(const sGeometryDrawInfo& di)
       }
       else
       {
-        sVERIFY(VertexShader->vs);
-        sVERIFY(VertexShader->CheckKind(sSTF_VERTEX));
+        assert(VertexShader->vs);
+        assert(VertexShader->CheckKind(sSTF_VERTEX));
         DXErr(DXDev->SetVertexShader(VertexShader->vs));
       }
 
@@ -5104,8 +5104,8 @@ void sGeometry::Draw(const sGeometryDrawInfo& di)
       }
       else
       {
-        sVERIFY(PixelShader->ps);
-        sVERIFY(PixelShader->CheckKind(sSTF_PIXEL));
+        assert(PixelShader->ps);
+        assert(PixelShader->CheckKind(sSTF_PIXEL));
         DXErr(DXDev->SetPixelShader(PixelShader->ps));
       }
 
@@ -5121,9 +5121,9 @@ void sGeometry::Draw(const sGeometryDrawInfo& di)
 
   void sMaterial::SetStates(sInt variant)
   {
-    sVERIFY(variant >= 0 && variant < StateVariants);
-    sVERIFY(States);
-    sVERIFY(States[variant]);
+    assert(variant >= 0 && variant < StateVariants);
+    assert(States);
+    assert(States[variant]);
 
     sSetRenderStates(States[variant], StateCount[variant]);
 
@@ -5154,7 +5154,7 @@ void sGeometry::Draw(const sGeometryDrawInfo& di)
 #endif
 // sGFXMtrlIsSet = 1;
 
-    sVERIFY(sizeof(sMaterial) - ((sU8*)&Flags - (sU8*)this) >= sizeof(sMaterialRS));
+    assert(sizeof(sMaterial) - ((sU8*)&Flags - (sU8*)this) >= sizeof(sMaterialRS));
     *(sMaterialRS*)& Flags = VariantFlags[variant];
   }
 
@@ -5384,7 +5384,7 @@ void sGeometry::Draw(const sGeometryDrawInfo& di)
     RGNDATAHEADER* hdr;
     sRect* rd;
 
-    sVERIFY(count * sizeof(sRect) + sizeof(RGNDATAHEADER) <= sizeof(RenderClippingData));
+    assert(count * sizeof(sRect) + sizeof(RGNDATAHEADER) <= sizeof(RenderClippingData));
 
     hdr = (RGNDATAHEADER*)RenderClippingData;
     rd = (sRect*)(((sU8*)RenderClippingData) + (sizeof(RGNDATAHEADER)));
@@ -5407,8 +5407,8 @@ void sGeometry::Draw(const sGeometryDrawInfo& di)
   {
     // restore system
 
-    sVERIFY(DXActiveRT == 0);
-    sVERIFY(Render3DInProgress == sFALSE);
+    assert(DXActiveRT == 0);
+    assert(Render3DInProgress == sFALSE);
 
     if(!DXActive)
     {
@@ -5552,7 +5552,7 @@ void sGeometry::Draw(const sGeometryDrawInfo& di)
   {
     if(!Render3DInProgress)
     {
-      sVERIFY(DXActiveRT == 0);
+      assert(DXActiveRT == 0);
       return;
     }
 
@@ -5635,7 +5635,7 @@ void sGeometry::Draw(const sGeometryDrawInfo& di)
     if(flip)
       sPostFlipHook->Call();
 
-    sVERIFY(DXActiveRT == 0);
+    assert(DXActiveRT == 0);
   }
 
   void sRender3DFlush()

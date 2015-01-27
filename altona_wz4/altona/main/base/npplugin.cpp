@@ -355,7 +355,7 @@ NPError NPP_Initialize()
 {
   WInstance = GetModuleHandle(0);
 
-  sVERIFY(sizeof(sChar) == 2);
+  assert(sizeof(sChar) == 2);
   sInitEmergencyThread();
 
   sInitMem0();

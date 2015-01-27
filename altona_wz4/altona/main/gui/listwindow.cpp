@@ -1424,8 +1424,8 @@ void sStaticListWindow::UpdateTreeInfo()
   sFORALL(*Array, obj)
   {
     ti = GetTreeInfo(obj);
-    sVERIFY(ti);
-    sVERIFY(ti->Level >= 0);
+    assert(ti);
+    assert(ti->Level >= 0);
 
     if(ti->Level >= sLW_MAXTREENEST)
       ti->Level = sLW_MAXTREENEST - 1;

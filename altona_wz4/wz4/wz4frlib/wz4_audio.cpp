@@ -15,7 +15,7 @@
 // you need to scale the IFFT by 1/N yourself
 static void sFFT(sComplex* dataComplex, sInt count, sBool inverse)
 {
-  sVERIFY(count && (count & (count - 1)) == 0);
+  assert(count && (count & (count - 1)) == 0);
   sF32* data = &dataComplex->r - 1;
 
   // bit reversal

@@ -535,7 +535,7 @@ void sPrintShader(sTextBuffer& tb, const sU32* data, sInt flags)
 
     tb.PrintChar('\n');
 
-    sVERIFY(datastart + len == data);
+    assert(datastart + len == data);
   }
 
   if(!(flags & sPSF_CARRAY))

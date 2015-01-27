@@ -249,7 +249,7 @@ void IppHelper2::BlurNext(sTexture2D* dest, sTexture2D* src, sF32 radius, sF32 a
 
 void IppHelper2::Blur(sTexture2D* dest, sTexture2D* src, sF32 radius, sF32 amp)
 {
-  sVERIFY(src != dest);
+  assert(src != dest);
 
   if(radius < 4.0f)
   {

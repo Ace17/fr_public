@@ -144,8 +144,8 @@ wPaintInfo::~wPaintInfo()
 
 void wPaintInfo::AddHandle(wOp* op, sInt id, const sRect& r, sInt mode, sInt* t, sF32* x, sF32* y, sF32* z, sInt arrayline)
 {
-  sVERIFY(op);
-  sVERIFY(id > 0);
+  assert(op);
+  assert(id > 0);
 
   sInt index = Handles.GetCount();
   sInt selindex = -1;
@@ -501,7 +501,7 @@ void wPaintInfo::PaintAddRect2D(const sRect& rr, sU32 col)
   TexGeoVP[TexGeoVC + 3].Init(rr.x0 - 0.5f, rr.y1 - 0.5f, 1, col, 0, 1);
   TexGeoVC += 4;
 
-  sVERIFY(TexGeoVC <= BatchSize);
+  assert(TexGeoVC <= BatchSize);
 
   if(TexGeoVC == BatchSize)
     PaintFlushRect();
@@ -542,7 +542,7 @@ void wPaintInfo::PaintAddLine(sF32 x0, sF32 y0, sF32 z0, sF32 x1, sF32 y1, sF32 
   vp[vc + 1].Init(x1, y1, z1, col);
   vc += 2;
 
-  sVERIFY(vc <= BatchSize);
+  assert(vc <= BatchSize);
 
   if(vc == BatchSize)
     PaintFlushLine(zoff);
@@ -1209,7 +1209,7 @@ wOp::wOp() : SelectedHandles(0)
 
 void wOp::Init(wClass* cl)
 {
-  sVERIFY(cl);
+  assert(cl);
 
   wClassInputInfo* info;
   Class = cl;
@@ -1353,7 +1353,7 @@ void wOp::Tag()
 
 void wOp::CopyFrom(wOp* src)
 {
-  sVERIFY(Class == 0);
+  assert(Class == 0);
 
   Init(src->Class);
   Name = src->Name;
@@ -1847,7 +1847,7 @@ void wOp::MakeSource(sTextBuffer& tb)
         L"???", L"int", L"float", L"string", L"color"
       };
       tb.PrintF(L"%s : %s", para->Name, tname[para->Type]);
-      sVERIFY(para->Count > 0);
+      assert(para->Count > 0);
 
       if(para->Count > 1)
         tb.PrintF(L"[%d] = [ ", para->Count);
@@ -1867,11 +1867,11 @@ void wOp::MakeSource(sTextBuffer& tb)
           tb.PrintF(L"%f", para->FloatVal[i]);
           break;
         case ScriptTypeColor:
-          sVERIFY(i == 0);
+          assert(i == 0);
           tb.PrintF(L"[%d/255.0,%d/255.0,%d/255.0,%d/255.0]", (para->ColorVal >> 16) & 255, (para->ColorVal >> 8) & 255, (para->ColorVal >> 0) & 255, (para->ColorVal >> 24) & 255);
           break;
         case ScriptTypeString:
-          sVERIFY(i == 0);
+          assert(i == 0);
           tb.PrintF(L"%q", para->StringVal);
           break;
         default:
@@ -1973,7 +1973,7 @@ void wOp::Serialize_(streamer& s)
         sDPrintF(L"try to load unknown classname <%s> type <%s>\n", classname, typenam);
         cl = Doc->FindClass(L"UnknownOp", L"AnyType");
         Doc->UnknownOps++;
-        sVERIFY(cl);
+        assert(cl);
       }
 
       Init(cl);
@@ -2004,7 +2004,7 @@ void wOp::Serialize_(streamer& s)
 
     if(s.IsWriting())
     {
-      sVERIFY(strings <= Class->ParaStrings);
+      assert(strings <= Class->ParaStrings);
 
       for(sInt i = 0; i < strings; i++)
         s | EditString[i];
@@ -2130,7 +2130,7 @@ void wOp::Serialize_(streamer& s)
           for(sInt i = 0; i < animcount; i++)
           {
             s | id;
-            sVERIFY(id == 0);
+            assert(id == 0);
           }
         }
       }
@@ -2333,7 +2333,7 @@ void wOpData::CopyTo(wOp* op)
 
     for(sInt i = 0; i < Strings.GetCount(); i++)
     {
-      sVERIFY(op->EditString[i]);
+      assert(op->EditString[i]);
       op->EditString[i]->Clear();
       op->EditString[i]->Print(Strings[i]);
     }
@@ -2554,7 +2554,7 @@ void wEditOptions::ApplyTheme()
     break;
   }
 
-  sVERIFY(gt);
+  assert(gt);
   sGui->SetTheme(*gt);
 }
 
@@ -2599,7 +2599,7 @@ template<class streamer>
 void wDocOptions::Serialize_(streamer& s)
 {
   sInt version = s.Header(sSerId::Wz4DocOptions, 16);
-  sVERIFY(sCOUNTOF(sColorPickerWindow::PaletteColors) == 32);
+  assert(sCOUNTOF(sColorPickerWindow::PaletteColors) == 32);
 
   if(version)
   {
@@ -2742,16 +2742,16 @@ wDocument::wDocument()
   {
     if(cl->Flags & wCF_CONVERSION)
     {
-      sVERIFY(cl->Inputs.GetCount() == 1);
-      sVERIFY(cl->Inputs[0].Type);
+      assert(cl->Inputs.GetCount() == 1);
+      assert(cl->Inputs[0].Type);
       Conversions.AddTail(cl);
     }
 
     if(!cl->Extract.IsEmpty())
     {
-      sVERIFY(cl->Inputs.GetCount() == 1);
-      sVERIFY(cl->Inputs[0].Type);
-      sVERIFY(cl->ParaStrings == 1);
+      assert(cl->Inputs.GetCount() == 1);
+      assert(cl->Inputs[0].Type);
+      assert(cl->ParaStrings == 1);
       Extractions.AddTail(cl);
     }
   }
@@ -2940,12 +2940,12 @@ void wDocument::Connect()
     if(page->IsTree)
     {
       AllOps.Add((sArray<wOp*> &)page->Tree);
-      sVERIFY(page->Ops.IsEmpty());
+      assert(page->Ops.IsEmpty());
     }
     else
     {
       AllOps.Add((sArray<wOp*> &)page->Ops);
-      sVERIFY(page->Tree.IsEmpty());
+      assert(page->Tree.IsEmpty());
     }
   }
 
@@ -4471,7 +4471,7 @@ wObject* wExecutive::Execute(sBool progress, sBool depend)
 
       if(allok)
       {
-        sVERIFY(cmd->Output == 0);
+        assert(cmd->Output == 0);
 
         if(cmd->Op && cmd->Op->WeakCache)
         {

@@ -329,7 +329,7 @@ void Serialize_(streamer &);
 
 void sShaderBlob::SetNext(sInt type)
 {
-  sVERIFY(Type != sSTF_NONE);
+  assert(Type != sSTF_NONE);
   sShaderBlob* blob = (sShaderBlob*)(Data + sAlign(Size, 4));
   blob->Type = type;
 }
@@ -371,8 +371,8 @@ void sSerializeShaderBlob(sU8* data, sInt& size, sReader& s)
 {
   sInt readsize = 0;
   s | readsize;
-  sVERIFY(!(size & 3));
-  sVERIFY(readsize < size);
+  assert(!(size & 3));
+  assert(readsize < size);
   size = readsize;
 
   sShaderBlob* blob = 0;
@@ -430,7 +430,7 @@ void sExitShaders()
 
 sShader* sCreateShaderRaw(sInt type, const sU8* code, sInt bytes)
 {
-  sVERIFY(type & sSTF_PLATFORM);        // no more automatic setting of shader platform!
+  assert(type & sSTF_PLATFORM);        // no more automatic setting of shader platform!
 // type |= sGetShaderPlatform();
   sU32 hash;
   sShader* sh;
@@ -474,7 +474,7 @@ sShader* sCreateShaderRaw(sInt type, const sU8* code, sInt bytes)
 
 sShader* sCreateShader(sInt type, const sU8* code, sInt bytes)
 {
-  sVERIFY(type & sSTF_PLATFORM);        // no more automatic setting of shader platform!
+  assert(type & sSTF_PLATFORM);        // no more automatic setting of shader platform!
   sU32 hash;
   sShader* sh;
 
@@ -517,7 +517,7 @@ sShader::sShader(sInt type, const sU8* data, sInt length, sU32 hash, sBool raw /
   GLName = 0;
 #endif
 
-  sVERIFY(Shaders);
+  assert(Shaders);
   Shaders->AddTail(this);
 
   if(raw)
@@ -566,7 +566,7 @@ sShader::sShader(sInt type, const sU8* data, sInt length, sU32 hash, sBool raw /
 
 sShader::~sShader()
 {
-  sVERIFY(Shaders);
+  assert(Shaders);
   Shaders->Rem(this);
   sDeleteShader2(this);
   delete[] Data;
@@ -715,7 +715,7 @@ sVertexFormatHandle* sCreateVertexFormat(const sU32* disc)
 
   for(count = 0; disc[count]; count++)
   {
-    sVERIFY(count < 31);
+    assert(count < 31);
     data[count] = disc[count];
 
     if((data[count] & sVF_TYPEMASK) == 0)
@@ -826,7 +826,7 @@ void sStreamVertexFormat(sReader& s, sVertexFormatHandle*& vhandle)
   sU32 count;
 
   s | count;
-  sVERIFY(count < 16);
+  assert(count < 16);
   s.ArrayU32(vd, count);
 
   vhandle = sCreateVertexFormat(vd);
@@ -863,7 +863,7 @@ sInt sVertexFormatHandle::GetOffset(sInt semantic_and_format)
 
   while(data[i])
   {
-    sVERIFY((data[i] & sVF_STREAMMASK) == 0);
+    assert((data[i] & sVF_STREAMMASK) == 0);
 
     if((data[i] & (sVF_USEMASK | sVF_TYPEMASK)) == (sU32)semantic_and_format)
       return offset;
@@ -1072,7 +1072,7 @@ void sGeometry::Serialize(sReader& s)
 
 void sGeometry::Init(sInt flags, sVertexFormatHandle* form)
 {
-  sVERIFY(!(flags & sGF_CPU_MEM));
+  assert(!(flags & sGF_CPU_MEM));
   Flags = flags;
   Format = form;
   switch(Flags & sGF_INDEXMASK)
@@ -1087,7 +1087,7 @@ void sGeometry::Init(sInt flags, sVertexFormatHandle* form)
 
 void sGeometry::BeginLoadIB(sInt ic, sGeometryDuration duration, void** ip)
 {
-  sVERIFY(IndexSize > 0)
+  assert(IndexSize > 0)
   IndexPart.Clear();
 #if sRENDERER == sRENDER_DX9 || sRENDERER == sRENDER_DX11
   IndexPart.Init(ic, IndexSize, duration, (Flags & sGF_INDEX32) ? 2 : 1);
@@ -1645,13 +1645,13 @@ sTextureBase::sTextureBase()
 
 sTextureBase::~sTextureBase()
 {
-  sVERIFY(LoadBuffer == 0);     // if this is not 0, then EndLoad() has not been called!
+  assert(LoadBuffer == 0);     // if this is not 0, then EndLoad() has not been called!
   sTextureProxy* pr;
 
   while(!Proxies.IsEmpty())
   {
     pr = Proxies.GetHead()->Proxy;
-    sVERIFY(pr->Link == this);
+    assert(pr->Link == this);
     pr->Disconnect();
   }
 
@@ -1692,7 +1692,7 @@ sTexture2D::~sTexture2D()
 
 void sTexture2D::Clear()
 {
-  sVERIFY(LoadBuffer == 0);
+  assert(LoadBuffer == 0);
   Destroy2();
   SizeX = 0;
   SizeY = 0;
@@ -1731,7 +1731,7 @@ void sTexture2D::ReInit(sInt xs, sInt ys, sInt flags, sInt mipmaps)
 void sTexture2D::Init(sInt xs, sInt ys, sInt flags, sInt mipmaps, sBool force /*=sFALSE*/)
 {
   sInt realmip;
-  sVERIFY(LoadBuffer == 0);
+  assert(LoadBuffer == 0);
 
   // use screen size
 
@@ -1886,7 +1886,7 @@ sTextureCube::~sTextureCube()
 void sTextureCube::Init(sInt dim, sInt flags, sInt mipmaps /*=0*/, sBool force /*=sFALSE*/)
 {
   sInt realmip;
-  sVERIFY(LoadBuffer == 0);
+  assert(LoadBuffer == 0);
 
   // calculate "real" mipmap count
   realmip = 0;
@@ -1926,7 +1926,7 @@ void sTextureCube::Init(sInt dim, sInt flags, sInt mipmaps /*=0*/, sBool force /
 
 void sTextureCube::Clear()
 {
-  sVERIFY(LoadBuffer == 0);
+  assert(LoadBuffer == 0);
   Destroy2();
   SizeXY = 0;
   Flags = sTEX_CUBE;
@@ -2211,7 +2211,7 @@ sBool sMaterialRS::operator == (const sMaterialRS& rs) const
 template<class streamer>
 static inline void SerializeMaterialRSOld(sMaterialRS& rs, streamer& s)
 {
-  sVERIFY(sMTRL_MAXTEX >= 8);
+  assert(sMTRL_MAXTEX >= 8);
   s.U32(rs.Flags);
   s.ArrayU8(rs.FuncFlags, 4);
   s.ArrayU32(rs.TFlags, 8);
@@ -2374,7 +2374,7 @@ sMaterial::~sMaterial()
 
 void sMaterial::CopyBaseFrom(const sMaterial* src)
 {
-  sVERIFY(src->GetVariantCount() <= 1);   // variants are not copied, so don't use CopyBaseFrom with
+  assert(src->GetVariantCount() <= 1);   // variants are not copied, so don't use CopyBaseFrom with
 
   // materials having multiple variants
   for(sInt i = 0; i < sMTRL_MAXTEX; i++)
@@ -2475,8 +2475,8 @@ void sMaterial::DiscardVariants()
 #if sRENDERER != sRENDER_OGL2
 void sMaterial::AllocStates(const sU32* data, sInt count, sInt var)
 {
-  sVERIFY(var < StateVariants);
-  sVERIFY(States[var] == 0);
+  assert(var < StateVariants);
+  assert(States[var] == 0);
 
   States[var] = new sU32[count * 2];
   StateCount[var] = count;
@@ -2485,14 +2485,14 @@ void sMaterial::AllocStates(const sU32* data, sInt count, sInt var)
 
 void sMaterial::SetVariant(sInt var)
 {
-  sVERIFY(var >= 0 && var < StateVariants);
+  assert(var >= 0 && var < StateVariants);
 
   sU32 buffer[512];
   sU32* data = buffer;
 
   VariantFlags[var] = *(sMaterialRS*)&Flags;
   AddMtrlFlags(data);
-  sVERIFY(data >= buffer && data <= buffer + sCOUNTOF(buffer));
+  assert(data >= buffer && data <= buffer + sCOUNTOF(buffer));
   AllocStates(buffer, (data - buffer) / 2, var);
 }
 
@@ -2509,7 +2509,7 @@ void sMaterial::SetVariantRS(sInt var, const sMaterialRS& rs)
 
 sMaterialRS & sMaterial::GetVariantRS(sInt var) const
 {
-  sVERIFY(var >= 0 && var < StateVariants);
+  assert(var >= 0 && var < StateVariants);
   return VariantFlags[var];
 }
 
@@ -3405,7 +3405,7 @@ void sSetCBuffers(sCBufferBase** cbuffers, sInt cbcount)
 
     if(cb)
     {
-      sVERIFY(cb->Slot < sCBUFFER_MAXSLOT * sCBUFFER_SHADERTYPES);
+      assert(cb->Slot < sCBUFFER_MAXSLOT * sCBUFFER_SHADERTYPES);
 
       if(cb != CurrentCBs[cb->Slot])
       {
@@ -3490,7 +3490,7 @@ void sCBufferBase::SetCfg(sInt slot, sInt start, sInt count, sU64 mask)
 
 sCBufferBase* sGetCurrentCBuffer(sInt slot)
 {
-  sVERIFY(slot < sCBUFFER_MAXSLOT * sCBUFFER_SHADERTYPES);
+  assert(slot < sCBUFFER_MAXSLOT * sCBUFFER_SHADERTYPES);
   return CurrentCBs[slot];
 }
 
@@ -4307,7 +4307,7 @@ sTargetPara::sTargetPara(sInt flags, sU32 clearcol, const sTargetSpec& spec)
 
 void sTargetPara::SetTarget(sInt i, sTextureBase* tex, sU32 clearcol)
 {
-  sVERIFY(i >= 0 && i < sCOUNTOF(Target));
+  assert(i >= 0 && i < sCOUNTOF(Target));
   Target[i] = tex;
   ClearColor[i].InitColor(clearcol);
 }
@@ -4671,12 +4671,12 @@ void sCopyTexture(const sCopyTexturePara& para)
 
   if(para.Source == sGetScreenColorBuffer())
   {
-    sVERIFY((para.Dest->Flags & sTEX_TYPE_MASK) == sTEX_2D);
+    assert((para.Dest->Flags & sTEX_TYPE_MASK) == sTEX_2D);
     sGrabScreen((sTexture2D*)para.Dest, oldflags, &para.DestRect, &para.SourceRect);
   }
   else if(para.Dest == sGetScreenColorBuffer())
   {
-    sVERIFY((para.Dest->Flags & sTEX_TYPE_MASK) == sTEX_2D);
+    assert((para.Dest->Flags & sTEX_TYPE_MASK) == sTEX_2D);
     sSetScreen((sTexture2D*)para.Source, oldflags, &para.DestRect, &para.SourceRect);
   }
   else

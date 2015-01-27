@@ -400,7 +400,7 @@ void AVIVideoEncoderVFW::WriteFrame(const sU32* buffer, sInt sx, sInt sy, sInt p
 
 void AVIVideoEncoderVFW::WriteFrame(const sImage* img)
 {
-  sVERIFY(img);
+  assert(img);
   WriteFrame(img->Data, img->SizeX, img->SizeY, img->SizeX * 4);
 }
 

@@ -84,7 +84,7 @@ void SerializeWz4Channel(sReader& stream, Wz4Channel*& chan)
     }
     break;
   default:
-    sVERIFY(L"unknown channel format");
+    assert(L"unknown channel format");
     break;
   }
 }

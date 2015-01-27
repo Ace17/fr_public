@@ -16,7 +16,7 @@ static sU8 WriteScratch;  // scratch byte in case of buffer overruns
 
 void sBitWriter::FlushBuffer(sBool finish)
 {
-  sVERIFY(Buffer != 0);
+  assert(Buffer != 0);
 
   if(BufferPtr == Buffer) // nothing to flush
     return;
@@ -40,7 +40,7 @@ void sBitWriter::FlushBuffer(sBool finish)
     BufferPtr = Buffer;
   }
 
-  sVERIFY(finish || (BufferPtr < BufferEnd));
+  assert(finish || (BufferPtr < BufferEnd));
 }
 
 sBitWriter::sBitWriter()
@@ -56,13 +56,13 @@ sBitWriter::sBitWriter()
 
 sBitWriter::~sBitWriter()
 {
-  sVERIFY(Buffer == 0);
+  assert(Buffer == 0);
 }
 
 void sBitWriter::Start(sU8* outBuffer, sDInt bufferSize)
 {
-  sVERIFY(outBuffer != 0);
-  sVERIFY(bufferSize > 0);
+  assert(outBuffer != 0);
+  assert(bufferSize > 0);
 
   File = 0;
   Buffer = BufferPtr = outBuffer;
@@ -78,7 +78,7 @@ void sBitWriter::Start(sFile* outFile)
 {
   static const sInt BufferSize = 4096;
 
-  sVERIFY(outFile != 0);
+  assert(outFile != 0);
   Start(new sU8[BufferSize], BufferSize);
   File = outFile;
 }
@@ -109,7 +109,7 @@ static sU8 ReadScratch = 0;
 
 void sBitReader::RefillBuffer()
 {
-  sVERIFY(Buffer != 0);
+  assert(Buffer != 0);
 
   if(!File) // not reading from a file => we run past the buffer!
   {
@@ -184,7 +184,7 @@ void sBitReader::Start(sFile* file)
 {
   static const sInt bufferSize = 4096;
 
-  sVERIFY(file != 0);
+  assert(file != 0);
   File = file;
   FileSize = file->GetSize();
 
@@ -275,7 +275,7 @@ static void AddToHeap(sStaticArray<sInt>& heap, const sStaticArray<sU32>& weight
 
 static sInt PopHeap(sStaticArray<sInt>& heap, const sStaticArray<sU32>& weight)
 {
-  sVERIFY(heap.GetCount() > 0);
+  assert(heap.GetCount() > 0);
   sInt ret = heap[0];
 
   sInt last = heap.RemTail();
@@ -319,7 +319,7 @@ void sBuildHuffmanCodeLens(sInt* lens, const sU32* freq, sInt count, sInt maxLen
 
   for(sInt i = 0; i < count; i++)
   {
-    sVERIFY(freq[i] < (1 << 24));
+    assert(freq[i] < (1 << 24));
     weight[i] = freq[i] << 8;
     alphabetSize += (freq[i] != 0);
   }
@@ -399,7 +399,7 @@ void sBuildHuffmanCodeValues(sU32* value, const sInt* lens, sInt count)
     maxLen = sMax(maxLen, lens[i]);
   }
 
-  sVERIFY(minLen >= 1 && maxLen <= 24); // 24 is limit for putbits
+  assert(minLen >= 1 && maxLen <= 24); // 24 is limit for putbits
 
   // assign codes
   sU32 code = 0;
@@ -513,7 +513,7 @@ sFastHuffmanDecoder::~sFastHuffmanDecoder()
 
 sBool sFastHuffmanDecoder::Init(const sInt* lens, sInt count)
 {
-  sVERIFY(count <= 4096); // max because of 16bit fastpath encoding
+  assert(count <= 4096); // max because of 16bit fastpath encoding
   CodeMap = new sU16[count];
   sU32* codes = new sU32[count];
 
@@ -523,7 +523,7 @@ sBool sFastHuffmanDecoder::Init(const sInt* lens, sInt count)
   for(sInt i = 0; i < count; i++)
     maxLen = sMax(maxLen, lens[i]);
 
-  sVERIFY(maxLen <= 24);
+  assert(maxLen <= 24);
 
   // build slow decode tables
   sU32 code = 0;

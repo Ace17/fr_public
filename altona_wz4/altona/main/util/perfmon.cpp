@@ -715,8 +715,8 @@ void sPerfAddThread(sThreadContext* ctx)
   if(!ctx)
     ctx = sGetThreadContext();
 
-  sVERIFY(!ctx->PerfData);
-  sVERIFY(NumThreads < MaxThreads);
+  assert(!ctx->PerfData);
+  assert(NumThreads < MaxThreads);
 
   Thread* t = (Thread*)Alloc(sizeof(Thread));
 
@@ -961,7 +961,7 @@ void sPerfAddValue(const sChar* name, const sInt* ptr, sInt min, sInt max, sInt 
 
   Lock->Lock();
 
-  sVERIFY(NumValues < MaxValues);
+  assert(NumValues < MaxValues);
   sInt id = NumValues++;
   Value& v = Values[id];
   v.Name = name;
@@ -1025,7 +1025,7 @@ void sPerfAddSwitch(const sChar* name, const sChar* choice, sInt* ptr)
     return;
 
   Lock->Lock();
-  sVERIFY(NumSwitches < MaxSwitches);
+  assert(NumSwitches < MaxSwitches);
   Switch& s = Switches[NumSwitches++];
   s.Name = name;
   s.Choice = choice;

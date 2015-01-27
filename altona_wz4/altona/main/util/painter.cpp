@@ -166,7 +166,7 @@ void sBasicPainter::End()
   Geo->Draw();
 #else
   sVertexSingle* vp;
-  sVERIFY(Used <= Alloc);
+  assert(Used <= Alloc);
 
   if(Used > 0)
   {
@@ -328,7 +328,7 @@ void sBasicPainter::Box(const sFRect& r, const sU32* col)
 #else
   vp = Vertices + Used * 4;
   Used++;
-  sVERIFY(Used <= Alloc);
+  assert(Used <= Alloc);
 #endif
 
   const sF32 f = 4.0f / 128;
@@ -351,7 +351,7 @@ void sBasicPainter::Line(sF32 x0, sF32 y0, sF32 x1, sF32 y1, sU32 c0, sU32 c1, s
 #else
   vp = Vertices + Used * 4;
   Used++;
-  sVERIFY(Used <= Alloc);
+  assert(Used <= Alloc);
 #endif
 
   d.Init(x1 - x0, y1 - y0, 0);

@@ -48,10 +48,10 @@ static Wz4BSPError SplitEdgeAlongPlane(const sVector31& a, const sVector31& b, c
 {
   sF32 da = a ^ plane;
   sF32 db = b ^ plane;
-  sVERIFY(sSign(da) != sSign(db) && sFAbs(da - db) >= 2.0f * eps);
+  assert(sSign(da) != sSign(db) && sFAbs(da - db) >= 2.0f * eps);
 
   sF32 t = da / (da - db); // =(0-da) / (db-da)
-  sVERIFY(t >= 0.0f && t <= 1.0f);
+  assert(t >= 0.0f && t <= 1.0f);
 
   out = sVector31((1.0f - t) * a + t * b);
 
@@ -480,7 +480,7 @@ void Wz4BSPFace::CalcFaceIntegrals(sInt c, sVector30& f, sVector30& f2, sVector3
 
 Wz4BSPPolyClass Wz4BSPFace::Classify(const sVector4& plane, sF32 eps) const
 {
-  sVERIFY(Count >= 3);
+  assert(Count >= 3);
   sInt nBack = 0, nFront = 0;
 
   for(sInt i = 0; i < Count; i++)
@@ -573,7 +573,7 @@ void Wz4BSPPolyhedron::Clear()
 
 void Wz4BSPPolyhedron::InitBBox(const sAABBox& box)
 {
-  sVERIFY(IsEmpty());
+  assert(IsEmpty());
   Faces.Resize(6);
 
   sVector31 points[8];
@@ -593,7 +593,7 @@ void Wz4BSPPolyhedron::InitBBox(const sAABBox& box)
 
 void Wz4BSPPolyhedron::InitTetrahedron(const sVector31& o, const sVector31& x, const sVector31& y, const sVector31& z)
 {
-  sVERIFY(IsEmpty());
+  assert(IsEmpty());
   Faces.HintSize(4);
 
   Faces.AddTail(Wz4BSPFace::MakeTri(o, y, x));
@@ -1152,7 +1152,7 @@ sVector4 Wz4BSP::PickSplittingPlane(const sArray<Wz4BSPFace*>& faces, sRandomMT&
 
     for(sInt j = 0; j < faces.GetCount(); j++)
     {
-      sVERIFY(faces[j]->IsPlanar(PlaneThickness));
+      assert(faces[j]->IsPlanar(PlaneThickness));
       switch(faces[j]->Classify(plane, PlaneThickness))
       {
       case WZ4BSP_ON: // on count for back
@@ -1338,8 +1338,8 @@ Wz4BSPNode* Wz4BSP::SplitTree(Wz4BSPNode* root, const sVector4& plane, sInt& spl
 
 void Wz4BSP::GeneratePolyhedronsR(Wz4BSPNode* node, const Wz4BSPPolyhedron& base, Wz4Mesh* out, sF32 explode)
 {
-  sVERIFY(node->Type == Wz4BSPNode::Inner);
-  sVERIFY(ErrorCode == WZ4BSP_OK);
+  assert(node->Type == Wz4BSPNode::Inner);
+  assert(ErrorCode == WZ4BSP_OK);
 
   Wz4BSPPolyhedron front, back;
   ErrorCode = base.Split(node->Plane, front, back, PlaneThickness);
@@ -1363,7 +1363,7 @@ void Wz4BSP::GeneratePolyhedronsR(Wz4BSPNode* node, const Wz4BSPPolyhedron& base
 
 void Wz4BSP::CalcBoundsR(Wz4BSPNode* node, const sAABBox& box)
 {
-  sVERIFY(node != 0);
+  assert(node != 0);
   node->Bounds = box;
 
   if(node->Type == Wz4BSPNode::Inner)
@@ -1456,7 +1456,7 @@ void Wz4BSP::CopyFrom(Wz4BSP* bsp)
 
 void Wz4BSP::MakePolyhedron(sInt nFaces, sInt nIter, sF32 power, sBool dualize, sInt seed)
 {
-  sVERIFY(nFaces >= 4);
+  assert(nFaces >= 4);
   sVector30* facePoints = new sVector30[nFaces];
   sRandomMT rand;
 
@@ -1648,7 +1648,7 @@ Wz4BSPError Wz4BSP::GeneratePolyhedrons(Wz4Mesh* out, sF32 explode)
 {
   Wz4BSPPolyhedron poly;
 
-  sVERIFY(out->IsEmpty());
+  assert(out->IsEmpty());
   out->AddDefaultCluster();
 
   ErrorCode = WZ4BSP_OK;
@@ -1678,7 +1678,7 @@ sBool Wz4BSP::TraceRay(const sRay& inRay, sF32 tMin, sF32 tMax, sF32& tHit, sVec
   sRay ray = inRay;
   ray.Start -= CenterPos;
 
-  sVERIFY(Root != 0);
+  assert(Root != 0);
   Wz4BSPNode* node = Root, * parent = 0;
 
   while(1)

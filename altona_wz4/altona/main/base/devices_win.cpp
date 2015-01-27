@@ -32,7 +32,7 @@ public:
   {
     Write = 0;
     Read = 0;
-    sVERIFY(sIsPower2(max));
+    assert(sIsPower2(max));
   }
 
   ~sLocklessQueue2()
@@ -49,7 +49,7 @@ public:
   void AddTail(const T& e)
   {
     sInt i = Write;
-    sVERIFY(i < Read + max);
+    assert(i < Read + max);
     Data[i & (max - 1)] = e;
     sWriteBarrier();
     Write = i + 1;

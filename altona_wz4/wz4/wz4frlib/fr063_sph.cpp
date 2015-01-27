@@ -596,7 +596,7 @@ void RPSPH::Hash()
     {
       sU32 hash = hashes[i];
       sInt n = HashTable[hash].Start++;
-      sVERIFY(n < nmax);
+      assert(n < nmax);
       parts1[n] = parts[i];
       parts1[n].Hash = hash;
       remap[i] = n;
@@ -614,10 +614,10 @@ void RPSPH::Hash()
 
   sFORALL(Springs, s)
   {
-    sVERIFY(s->Part0 < max);
-    sVERIFY(s->Part1 < max);
-    sVERIFY(remap[s->Part0] < nmax);
-    sVERIFY(remap[s->Part1] < nmax);
+    assert(s->Part0 < max);
+    assert(s->Part1 < max);
+    assert(remap[s->Part0] < nmax);
+    assert(remap[s->Part1] < nmax);
     s->Part0 = remap[s->Part0];
     s->Part1 = remap[s->Part1];
   }
@@ -697,7 +697,7 @@ void RPSPH::Inter(sInt n0, sInt n1)
       {
         if(rangestart[i] + rangecount[i] > max)
         {
-          sVERIFY(ranges < 10);   // this should only happen once per particle!
+          assert(ranges < 10);   // this should only happen once per particle!
           rangestart[ranges] = 0;
           rangecount[ranges] = rangestart[i] + rangecount[i] - max;
           rangecount[i] = max - rangestart[i];
@@ -718,7 +718,7 @@ void RPSPH::Inter(sInt n0, sInt n1)
 
       for(sInt j = j0; j < j1; j++)
       {
-        sVERIFY(j >= 0 && j < max);
+        assert(j >= 0 && j < max);
 
         if(j >= n)
           continue;
@@ -730,7 +730,7 @@ void RPSPH::Inter(sInt n0, sInt n1)
 
         if(lsq < r * r)
         {
-          sVERIFY(nearcount < MAXNEAR);
+          assert(nearcount < MAXNEAR);
           near[nearcount++] = j;
         }
       }

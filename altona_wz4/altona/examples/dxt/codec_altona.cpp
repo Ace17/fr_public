@@ -27,13 +27,13 @@ const sChar* CodecAltona::GetName()
 
 void CodecAltona::Pack(sImage* bmp, sImageData* dxt, sInt level)      // dummy!
 {
-  sVERIFY((dxt->Format & sTEX_FORMAT) == level);
+  assert((dxt->Format & sTEX_FORMAT) == level);
   dxt->ConvertFrom(bmp);
 }
 
 void CodecAltona::Unpack(sImage* bmp, sImageData* dxt, sInt level)
 {
-  sVERIFY((dxt->Format & sTEX_FORMAT) == level);
+  assert((dxt->Format & sTEX_FORMAT) == level);
   dxt->ConvertTo(bmp);
 }
 

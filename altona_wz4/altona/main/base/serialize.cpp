@@ -91,7 +91,7 @@ void sWriter::Begin(sFile* file)
   BufferSize = sSerMaxBytes * 2 + sSerMaxAlign;
   Buffer = (sU8*)sAllocMem_(BufferSize, sSerMaxAlign, 0);
 #else
-  sVERIFY(!sSerBufferUsed);   // multiple file reader/writers not supported with STATICMEM
+  assert(!sSerBufferUsed);   // multiple file reader/writers not supported with STATICMEM
   BufferSize = sSerBufferSize;
   Buffer = sSerBuffer;
   sSerBufferUsed = sTRUE;
@@ -103,7 +103,7 @@ void sWriter::Begin(sFile* file)
   if(!File)
     Ok = 0;
 
-  sVERIFY((sDInt(Buffer) & (sSerMaxAlign - 1)) == 0);
+  assert((sDInt(Buffer) & (sSerMaxAlign - 1)) == 0);
 
   WOCount = 1;
   sClear(WOH);
@@ -135,7 +135,7 @@ void sWriter::Check()
     {
       sDInt bytes = (Data - Buffer) & ~(sSerMaxAlign - 1);
       sDInt left = (Data - Buffer) - bytes;
-      sVERIFY(bytes > 0);
+      assert(bytes > 0);
       File->Write(Buffer, bytes);
       sCopyMem(Buffer, Buffer + bytes, left);
       Data -= bytes;
@@ -204,7 +204,7 @@ void sWriter::Align(sInt alignment)
 
 sInt sWriter::RegisterPtr(void* obj)
 {
-  sVERIFY(WOCount < sSerObjectMaxW);
+  assert(WOCount < sSerObjectMaxW);
 
   sDInt hash = sDInt(obj);
   hash = (hash & 0xffff) ^ ((hash >> 16) & 0xffff);
@@ -238,7 +238,7 @@ sBool sWriter::IsRegistered(void* obj)
     if(e->Ptr == obj)
     {
       sInt i = sInt(e - WOL);
-      sVERIFY(i >= 1 && i < WOCount);
+      assert(i >= 1 && i < WOCount);
       return 1;
     }
 
@@ -269,7 +269,7 @@ void sWriter::VoidPtr(const void* obj)
     if(e->Ptr == obj)
     {
       sInt i = sInt(e - WOL);
-      sVERIFY(i >= 1 && i < WOCount);
+      assert(i >= 1 && i < WOCount);
       U32(i);
       return;
     }
@@ -474,7 +474,7 @@ void sReader::Begin(sFile* file)
   }
 
 #else
-  sVERIFY(!sSerBufferUsed);   // multiple file reader/writers not supported with STATICMEM
+  assert(!sSerBufferUsed);   // multiple file reader/writers not supported with STATICMEM
   sSerBufferUsed = sTRUE;
   BufferSize = sSerBufferSize;
   Buffer = sSerBuffer;
@@ -672,7 +672,7 @@ const sU8* sReader::GetPtr(sInt bytes)
   Check();
   result = Data;
   Data += bytes;
-  sVERIFY(Data < CheckEnd);     // don't use this function, it is broken by design
+  assert(Data < CheckEnd);     // don't use this function, it is broken by design
   Check();
   return result;
 }
@@ -684,12 +684,12 @@ void sReader::Align(sInt alignment)
   if(misalign > 0)
     Data += alignment - misalign;
 
-  sVERIFY((sDInt(Data) & (alignment - 1)) == 0);
+  assert((sDInt(Data) & (alignment - 1)) == 0);
 }
 
 sInt sReader::RegisterPtr(void* obj)
 {
-  sVERIFY(ROCount < sSerObjectMax);
+  assert(ROCount < sSerObjectMax);
   ROL[ROCount] = obj;
   return ROCount++;
 }
@@ -698,7 +698,7 @@ void sReader::VoidPtr(void*& obj)
 {
   sInt i;
   S32(i);
-  sVERIFY(i >= 0 && i < ROCount);
+  assert(i >= 0 && i < ROCount);
   obj = ROL[i];
 }
 

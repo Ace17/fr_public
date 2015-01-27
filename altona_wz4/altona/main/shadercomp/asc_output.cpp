@@ -219,7 +219,7 @@ void ACDoc::OutTypeDecoration(ACType* type, sPoolString name)
 
     if((OutputLanguage & sSTF_PLATFORM) == sSTF_HLSL23)
     {
-      sVERIFY(tname[0] == 'u');
+      assert(tname[0] == 'u');
       tname++;
     }
 
@@ -718,7 +718,7 @@ void ACDoc::OutExpr(ACExpression* expr, sBool brackets)
           Print(L",");
 
         first = 0;
-        sVERIFY(para->Op == ACE_COMMA);
+        assert(para->Op == ACE_COMMA);
         OutExpr(para->Left, 1);
         para = para->Right;
       }
@@ -828,7 +828,7 @@ void ACDoc::OutExpr(ACExpression* expr, sBool brackets)
             Print(L",");
 
           first = 0;
-          sVERIFY(para->Op == ACE_COMMA);
+          assert(para->Op == ACE_COMMA);
           OutExpr(para->Left);
           para = para->Right;
         }

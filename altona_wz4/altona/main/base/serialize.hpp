@@ -573,7 +573,7 @@ public:
   {
     sInt max;
     S32(max);
-    sVERIFY(a.GetCount() == 0);
+    assert(a.GetCount() == 0);
     sTAG_CALLER();
     a.Resize(max);
   }
@@ -583,7 +583,7 @@ public:
   {
     sInt max;
     S32(max);
-    sVERIFY(a.GetCount() == 0);
+    assert(a.GetCount() == 0);
     sTAG_CALLER();
     a.Resize(max);
 
@@ -599,7 +599,7 @@ public:
   {
     sInt max;
     S32(max);
-    sVERIFY(a.GetCount() == 0);
+    assert(a.GetCount() == 0);
     sTAG_CALLER();
     a.HintSize(max + additional);
     a.Resize(max);
@@ -623,7 +623,7 @@ public:
   {
     sInt max;
     S32(max);
-    sVERIFY(a.GetCount() == 0);
+    assert(a.GetCount() == 0);
     sTAG_CALLER();
     a.Resize(max);
     sInt interval = 4095 / sizeof(Type);
@@ -646,7 +646,7 @@ public:
   {
     sInt max;
     S32(max);
-    sVERIFY(a.GetCount() == 0);
+    assert(a.GetCount() == 0);
     sTAG_CALLER();
     a.Resize(max);
     sInt interval = 4095 / sizeof(Type);

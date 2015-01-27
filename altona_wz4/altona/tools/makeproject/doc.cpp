@@ -1754,7 +1754,7 @@ void Document::_Project(sBool projectKeyword)
       // parse it as if it was a normal file modifier
       sAutoArray<Config*> modConfig;
       _Config(modConfig, sTRUE);
-      sVERIFY(modConfig.GetCount() == 1);
+      assert(modConfig.GetCount() == 1);
 
       // then add settings to all matching solution configurations
       Config* mod = modConfig[0];

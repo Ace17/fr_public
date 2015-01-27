@@ -82,7 +82,7 @@ void sWindow::OnPaint3D()
 
 void sWindow::OnLayout()
 {
-  sVERIFY(Childs.GetCount() <= 1);
+  assert(Childs.GetCount() <= 1);
 
   sWindow* c;
   sFORALL(Childs, c)

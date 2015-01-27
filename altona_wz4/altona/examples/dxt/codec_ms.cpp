@@ -92,7 +92,7 @@ void CodecMS::Pack(sImage* bmp, sImageData* dxt, sInt level)
   wr.bottom = ys;
 
   surf = 0;
-  sVERIFY(DXDev);
+  assert(DXDev);
   DXErr(DXDev->CreateOffscreenPlainSurface(xs, ys, d3dformat, D3DPOOL_SCRATCH, &surf, 0));
   DXErr(D3DXLoadSurfaceFromMemory(surf, 0, 0, bmp->Data, srcfmt, xs * 4, 0, &wr, D3DX_FILTER_POINT | D3DX_FILTER_DITHER, 0));
 
@@ -155,7 +155,7 @@ void CodecMS::Unpack(sImage* bmp, sImageData* dxt, sInt level)
   wr.bottom = ys;
 
   surf = 0;
-  sVERIFY(DXDev);
+  assert(DXDev);
   DXErr(DXDev->CreateOffscreenPlainSurface(xs, ys, D3DFMT_A8R8G8B8, D3DPOOL_SCRATCH, &surf, 0));
   DXErr(D3DXLoadSurfaceFromMemory(surf, 0, 0, dxt->Data, d3dformat, xs / 4 * blocksize, 0, &wr, D3DX_FILTER_POINT, 0));
 

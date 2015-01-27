@@ -398,10 +398,10 @@ void GenBitmap::CopyFrom(wObject* o)
 {
   GenBitmap* ob;
 
-  sVERIFY(o->IsType(GenBitmapType));
+  assert(o->IsType(GenBitmapType));
 
   ob = (GenBitmap*)o;
-  sVERIFY(ob->Data);
+  assert(ob->Data);
 
 // Texture = sINVALID;
   Init(ob->XSize, ob->YSize);
@@ -714,14 +714,14 @@ void GenBitmap::Perlin(sInt freq, sInt oct, sF32 fadeoff, sInt seed, sInt mode, 
 
 void GenBitmap::Loop(sInt mode, GenBitmap* srca, GenBitmap* srcb)
 {
-  sVERIFY(Size == srca->Size);
-  sVERIFY(srcb == 0 || Size == srcb->Size);
+  assert(Size == srca->Size);
+  assert(srcb == 0 || Size == srcb->Size);
   Bitmap_Inner(Data, srca->Data, Size, mode, srcb ? srcb->Data : 0);
 }
 
 void GenBitmap::Loop(sInt mode, sU64* srca, GenBitmap* srcb)
 {
-  sVERIFY(srcb == 0 || Size == srcb->Size);
+  assert(srcb == 0 || Size == srcb->Size);
   Bitmap_Inner(Data, srca, Size, mode, srcb ? srcb->Data : 0);
 }
 
@@ -763,7 +763,7 @@ void GenBitmap::PreMulAlpha()
 
 void __stdcall Bitmap_Inner(sU64* d, sU64* s, sInt count, sInt mode, sU64* x)
 {
-  sVERIFY(count && (count & 3) == 0); // always at least 4 pixels. shouldn't be a problem.
+  assert(count && (count & 3) == 0); // always at least 4 pixels. shouldn't be a problem.
 
   __m128i* dst = (__m128i*)d;
   const __m128i* src = (const __m128i*)s;
@@ -1869,7 +1869,7 @@ void GenBitmap::Blur(sInt flags, sF32 sx, sF32 sy, sF32 _amp)
   }
   while(repeat--);
 
-  sVERIFY(qq != (sU16*)Data);
+  assert(qq != (sU16*)Data);
   delete[] qq;
 }
 
@@ -2004,7 +2004,7 @@ void GenBitmap::Twirl(GenBitmap* src, sF32 strength, sF32 gamma, sF32 rx, sF32 r
   sInt px, py, dx, dy, u, v;
   BilinearContext ctx;
 
-  sVERIFY(Size == src->Size);
+  assert(Size == src->Size);
 
 // prepare
 
@@ -2180,8 +2180,8 @@ void GenBitmap::Distort(GenBitmap* src, GenBitmap* map, sF32 dist, sInt border)
   sInt bumpx, bumpy;
   BilinearContext ctx;
 
-  sVERIFY(Size == src->Size);
-  sVERIFY(Size == map->Size);
+  assert(Size == src->Size);
+  assert(Size == map->Size);
 
 // prepare
 
@@ -2236,7 +2236,7 @@ void GenBitmap::Normals(GenBitmap* src, sF32 _dist, sInt mode)
   sF32 e;
   sInt dist;
 
-  sVERIFY(Size == src->Size);
+  assert(Size == src->Size);
 
   dist = sInt(_dist * 65536.0f);
   d = (sU16*)Data;
@@ -3286,7 +3286,7 @@ void GenBitmap::Bricks(sInt bmxs, sInt bmys, sInt color0, sInt color1, sInt colo
   {
     fy = 0x4000 / YSize * y * ty;
     by = fy >> 14;
-    sVERIFY(by < ty);
+    assert(by < ty);
     fy = fy & 0x3fff;
     sideakku = (by * sidestep) & 0x7fff;
 

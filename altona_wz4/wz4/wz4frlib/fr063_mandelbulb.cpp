@@ -142,7 +142,7 @@ void RNFR063_Mandelbulb::Prepare(Wz4RenderContext* ctx)
     if(!n)
       break;
 
-    sVERIFY(n->Evictable);
+    assert(n->Evictable);
 
     if(n->Area >= Para.LodDrop * lodfactor)
       break;
@@ -195,7 +195,7 @@ void RNFR063_Mandelbulb::Prepare(Wz4RenderContext* ctx)
 
   if(!OctMan->Pipeline1.IsEmpty())
   {
-    sVERIFY(Workload == 0);
+    assert(Workload == 0);
 
     if(Para.Multithreading)   // enable / disable threading
       Workload = sSched->BeginWorkload();
@@ -452,7 +452,7 @@ void OctManager::NewFrame()
   VerticesDrawn = 0;
   DeepestDrawn = 0;
   NodesDrawn = 0;
-  sVERIFY(CurrentTarget == 0);
+  assert(CurrentTarget == 0);
 }
 
 void OctManager::LostDevice()
@@ -559,7 +559,7 @@ void OctManager::ReadbackRender()
       sSchedMon->End(0);
       const sHalfFloat* f16 = (const sHalfFloat*)t->trans->BeginRead(pitch);
 
-      sVERIFY(pitch == 256 * 4 * sizeof(sHalfFloat));
+      assert(pitch == 256 * 4 * sizeof(sHalfFloat));
 
       sFORALL(t->Jobs, job)
       {
@@ -872,7 +872,7 @@ void OctManager::Draw()
   while(!DirtyHandles.IsEmpty())
   {
     gh = DirtyHandles.RemTail();
-    sVERIFY(gh->Valid == 0);
+    assert(gh->Valid == 0);
 
     // check for space
 
@@ -1504,8 +1504,8 @@ void OctNode::Clear()
 
 void OctNode::Free()
 {
-  sVERIFY(!Initializing || OctMan->EndGame);
-  sVERIFY(!Splitting || OctMan->EndGame);
+  assert(!Initializing || OctMan->EndGame);
+  assert(!Splitting || OctMan->EndGame);
 
   for(sInt i = 0; i < 8; i++)
   {
@@ -1578,7 +1578,7 @@ void OctNode::DeleteChilds()
 {
   if(Evictable)
   {
-    sVERIFY(!Splitting);
+    assert(!Splitting);
 
     for(sInt i = 0; i < 8; i++)
     {
@@ -1774,7 +1774,7 @@ void OctNode::MakeChilds0()
 
 void OctNode::Init0(sInt x_, sInt y_, sInt z_, sInt q_)
 {
-  sVERIFY(q == 0);
+  assert(q == 0);
   x = x_;
   y = y_;
   z = z_;
@@ -1807,7 +1807,7 @@ static void MandelTaskFunc(sStsManager*, sStsThread* thread, sInt start, sInt co
 
 void OctNode::MakeChilds1(sStsWorkload* wl)
 {
-  sVERIFY(Splitting);
+  assert(Splitting);
 
   for(sInt i = 0; i < 8; i++)
   {
@@ -1827,7 +1827,7 @@ void OctNode::MakeChilds1(sStsWorkload* wl)
 
 void OctNode::MakeChilds2()
 {
-  sVERIFY(Splitting);
+  assert(Splitting);
 
   for(sInt i = 0; i < 8; i++)
   {
@@ -1846,9 +1846,9 @@ void OctNode::MakeChilds2()
 
 void OctNode::Init1(sInt threadindex)
 {
-  sVERIFY(Initializing);
+  assert(Initializing);
 
-  sVERIFY(threadindex >= 0 && threadindex < OctMan->ThreadMax);
+  assert(threadindex >= 0 && threadindex < OctMan->ThreadMax);
   VertexUsed = 0;
   VertexAlloc = OctMan->ThreadVertexAlloc;
   IndexUsed = 0;
@@ -2051,7 +2051,7 @@ void OctNode::Init1(sInt threadindex)
           if(!(VertexUsed + vc <= VertexAlloc && IndexUsed + vc <= IndexAlloc))
             sDPrintF(L"%d %d %d | %d %d %d\n", VertexUsed, vc, VertexAlloc, IndexUsed, vc * 3, IndexAlloc);
 
-          sVERIFY(VertexUsed + vc <= VertexAlloc && IndexUsed + vc * 3 <= IndexAlloc);
+          assert(VertexUsed + vc <= VertexAlloc && IndexUsed + vc * 3 <= IndexAlloc);
 
           for(sInt i = 0; i < vc; i += 3)
           {
@@ -2070,7 +2070,7 @@ void OctNode::Init1(sInt threadindex)
                                 + (n1 * n1) * (tz + e0z)
                                 + (n1) * (ty + e0y)
                                 + (1) * (tx + e0x);
-              sVERIFY(cacheindex >= 0 && cacheindex < n1 * n1 * n1 * 3);
+              assert(cacheindex >= 0 && cacheindex < n1 * n1 * n1 * 3);
               verts[j] = icache[cacheindex];
 
               if(verts[j] == -1)
@@ -2149,7 +2149,7 @@ void OctNode::Init1(sInt threadindex)
 
 void OctNode::Init2()
 {
-  sVERIFY(Initializing);
+  assert(Initializing);
   Initializing = 0;
 
   OctMan->FreeMemBundle(Bundle);

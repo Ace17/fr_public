@@ -60,7 +60,7 @@ void MandelInfo::InitData(sU8* data, sInt pitch, sInt sx, sInt sy, sInt batches)
 
   Batches = batches;
   LinesPerBatch = sy / batches;
-  sVERIFY(sy == LinesPerBatch * Batches);
+  assert(sy == LinesPerBatch * Batches);
 }
 
 void MandelInfo::InitRect(sF64 cx_, sF64 cy_, sF64 sx_, sF64 sy_)
@@ -152,7 +152,7 @@ MyApp::~MyApp()
 void TaskCode(sStsManager* m, sStsThread* th, sInt start, sInt count, void* data)
 {
   sSchedMon->Begin(th->GetIndex(), 0x40ff40);
-  sVERIFY(count == 1);
+  assert(count == 1);
   MandelInfo* mi = (MandelInfo*)data;
   mi->DoBatch(start);
 
@@ -188,7 +188,7 @@ void MyApp::Update(sTexture2D* tex)
 {
   sU8* data;
   sInt pitch;
-  sVERIFY(tex->BitsPerPixel == 32);
+  assert(tex->BitsPerPixel == 32);
 
   static sInt time = 0;
   sU32 qual = sGetKeyQualifier();

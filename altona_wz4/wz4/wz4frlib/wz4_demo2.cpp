@@ -50,7 +50,7 @@ void Wz4RenderType_::BeginShow(wPaintInfo& pi)
 
 void Wz4RenderType_::Show(wObject* obj, wPaintInfo& pi)
 {
-  sVERIFY(obj->Type == Wz4RenderType);
+  assert(obj->Type == Wz4RenderType);
   Wz4Render* ro = (Wz4Render*)obj;
 
   // prepare environment
@@ -180,8 +180,8 @@ Wz4Render::~Wz4Render()
 
 void Wz4Render::AddChilds(wCommand* cmd, sInt rp, sInt first, sInt last)
 {
-  sVERIFY(RootNode->Op == 0);
-  sVERIFY(RootNode->Code == 0);
+  assert(RootNode->Op == 0);
+  assert(RootNode->Code == 0);
 
   AddCode(cmd, rp);
 
@@ -371,7 +371,7 @@ void Wz4ParticleNode::SimulateCalc(Wz4RenderContext* ctx)
 
 void Wz4ParticlesType_::Show(wObject* obj, wPaintInfo& pi)
 {
-  sVERIFY(obj->Type == Wz4ParticlesType);
+  assert(obj->Type == Wz4ParticlesType);
   Wz4Particles* p = (Wz4Particles*)obj;
 
   sF32 time = sFMod(pi.TimeBeat / 65536.0f / 16, 1);
@@ -540,7 +540,7 @@ void Wz4RenderContext::SetLocalTime(sF32 time)
 
 void Wz4RenderContext::RenderControl(Wz4RenderNode* root, sInt clrflg, sU32 clrcol, const sTargetSpec& spec)
 {
-  sVERIFY(RenderMode == 0);
+  assert(RenderMode == 0);
 
   sMatrix34 mat;
   Root = root;
@@ -642,7 +642,7 @@ void Wz4RenderContext::RenderControl(Wz4RenderNode* root, sInt clrflg, sU32 clrc
 
 void Wz4RenderContext::RenderControlZ(Wz4RenderNode* root, const sTargetSpec& spec)
 {
-  sVERIFY(RenderMode == 0);
+  assert(RenderMode == 0);
 
   sMatrix34 mat;
   Root = root;
@@ -682,7 +682,7 @@ void Wz4RenderContext::ClearRecFlags(Wz4RenderNode* root)
 void Wz4RenderContext::NextRecMask()
 {
   RecMask *= 2;
-  sVERIFY(RecMask)
+  assert(RecMask)
 }
 
 sBool Wz4RenderContext::IsCommonRendermode(sBool zwrite)

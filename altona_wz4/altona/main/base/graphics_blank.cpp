@@ -77,7 +77,7 @@ void sVertexFormatHandle::Create()
   {
     stream = (Data[i] & sVF_STREAMMASK) >> sVF_STREAMSHIFT;
 
-    sVERIFY(i < 31);
+    assert(i < 31);
     switch(Data[i] & sVF_TYPEMASK)
     {
     case sVF_F2:  b[stream] += 2 * 4;

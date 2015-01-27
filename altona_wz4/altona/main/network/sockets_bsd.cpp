@@ -334,7 +334,7 @@ sBool sTCPSocket::Write(const void* buffer, sDInt size, sDInt& written)
   }
 
   sInt truncSize = (sInt)size;
-  sVERIFY(truncSize == size);
+  assert(truncSize == size);
 
   sInt res = send(P->Socket, (const char*)buffer, truncSize, 0);
 
@@ -361,7 +361,7 @@ sBool sTCPSocket::Read(void* buffer, sDInt size, sDInt& read)
   }
 
   sInt truncSize = (sInt)size;
-  sVERIFY(truncSize == size);
+  assert(truncSize == size);
 
   sInt res = recv(P->Socket, (char*)buffer, truncSize, 0);
 

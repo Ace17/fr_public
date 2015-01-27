@@ -492,7 +492,7 @@ sProgressDialog::sProgressDialog(const sChar* title, const sChar* text)
 
 sProgressDialog::~sProgressDialog()
 {
-  sVERIFY(Instance == this);
+  assert(Instance == this);
   Instance = 0;
 }
 
@@ -548,7 +548,7 @@ void sProgressDialog::Render()
 
 void sProgressDialog::Open(const sChar* title, const sChar* text)
 {
-  sVERIFY(Instance == 0);
+  assert(Instance == 0);
 #if !sCOMMANDLINE
   Instance = new sProgressDialog(title, text);
 #endif
@@ -629,7 +629,7 @@ void sProgressDialog::PopLevel()
 {
   if(Instance)
   {
-    sVERIFY(Instance->BracketStack.GetCount() > 1);
+    assert(Instance->BracketStack.GetCount() > 1);
     sF32 tailProgress = Instance->BracketStack.GetTail().End;
     Instance->BracketStack.RemTail();
     SetProgress(tailProgress);

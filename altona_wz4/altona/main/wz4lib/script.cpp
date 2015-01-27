@@ -243,7 +243,7 @@ void ScriptSpline::Init(sInt count)
 
 void ScriptSpline::Eval(sF32 time, sF32* result, sInt count)
 {
-  sVERIFY(count <= Count);
+  assert(count <= Count);
   switch(Flags & SSF_BoundMask)
   {
   case SSF_BoundClamp:
@@ -396,7 +396,7 @@ void ScriptSpline::Eval(sF32 time, sF32* result, sInt count)
 
 void ScriptSpline::EvalD(sF32 time, sF32* result, sInt count)
 {
-  sVERIFY(count <= Count);
+  assert(count <= Count);
   switch(Flags & SSF_BoundMask)
   {
   case SSF_BoundZero:
@@ -517,7 +517,7 @@ sF64 ScriptSpline::ArcLengthIntegrand(sF64 x, void* user)
 {
   ScriptSpline* me = (ScriptSpline*)user;
   sF32 vals[16];
-  sVERIFY(me->Count <= sCOUNTOF(vals));
+  assert(me->Count <= sCOUNTOF(vals));
 
   // calc derivative at given time
   me->EvalD(x, vals, me->Count);
@@ -638,8 +638,8 @@ ScriptValue* ScriptContext::MakeValue(sInt type, sInt dim)
 
 ScriptValue* ScriptContext::CopyValue(ScriptValue* s)
 {
-  sVERIFY(!s->Func);
-  sVERIFY(!s->Spline);
+  assert(!s->Func);
+  assert(!s->Spline);
   ScriptValue* d = MakeValue(s->Type, s->Count);
 
   if(s->Type == ScriptTypeString)
@@ -683,9 +683,9 @@ ScriptValue* ScriptContext::MakeValue(ScriptSpline* spl)
 
 void ScriptContext::BindLocal(ScriptSymbol* sym, ScriptValue* val)
 {
-  sVERIFY(val->OldValue == 0);
-  sVERIFY(val->Symbol == 0);
-  sVERIFY(val->ScopeLink == 0);
+  assert(val->OldValue == 0);
+  assert(val->Symbol == 0);
+  assert(val->ScopeLink == 0);
 
   val->OldValue = sym->Value;
   val->Symbol = sym;
@@ -697,9 +697,9 @@ void ScriptContext::BindLocal(ScriptSymbol* sym, ScriptValue* val)
 
 void ScriptContext::BindGlobal(ScriptSymbol* sym, ScriptValue* val)
 {
-  sVERIFY(val->OldValue == 0);
-  sVERIFY(val->Symbol == 0);
-  sVERIFY(val->ScopeLink == 0);
+  assert(val->OldValue == 0);
+  assert(val->Symbol == 0);
+  assert(val->ScopeLink == 0);
 
   val->OldValue = sym->Value;
   val->Symbol = sym;
@@ -837,7 +837,7 @@ ScriptFunc* ScriptContext::AddFunc(sPoolString name, const sChar* proto)
       func->Args[i] = args[i];
   }
 
-  sVERIFY(*proto == 0);
+  assert(*proto == 0);
 
   return func;
 }
@@ -851,7 +851,7 @@ static void Unlink(ScriptValue* sv)
   while(sv)
   {
     next = sv->ScopeLink;
-    sVERIFY(sv->Symbol->Value == sv);
+    assert(sv->Symbol->Value == sv);
     sv->Symbol->Value = sv->OldValue;
 
     sv->OldValue = 0;
@@ -898,7 +898,7 @@ void ScriptContext::PushGlobal()
 void ScriptContext::PopGlobal()
 {
   sInt n = Scopes.GetCount() - 1;
-  sVERIFY(n >= 0);
+  assert(n >= 0);
   ScriptValue* sv = Scopes[n];
   Scopes[n] = 0;
   Scopes.RemTail();
@@ -942,8 +942,8 @@ void ScriptContext::BeginExe()
   ScriptFunc* func;
 
   sFORALL(Symbols, sym)
-  sVERIFY(sym->Value == 0);
-  sVERIFY(Scopes.GetCount() == 0);
+  assert(sym->Value == 0);
+  assert(Scopes.GetCount() == 0);
   ClearImports();
 
   Pool->Reset();
@@ -962,7 +962,7 @@ void ScriptContext::EndExe()
 {
   PopGlobal();
   FlushLocal();
-  sVERIFY(Scopes.GetCount() == 0);
+  assert(Scopes.GetCount() == 0);
 
   Pool->Reset();
 }
@@ -1027,7 +1027,7 @@ void ScriptContext::BindLocalColor(ScriptSymbol* sym, sU32* ptr)
    void ScriptContext::UnbindLocalColor(ScriptSymbol *sym,sU32 *ptr)
    {
    sVector4 c;
-   sVERIFY(sym->CCount==4 && sym->CType==2);
+   assert(sym->CCount==4 && sym->CType==2);
    c.x = sym->Value->FloatPtr[0];
    c.y = sym->Value->FloatPtr[1];
    c.z = sym->Value->FloatPtr[2];
@@ -1243,96 +1243,96 @@ sBool ScriptExecute(const sU32* Code, ScriptContext* ctx, sString<1024>& ErrorMs
       break;
 
     case SC_NOT | SC_INT:
-      sVERIFY(count == 1);
+      assert(count == 1);
       Stack[index - 1].i = !Stack[index - 1].i;
       break;
     case SC_NOTNOT | SC_INT:
-      sVERIFY(count == 1);
+      assert(count == 1);
       Stack[index - 1].i = !!Stack[index - 1].i;
       break;
     case SC_LOGAND | SC_INT:
-      sVERIFY(count == 1);
+      assert(count == 1);
       Stack[index - 2].i = Stack[index - 2].i && Stack[index - 1].i;
       index--;
       break;
     case SC_LOGOR | SC_INT:
-      sVERIFY(count == 1);
+      assert(count == 1);
       Stack[index - 2].i = Stack[index - 2].i || Stack[index - 1].i;
       index--;
       break;
     case SC_BINAND | SC_INT:
-      sVERIFY(count == 1);
+      assert(count == 1);
       Stack[index - 2].i = Stack[index - 2].i & Stack[index - 1].i;
       index--;
       break;
     case SC_BINOR | SC_INT:
-      sVERIFY(count == 1);
+      assert(count == 1);
       Stack[index - 2].i = Stack[index - 2].i | Stack[index - 1].i;
       index--;
       break;
     case SC_BINXOR | SC_INT:
-      sVERIFY(count == 1);
+      assert(count == 1);
       Stack[index - 2].i = Stack[index - 2].i ^ Stack[index - 1].i;
       index--;
       break;
 
     case SC_EQ | SC_INT:
-      sVERIFY(count == 1);
+      assert(count == 1);
       Stack[index - 2].i = Stack[index - 2].i == Stack[index - 1].i;
       index--;
       break;
     case SC_EQ | SC_FLOAT:
-      sVERIFY(count == 1);
+      assert(count == 1);
       Stack[index - 2].i = Stack[index - 2].f == Stack[index - 1].f;
       index--;
       break;
     case SC_NE | SC_INT:
-      sVERIFY(count == 1);
+      assert(count == 1);
       Stack[index - 2].i = Stack[index - 2].i != Stack[index - 1].i;
       index--;
       break;
     case SC_NE | SC_FLOAT:
-      sVERIFY(count == 1);
+      assert(count == 1);
       Stack[index - 2].i = Stack[index - 2].f != Stack[index - 1].f;
       index--;
       break;
     case SC_GT | SC_INT:
-      sVERIFY(count == 1);
+      assert(count == 1);
       Stack[index - 2].i = Stack[index - 2].i > Stack[index - 1].i;
       index--;
       break;
     case SC_GT | SC_FLOAT:
-      sVERIFY(count == 1);
+      assert(count == 1);
       Stack[index - 2].i = Stack[index - 2].f > Stack[index - 1].f;
       index--;
       break;
     case SC_GE | SC_INT:
-      sVERIFY(count == 1);
+      assert(count == 1);
       Stack[index - 2].i = Stack[index - 2].i >= Stack[index - 1].i;
       index--;
       break;
     case SC_GE | SC_FLOAT:
-      sVERIFY(count == 1);
+      assert(count == 1);
       Stack[index - 2].i = Stack[index - 2].f >= Stack[index - 1].f;
       index--;
       break;
     case SC_LT | SC_INT:
-      sVERIFY(count == 1);
+      assert(count == 1);
       Stack[index - 2].i = Stack[index - 2].i < Stack[index - 1].i;
       index--;
       break;
     case SC_LT | SC_FLOAT:
-      sVERIFY(count == 1);
+      assert(count == 1);
       Stack[index - 2].i = Stack[index - 2].f < Stack[index - 1].f;
       index--;
       break;
     case SC_LE | SC_INT:
-      sVERIFY(count == 1);
+      assert(count == 1);
       Stack[index - 2].i = Stack[index - 2].i <= Stack[index - 1].i;
       index--;
       break;
     case SC_LE | SC_FLOAT:
-      sVERIFY(count == 1);
+      assert(count == 1);
       Stack[index - 2].i = Stack[index - 2].f <= Stack[index - 1].f;
       index--;
       break;
@@ -1688,7 +1688,7 @@ sBool ScriptExecute(const sU32* Code, ScriptContext* ctx, sString<1024>& ErrorMs
 
         index--;
         sF32 result[8];
-        sVERIFY(count <= 8);
+        assert(count <= 8);
         val->Spline->Eval(Stack[index].f, result, count);
 
         for(sInt i = 0; i < count; i++)
@@ -2760,7 +2760,7 @@ ScriptCompiler::Expression* ScriptCompiler::NewExprCT(sInt code, Expression* a, 
 
 void ScriptCompiler::PromoteType(Expression** p)
 {
-  sVERIFY((*p)->Type == ScriptTypeInt);
+  assert((*p)->Type == ScriptTypeInt);
   Expression* expr = NewExpr(SC_ITOF, *p);
   expr->Type = ScriptTypeFloat;
   expr->Count = expr->a->Count;
@@ -2769,8 +2769,8 @@ void ScriptCompiler::PromoteType(Expression** p)
 
 void ScriptCompiler::PromoteCount(Expression** p, sInt count)
 {
-  sVERIFY((*p)->Count == 1);
-  sVERIFY(count > 1);
+  assert((*p)->Count == 1);
+  assert(count > 1);
   Expression* expr = NewExpr(SC_DUP, *p);
   expr->Type = (*p)->Type;
   expr->Count = count;
@@ -2844,7 +2844,7 @@ void ScriptCompiler::_Range(sInt& r0, sInt& r1, ScriptCompiler::Expression*& ei)
     if(Scan.Errors)
       return;
 
-    sVERIFY(c >= 1 && c <= 4);
+    assert(c >= 1 && c <= 4);
     r0 = n[0];
     r1 = r0 + c;
 
@@ -2892,7 +2892,7 @@ void ScriptCompiler::CheckFunc(Expression* expr, ScriptFunc* func)
     for(sInt i = 0; i < argcount; i++)
     {
       sInt count = func->Args[i].VarCount;
-      sVERIFY(count < 10);
+      assert(count < 10);
 
       if(count == 0)
         count = func->Args[i].Count;
@@ -2919,7 +2919,7 @@ void ScriptCompiler::CheckFunc(Expression* expr, ScriptFunc* func)
 
     if(count > 0)
     {
-      sVERIFY(count < 10);
+      assert(count < 10);
       count = ac[count];
     }
     else
@@ -4555,7 +4555,7 @@ void ScriptCompiler::ConstFold(Expression* expr)
   {
     sInt type = expr->Type;
     sInt max = expr->Count;
-    sVERIFY(expr->a->Count == 1)
+    assert(expr->a->Count == 1)
 
     sU32 * val = Pool->Alloc<sU32>(max);
 

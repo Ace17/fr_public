@@ -91,12 +91,12 @@ sDemoPackFile::sDemoPackFile(const sChar* name)
 
 #endif
 
-  sVERIFY(ptr[0] == 0xdeadbeef);
+  assert(ptr[0] == 0xdeadbeef);
   Count = ptr[1];
 
   Data = new sU8[Header[2]];
   sCopyMem(Data, Header, 16);
-  sVERIFY(Header[2] > 32);
+  assert(Header[2] > 32);
   File->Read(Data + 16, Header[2] - 16);
   Dir = (PackHeader*)(Data + 16);
 
@@ -259,7 +259,7 @@ DPFUnpacked::~DPFUnpacked()
 
 sBool DPFUnpacked::Read(void* data, sDInt size)
 {
-  sVERIFY(Offset + size <= Size);
+  assert(Offset + size <= Size);
   BaseFile->SetOffset(Offset + BaseOffset);
   Offset += size;
 
@@ -270,7 +270,7 @@ sBool DPFUnpacked::Read(void* data, sDInt size)
 
 sBool DPFUnpacked::SetOffset(sS64 offset)
 {
-  sVERIFY(offset >= 0 && offset <= Size);
+  assert(offset >= 0 && offset <= Size);
   Offset = offset;
   return sTRUE;
 }
@@ -487,7 +487,7 @@ sU32 DecodeChunk(DepackState* __restrict st, sU8* dst_, sU8* dstend, sInt start,
       compSize = len;
 
       sInt chunk = sMin<sInt>(len, dstend - dst);
-      sVERIFY(offs < 640 * 1024);
+      assert(offs < 640 * 1024);
 
       for(sInt i = 0; i < chunk; i++)
         dst[i] = dst[i - offs];
@@ -565,7 +565,7 @@ sBool DPFPacked::Read(void* datav, sDInt size)
 
   while(size > 0)
   {
-    sVERIFY(DestPtr <= DestEnd);
+    assert(DestPtr <= DestEnd);
     sInt chunk = sMin(size, DestEnd - DestPtr);
 
     if(chunk == 0)
@@ -580,7 +580,7 @@ sBool DPFPacked::Read(void* datav, sDInt size)
       sCopyMem(data, DestPtr, chunk);
       data += chunk;
       DestPtr += chunk;
-      sVERIFY(DestPtr <= DestEnd);
+      assert(DestPtr <= DestEnd);
       size -= chunk;
     }
   }

@@ -65,7 +65,7 @@ public:
 
   virtual ULONG STDMETHODCALLTYPE Release()
   {
-    sVERIFY(RefCount > 1); // must never reach zero
+    assert(RefCount > 1); // must never reach zero
     return --RefCount;
   }
 
@@ -196,7 +196,7 @@ sBool sLoadImageWin32(sFile* file, sImage& img)
   {
     BITMAP bmp;
     GetObject(hbmp, sizeof(bmp), &bmp);
-    sVERIFY(bmp.bmType == 0 && bmp.bmPlanes == 1);
+    assert(bmp.bmType == 0 && bmp.bmPlanes == 1);
 
     if(bmp.bmType == 0 && bmp.bmPlanes == 1)
     {

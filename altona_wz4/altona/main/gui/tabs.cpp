@@ -382,7 +382,7 @@ void sTabBorderBase::DelTab(sInt tab)
     if(tab >= max)
       tab--;
 
-    sVERIFY(tab >= 0);
+    assert(tab >= 0);
     ActiveTab = -1;
     SetTab(tab);
   }

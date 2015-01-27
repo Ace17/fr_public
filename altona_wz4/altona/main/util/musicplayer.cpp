@@ -62,7 +62,7 @@ sBool sMusicPlayer::LoadAndCache(const sChar* name)
     RewindBuffer = (sS16*)mem;
     RewindSize = size / 4;
     RewindPos = size / 4;
-    sVERIFY(Stream == 0);
+    assert(Stream == 0);
     Status = 3;
     return sTRUE;
   }
@@ -154,7 +154,7 @@ static void sMusicPlayerSoundHandler(sS16* samples, sInt count)
 
 void sMusicPlayer::InstallHandler()
 {
-  sVERIFY(sMusicPlayerPtr == 0);
+  assert(sMusicPlayerPtr == 0);
   sMusicPlayerPtr = this;
   sSetSoundHandler(44100, sMusicPlayerSoundHandler, 44100);
 }

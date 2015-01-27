@@ -152,7 +152,7 @@ ChaosMeshCluster::~ChaosMeshCluster()
 
 void ChaosMeshCluster::CopyFrom(const ChaosMeshCluster* src)
 {
-  sVERIFY(Material == 0);
+  assert(Material == 0);
   Material = src->Material;
 
   if(Material)
@@ -199,7 +199,7 @@ void ChaosMeshCluster::Charge()
     {
       for(sInt i = 0; desc[i]; i++)
       {
-        sVERIFY((desc[i] & sVF_STREAMMASK) == sVF_STREAM0);
+        assert((desc[i] & sVF_STREAMMASK) == sVF_STREAM0);
         switch(desc[i] & sVF_USEMASK)
         {
         case sVF_POSITION:    data = fat->Position;
@@ -526,7 +526,7 @@ sInt ChaosMesh::AddCluster(Wz4Material* mtrl)
 {
   ChaosMeshCluster* cl = new ChaosMeshCluster;
   Clusters.AddTail(cl);
-  sVERIFY(cl->Material == 0);
+  assert(cl->Material == 0);
   cl->Material = mtrl;
 
   if(mtrl)
@@ -1724,7 +1724,7 @@ void ChaosMesh::SplitForMatrices()
 
       if(mi >= 0)
       {
-        sVERIFY(Skeleton->Joints[mi].Temp >= 0);
+        assert(Skeleton->Joints[mi].Temp >= 0);
 
         vp->MatrixIndex[j] = Skeleton->Joints[mi].Temp;
       }
@@ -1737,7 +1737,7 @@ void ChaosMesh::SplitForMatrices()
 
     if(mi >= 0 && joint->Temp >= 0)
     {
-      sVERIFY(Skeleton->Joints[mi].Temp >= 0);
+      assert(Skeleton->Joints[mi].Temp >= 0);
       joint->Parent = Skeleton->Joints[mi].Temp;
     }
   }
@@ -2114,7 +2114,7 @@ void ChaosMesh::UpdateBuffers(sBool preTransformOpt)
         if(cl->Vertices[*ip].Index == -1)
           cl->Vertices[*ip].Index = n++;
       }
-      sVERIFY(n == cl->Vertices.GetCount());
+      assert(n == cl->Vertices.GetCount());
 
       sFORALL(cl->Indices, ip)
       * ip = cl->Vertices[*ip].Index;
@@ -2174,7 +2174,7 @@ ChaosMtrlVariant::ChaosMtrlVariant()
 void ChaosMesh::SetMaterialVariants(sInt count, ChaosMtrlVariant* v)
 {
   ChaosMeshCluster* cl;
-  sVERIFY(count > 1);
+  assert(count > 1);
   sFORALL(Clusters, cl)
   {
     if(cl->Material && cl->Material->Material && cl->Material->Material->GetVariantCount() <= 1)
@@ -2340,7 +2340,7 @@ void ChaosMesh::PaintWire(sGeometry* geo, sF32 time)
   ic = 0;
   sFORALL(Faces, face)
   {
-    sVERIFY(face->Count >= 3);
+    assert(face->Count >= 3);
 
     if(face->Cluster != -1)
       ic += face->Count * 2;
@@ -3219,7 +3219,7 @@ void sOptimizeIndexOrder(sInt IndexCount, sInt VertexCount, sInt* IndexBuffer)
 
         while(vert->TriList[k] != bestTriInd)
         {
-          sVERIFY(k < vert->TrisLeft);
+          assert(k < vert->TrisLeft);
           k++;
         }
 
@@ -3299,7 +3299,7 @@ void sOptimizeIndexOrder(sInt IndexCount, sInt VertexCount, sInt* IndexBuffer)
           sInt triInd = vert->TriList[j];
           VCacheTri* tri = &tris[triInd];
 
-          sVERIFY(tri->Score != -1);
+          assert(tri->Score != -1);
 
           sInt score = 0;
 
@@ -3329,7 +3329,7 @@ void sOptimizeIndexOrder(sInt IndexCount, sInt VertexCount, sInt* IndexBuffer)
 
 sF32 sSimulateVertexCache(sInt count, sInt* indices, sInt cachesize)
 {
-  sVERIFY(cachesize <= 64);
+  assert(cachesize <= 64);
   sInt cache[64];
   sInt cp;
   sInt cachemisses = 0;

@@ -631,7 +631,7 @@ void Wz4Mesh::Serialize(sReader& stream)
 
 void Wz4Mesh::CopyFrom(Wz4Mesh* src)
 {
-  sVERIFY(IsEmpty());
+  assert(IsEmpty());
 
   Vertices = src->Vertices;
   Faces = src->Faces;
@@ -654,7 +654,7 @@ void Wz4Mesh::CopyFrom(Wz4Mesh* src)
 void Wz4Mesh::CopyClustersFrom(Wz4Mesh* src)
 {
   Wz4MeshCluster* cl, * scl;
-  sVERIFY(Clusters.GetCount() == 0);
+  assert(Clusters.GetCount() == 0);
   Clusters.HintSize(src->Clusters.GetCount());
   sFORALL(src->Clusters, scl)
   {
@@ -991,7 +991,7 @@ void Wz4Mesh::ConvertFrom(class ChaosMesh* src)
     }
   }
 
-  sVERIFY(vi == vc);
+  assert(vi == vc);
 
   // animation
 
@@ -1004,7 +1004,7 @@ void Wz4Mesh::ConvertFrom(class ChaosMesh* src)
   // copy the clusters
 
   sInt cl = src->Clusters.GetCount();
-  sVERIFY(Clusters.GetCount() == 0);
+  assert(Clusters.GetCount() == 0);
   Clusters.Resize(cl);
 
   for(sInt i = 0; i < cl; i++)
@@ -1114,7 +1114,7 @@ void Wz4Mesh::SplitClustersAnim(sInt maxMats)
 
       if(mi >= 0)
       {
-        sVERIFY(Skeleton->Joints[mi].Temp >= 0);
+        assert(Skeleton->Joints[mi].Temp >= 0);
         vp->Index[j] = Skeleton->Joints[mi].Temp;
       }
     }
@@ -1126,7 +1126,7 @@ void Wz4Mesh::SplitClustersAnim(sInt maxMats)
 
     if(mi >= 0 && joint->Temp >= 0)
     {
-      sVERIFY(Skeleton->Joints[mi].Temp >= 0);
+      assert(Skeleton->Joints[mi].Temp >= 0);
       joint->Parent = Skeleton->Joints[mi].Temp;
     }
   }
@@ -1260,7 +1260,7 @@ void Wz4Mesh::SplitClustersChunked(sInt maxMats)
   for(sInt i = fcount - 1; i >= 0; i--)
   {
     sInt cl = Faces[i].Cluster;
-    sVERIFY(cl >= 0 && cl < ccount);
+    assert(cl >= 0 && cl < ccount);
     nextFaceInCluster[i] = firstFaceInCluster[cl];
     firstFaceInCluster[cl] = i;
   }
@@ -1280,7 +1280,7 @@ void Wz4Mesh::SplitClustersChunked(sInt maxMats)
       Faces[fc].Cluster = ci;
 
       sInt mi = Vertices[Faces[fc].Vertex[0]].Index[0];
-      sVERIFY(mi >= prevMatIndex);
+      assert(mi >= prevMatIndex);
       prevMatIndex = mi;
 
       if(firstMatIndex == -1)
@@ -1295,7 +1295,7 @@ void Wz4Mesh::SplitClustersChunked(sInt maxMats)
     // split if that wasn't the whole cluster
     if(fc >= 0)
     {
-      sVERIFY(oldface >= 0);      // should be at least one face processed!
+      assert(oldface >= 0);      // should be at least one face processed!
       // add a new cluster
       Wz4MeshCluster* clnew = new Wz4MeshCluster;
       clnew->Mtrl = Clusters[ci]->Mtrl;
@@ -1401,7 +1401,7 @@ struct Wz4MeshTempEdge
 
 static void ConnectFaces(Wz4MeshFaceConnect* conn, const sInt* buf, sInt count)
 {
-  sVERIFY(count <= 2);
+  assert(count <= 2);
 
   if(count == 1) // boundary
     conn[*buf >> 2].Adjacent[*buf & 3] = -1;
@@ -1498,7 +1498,7 @@ sInt* Wz4Mesh::BaseNormal()
   Wz4MeshVertex* vp;
   sVERIFYSTATIC(sOFFSET(Wz4MeshVertex, Pos) == 0);
   sVERIFYSTATIC(sOFFSET(Wz4MeshVertex, Normal) == 12);
-  sVERIFY(sizeof(vp->Pos) + sizeof(vp->Normal) == 24);
+  assert(sizeof(vp->Pos) + sizeof(vp->Normal) == 24);
   sFORALL(Vertices, vp)
   {
     sU32 hash = sChecksumMurMur((sU32*)&vp->Pos.x, 6) & (HashSize - 1);
@@ -1784,7 +1784,7 @@ void Wz4Mesh::SetOpposite(Wz4MeshFaceConnect* conn, sInt edge, sInt opposite)
 void Wz4Mesh::EdgeFlip(Wz4MeshFaceConnect* conn, sInt e0)
 {
   sInt e1 = OppositeEdge(conn, e0);
-  sVERIFY(e0 >= 0 && e1 >= 0); // may only flip internal edges
+  assert(e0 >= 0 && e1 >= 0); // may only flip internal edges
 
   const sInt f0i = GetFaceInd(e0);
   const sInt f1i = GetFaceInd(e1);
@@ -1799,7 +1799,7 @@ void Wz4Mesh::EdgeFlip(Wz4MeshFaceConnect* conn, sInt e0)
   Wz4MeshFace& f1 = Faces[f1i];
   Wz4MeshFaceConnect& fc0 = conn[f0i];
   Wz4MeshFaceConnect& fc1 = conn[f1i];
-  sVERIFY(f0.Count == 3 && f1.Count == 3); // may only flip triangles
+  assert(f0.Count == 3 && f1.Count == 3); // may only flip triangles
 
   // get vertices
   sInt va = f0.Vertex[v0i];
@@ -2297,7 +2297,7 @@ void Wz4Mesh::Facette(sF32 smooth)
         nc++;
       }
     }
-    sVERIFY(nc == vc);
+    assert(nc == vc);
 
     Vertices.Resize(nc);
     sCopyMem(Vertices.GetData(), nv, sizeof(Wz4MeshVertex) * nc);
@@ -2751,7 +2751,7 @@ void Wz4Mesh::Subdivide(sF32 smooth)
 
       if(vertinfo[i].Subdivide)
       {
-        sVERIFY(vertinfo[i].FaceCount == vertinfo[i].EdgeCount);
+        assert(vertinfo[i].FaceCount == vertinfo[i].EdgeCount);
         v->Pos.Fade(smooth, v->Pos, sVector31((pp * (f - 3) + ee * 2 + ff) / f));
       }
       else
@@ -3173,7 +3173,7 @@ static void ExactFade(sVector31& out, const sVector31& a, const sVector31& b, sF
 
 void Wz4Mesh::Extrude(sInt steps, sF32 amount, sInt flags, const sVector31& center, sF32 localScale, sInt SelectUpdateFlag, const sVector2& uvOffset)
 {
-  sVERIFY(steps > 0);
+  assert(steps > 0);
 
   // preliminiaries
 
@@ -3911,7 +3911,7 @@ void Wz4Mesh::Dual(Wz4Mesh* in, sF32 random)
 
 sBool Wz4Mesh::DivideInChunksR(Wz4MeshFace* mf, sInt mfi, Wz4MeshFaceConnect* conn)
 {
-  sVERIFY(mf->Temp >= 0);
+  assert(mf->Temp >= 0);
 
   for(sInt i = 0; i < mf->Count; i++)
   {
@@ -3960,7 +3960,7 @@ sBool Wz4Mesh::DivideInChunks(sInt flags, const sVector30& normal, const sVector
   sFORALL(Faces, mf)
   {
     mf->Temp = -1;
-    sVERIFY(mf->Cluster >= 0 && mf->Cluster < Clusters.GetCount());
+    assert(mf->Cluster >= 0 && mf->Cluster < Clusters.GetCount());
   }
   sFORALL(Vertices, mv)
   mv->SelectTemp = -1;
@@ -3987,7 +3987,7 @@ sBool Wz4Mesh::DivideInChunks(sInt flags, const sVector30& normal, const sVector
   delete[] conn;
 
   sFORALL(Vertices, mv)
-  sVERIFY(mv->SelectTemp >= 0);
+  assert(mv->SelectTemp >= 0);
 
   // sort faces by cluster
 
@@ -4423,7 +4423,7 @@ void Wz4Mesh::Bevel(sF32 amount)
         if(m / 4 < i)       // not the first time we encounter this loop!
           error = 2;
 
-        sVERIFY(loop.GetCount() < 100); // really lost
+        assert(loop.GetCount() < 100); // really lost
         n = m;
       }
 
@@ -4934,7 +4934,7 @@ void Wz4Mesh::ChargeSolid(sInt flags)
   for(sInt i = fcount - 1; i >= 0; i--)
   {
     sInt cl = Faces[i].Cluster;
-    sVERIFY(cl >= 0 && cl < ccount);
+    assert(cl >= 0 && cl < ccount);
     nextFaceInCluster[i] = firstFaceInCluster[cl];
     firstFaceInCluster[cl] = i;
   }
@@ -4949,7 +4949,7 @@ void Wz4Mesh::ChargeSolid(sInt flags)
   {
     sInt cli = _i;
 
-    sVERIFY(!cl->Geo[geoindex]);
+    assert(!cl->Geo[geoindex]);
 
     cl->ChunkStart = 0;
     cl->ChunkEnd = 0;
@@ -4990,7 +4990,7 @@ void Wz4Mesh::ChargeSolid(sInt flags)
           }
         }
       }
-      sVERIFY(ili == ic);
+      assert(ili == ic);
 
       // optimize index order here. do not optimize in the presence of chunks
       // seems not to be important for performance. strangely. although it works.
@@ -5237,7 +5237,7 @@ void Wz4Mesh::ChargeBBox()
     for(sInt i = fcount - 1; i >= 0; i--)
     {
       sInt cl = Faces[i].Cluster;
-      sVERIFY(cl >= 0 && cl < ccount);
+      assert(cl >= 0 && cl < ccount);
       nextFaceInCluster[i] = firstFaceInCluster[cl];
       firstFaceInCluster[cl] = i;
     }
@@ -5311,7 +5311,7 @@ void Wz4Mesh::BeforeFrame(sInt lightenv, sInt matcount, const sMatrix34CM* mat)
 void Wz4Mesh::Render(sInt flags, sInt index, const sMatrix34CM* mat, sF32 time, const sFrustum& fr)
 {
   Wz4MeshCluster* cl;
-  sVERIFY((flags & sRF_MATRIX_MASK) == 0); // do not set matrix mask
+  assert((flags & sRF_MATRIX_MASK) == 0); // do not set matrix mask
   sInt geoindex = 0;
   switch(flags & sRF_TARGET_MASK)
   {
@@ -5390,7 +5390,7 @@ void Wz4Mesh::Render(sInt flags, sInt index, const sMatrix34CM* mat, sF32 time, 
 void Wz4Mesh::RenderInst(sInt flags, sInt index, sInt mc, const sMatrix34CM* mats, sU32* colors)
 {
   Wz4MeshCluster* cl;
-  sVERIFY((flags & sRF_MATRIX_MASK) == 0); // do not set matrix mask
+  assert((flags & sRF_MATRIX_MASK) == 0); // do not set matrix mask
   sInt geoindex = 0;
 
   if(Skeleton)      // can't do this. please use bakeanim!
@@ -5506,7 +5506,7 @@ void Wz4Mesh::RenderInst(sInt flags, sInt index, sInt mc, const sMatrix34CM* mat
 void Wz4Mesh::RenderBone(sInt flags, sInt index, sInt mc, const sMatrix34CM* mats, sInt chunks, const sMatrix34CM* mat)
 {
   Wz4MeshCluster* cl;
-  sVERIFY((flags & sRF_MATRIX_MASK) == 0);
+  assert((flags & sRF_MATRIX_MASK) == 0);
   sMatrix34CM dummy;
   dummy.Init();
   sInt geoindex = 0;
@@ -5587,7 +5587,7 @@ void Wz4Mesh::RenderBone(sInt flags, sInt index, sInt mc, const sMatrix34CM* mat
 void Wz4Mesh::RenderBoneInst(sInt flags, sInt index, sInt mc, const sMatrix34CM* mats, sInt ic, const sMatrix34CM* imats)
 {
   Wz4MeshCluster* cl;
-  sVERIFY((flags & sRF_MATRIX_MASK) == 0);
+  assert((flags & sRF_MATRIX_MASK) == 0);
   sMatrix34CM dummy;
   dummy.Init();
   sInt geoindex = 0;
@@ -5668,7 +5668,7 @@ void Wz4Mesh::RenderBoneInst(sInt flags, sInt index, sInt mc, const sMatrix34CM*
 
 void Wz4Mesh::MakeGrid(sInt tx, sInt ty)
 {
-  sVERIFY(IsEmpty());
+  assert(IsEmpty());
 
   AddDefaultCluster();
   Wz4MeshVertex* mv = Vertices.AddMany((tx + 1) * (ty + 1));
@@ -5772,7 +5772,7 @@ void Wz4Mesh::MakeCube(sInt tx, sInt ty, sInt tz)
   muv[5].j.Init(1, 0, 0);
   muv[5].l.Init(1, 0, 0);
 
-  sVERIFY(IsEmpty());
+  assert(IsEmpty());
 
   AddDefaultCluster();
 
@@ -5789,7 +5789,7 @@ void Wz4Mesh::MakeCube(sInt tx, sInt ty, sInt tz)
 
 void Wz4Mesh::MakeTorus(sInt tx, sInt ty, sF32 ri, sF32 ro, sF32 phase, sF32 arc)
 {
-  sVERIFY(IsEmpty());
+  assert(IsEmpty());
   sBool hasarc = 0;
   sF32 fx, fy, px, py;
   sVector31 v;
@@ -5917,7 +5917,7 @@ void Wz4Mesh::MakeTorus(sInt tx, sInt ty, sF32 ri, sF32 ro, sF32 phase, sF32 arc
 
 void Wz4Mesh::MakeDisc(sInt ty, sF32 ri, sF32 phase, sBool doublesided)
 {
-  sVERIFY(IsEmpty());
+  assert(IsEmpty());
   sVector31 v;
 
   AddDefaultCluster();
@@ -5992,8 +5992,8 @@ void Wz4Mesh::MakeDisc(sInt ty, sF32 ri, sF32 phase, sBool doublesided)
 
 void Wz4Mesh::MakeSphere(sInt tx, sInt ty)
 {
-  sVERIFY(IsEmpty());
-  sVERIFY(tx >= 3 && ty >= 2);
+  assert(IsEmpty());
+  assert(tx >= 3 && ty >= 2);
 
   AddDefaultCluster();
   Wz4MeshVertex* mv = Vertices.AddMany((ty - 1) * (tx + 1) + 2);
@@ -6076,10 +6076,10 @@ void Wz4Mesh::MakeSphere(sInt tx, sInt ty)
 
 void Wz4Mesh::MakeCylinder(sInt segments, sInt slices, sInt top, sInt flags)
 {
-  sVERIFY(IsEmpty());
+  assert(IsEmpty());
   slices += 2;
   top += 1;
-  sVERIFY(segments >= 3 && slices >= 3);
+  assert(segments >= 3 && slices >= 3);
 
   sInt tx = segments;
   sInt ty = slices + top * 2;
@@ -6602,7 +6602,7 @@ void Wz4Mesh::Finish2DExtrusionOp(sF32 extrude, sInt flags)
 
 void Wz4Mesh::MakeText(const sChar* text, const sChar* font, sF32 height, sF32 extrude, sF32 maxErr, sInt flags)
 {
-  sVERIFY(IsEmpty());
+  assert(IsEmpty());
 
   AddDefaultCluster();
   height = sMax(height, 8 / 128.0f);
@@ -7080,10 +7080,10 @@ sInt Wz4Mesh::SplitEdgeAlongPlane(sInt va, sInt vb, const sVector4& plane)
 
   sF32 da = a.Pos ^ plane;
   sF32 db = b.Pos ^ plane;
-  sVERIFY(sSign(da) != sSign(db) && sFAbs(da - db) >= 2.0f * ClassifyEpsilon);
+  assert(sSign(da) != sSign(db) && sFAbs(da - db) >= 2.0f * ClassifyEpsilon);
 
   sF32 t = da / (da - db);
-  sVERIFY(t >= 0.0f && t <= 1.0f);
+  assert(t >= 0.0f && t <= 1.0f);
 
   Wz4MeshVertex* v = Vertices.AddMany(1);
   v->Pos.Fade(t, a.Pos, b.Pos);
@@ -7116,7 +7116,7 @@ sInt Wz4Mesh::SplitEdgeAlongPlane(sInt va, sInt vb, const sVector4& plane)
 void Wz4Mesh::SplitGenFace(sInt base, const sInt* verts, sInt count, sBool reuseBase)
 {
   Wz4MeshFace* out = reuseBase ? &Faces[base] : Faces.AddMany(1);
-  sVERIFY(count >= 3);
+  assert(count >= 3);
 
   if(count <= 4)
   {
@@ -7336,7 +7336,7 @@ void Wz4Mesh::LoadWz3MinMesh(const sU8*& blob)
   for(sInt i = 0; i < nFaces; i++)
   {
     sInt nVerts = *data++;
-    sVERIFY(nVerts >= 2 && nVerts <= 8);
+    assert(nVerts >= 2 && nVerts <= 8);
 
     sInt cluster = *data++;
     sInt Verts[8];
@@ -7427,13 +7427,13 @@ void Wz4Mesh::LoadWz3MinMesh(const sU8*& blob)
         (&basePose.i.x)[j] = GetLEF32(data);
 
       joint->BasePose.i = sVector30(basePose.i);
-      sVERIFY(basePose.i.w == 0.0f);
+      assert(basePose.i.w == 0.0f);
       joint->BasePose.j = sVector30(basePose.j);
-      sVERIFY(basePose.j.w == 0.0f);
+      assert(basePose.j.w == 0.0f);
       joint->BasePose.k = sVector30(basePose.k);
-      sVERIFY(basePose.k.w == 0.0f);
+      assert(basePose.k.w == 0.0f);
       joint->BasePose.l = sVector31(basePose.l);
-      sVERIFY(basePose.l.w == 1.0f);
+      assert(basePose.l.w == 1.0f);
       joint->Parent = GetLE32(data);
 
       sU32 keycountFlags = GetLE32(data);
@@ -7510,7 +7510,7 @@ sBool Wz4Mesh::LoadWz3MinMesh(const sChar* file)
   const sU8* data = buffer;
   LoadWz3MinMesh(data);
 
-  sVERIFY(data <= buffer + size);
+  assert(data <= buffer + size);
 
   // update everything
   CalcNormalAndTangents();
@@ -7689,7 +7689,7 @@ void OptimizeIndexOrder(sInt* IndexBuffer, sInt IndexCount, sInt VertexCount)
 
         while(vert->TriList[k] != bestTriInd)
         {
-          sVERIFY(k < vert->TrisLeft);
+          assert(k < vert->TrisLeft);
           k++;
         }
 
@@ -7769,7 +7769,7 @@ void OptimizeIndexOrder(sInt* IndexBuffer, sInt IndexCount, sInt VertexCount)
           sInt triInd = vert->TriList[j];
           VCacheTri* tri = &tris[triInd];
 
-          sVERIFY(tri->Score != -1);
+          assert(tri->Score != -1);
 
           sInt score = 0;
 

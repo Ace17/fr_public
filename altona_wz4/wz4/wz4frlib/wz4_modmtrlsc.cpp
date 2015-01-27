@@ -145,7 +145,7 @@ ShaderCreator::~ShaderCreator()
     delete[] TempNames[i];
 
   FragsExit();
-  sVERIFY(Frag == 0);
+  assert(Frag == 0);
 }
 
 /****************************************************************************/
@@ -192,7 +192,7 @@ void ShaderCreator::Shift(ModMtrlParaAssign* ass, ModMtrlParaAssign* assi, sInt 
 
 const sChar* ShaderCreator::GetTemp()
 {
-  sVERIFY(NextTemp < sCOUNTOF(TempNames));
+  assert(NextTemp < sCOUNTOF(TempNames));
   return TempNames[NextTemp++];
 }
 
@@ -533,7 +533,7 @@ void ShaderCreator::SetTextures(sMaterial* mtrl)
       while(mtrl->Texture[slot] != 0 && slot < sMTRL_MAXTEX)
         slot++;
 
-      sVERIFY(mtrl->Texture[slot] == 0);
+      assert(mtrl->Texture[slot] == 0);
       mtrl->Texture[slot] = tex;
       mtrl->TFlags[slot] = t->Flags;
       mtrl->TBind[slot] = mtb | t->Slot;
@@ -564,9 +564,9 @@ void ShaderCreator::BindVS(sPoolString name, sInt type, sInt bind, sInt bindinde
   {
     if(r->Name == name)
     {
-      sVERIFY(type == r->Type);
-      sVERIFY(bind == r->Bind);
-      sVERIFY(bindindex == r->Index);
+      assert(type == r->Type);
+      assert(bind == r->Bind);
+      assert(bindindex == r->Index);
       return;
     }
   }
@@ -595,9 +595,9 @@ void ShaderCreator::BindPS(sPoolString name, sInt type, sInt bind, sInt bindinde
   {
     if(r->Name == name)
     {
-      sVERIFY(type == r->Type);
-      sVERIFY(bind == r->Bind);
-      sVERIFY(bindindex == r->Index);
+      assert(type == r->Type);
+      assert(bind == r->Bind);
+      assert(bindindex == r->Index);
       return;
     }
   }
@@ -625,7 +625,7 @@ void ShaderCreator::InputPS(sPoolString name, sInt type, sBool modify)
   {
     if(r->Name == name)
     {
-      sVERIFY(type == r->Type);
+      assert(type == r->Type);
       return;
     }
   }
@@ -650,7 +650,7 @@ void ShaderCreator::Para(sPoolString name)
     return;
 
   Reg* rr = sFind(ParaReg, &Reg::Name, name);
-  sVERIFY(rr);
+  assert(rr);
   r = Paras.AddMany(1);
   r->Name = name;
   r->Type = rr->Type;
@@ -726,7 +726,7 @@ void ShaderCreator::Require(sPoolString name, sInt type)
   {
     if(r->Name == name)
     {
-      sVERIFY(type == r->Type);
+      assert(type == r->Type);
       return;
     }
   }
@@ -938,14 +938,14 @@ ShaderCreator::Value* ShaderCreator::GetValue(sPoolString name)
 
 ShaderCreator::Fragment* ShaderCreator::MakeFragment()
 {
-  sVERIFY(Frag == 0);
+  assert(Frag == 0);
   Frag = new Fragment;
   return FragEnd();
 }
 
 ShaderCreator::Fragment* ShaderCreator::FragBegin(const sChar* comment)
 {
-  sVERIFY(Frag == 0);
+  assert(Frag == 0);
   Frag = new Fragment;
   Frag->Comment = comment;
   Frag->Code = 0;
@@ -1000,7 +1000,7 @@ void ShaderCreator::FragsExit()
 void ShaderCreator::FragFirst(sPoolString name)
 {
   Value* v = GetValue(name);
-  sVERIFY(v->First == 0);
+  assert(v->First == 0);
   v->First = Frag;
 }
 

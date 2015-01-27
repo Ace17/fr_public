@@ -223,7 +223,7 @@ void sUpdateWindow(const sRect& r)
 void sSetMousePointer(sInt code)
 {
   static sInt oldcursor = -1;
-  sVERIFY(code >= 0 && code < sMP_MAX);
+  assert(code >= 0 && code < sMP_MAX);
 
   if(code != oldcursor)
   {
@@ -394,12 +394,12 @@ static void sSetXRRegion()
 
 void sClipFlush()
 {
-  sVERIFY(ClipIndex <= 1);
+  assert(ClipIndex <= 1);
 }
 
 void sClipPush()
 {
-  sVERIFY(ClipIndex < MAX_CLIPS);
+  assert(ClipIndex < MAX_CLIPS);
 
   if(ClipIndex)
     XUnionRegion(ClipStack[ClipIndex], EmptyRegion, ClipStack[ClipIndex + 1]);
@@ -427,7 +427,7 @@ sBool sXUpdateEmpty()
 
 void sXClipPushUpdate()
 {
-  sVERIFY(ClipIndex < MAX_CLIPS);
+  assert(ClipIndex < MAX_CLIPS);
   ClipIndex++;
   XUnionRegion(UpdateRegion, EmptyRegion, ClipStack[ClipIndex]);
   sChangedRegions();
@@ -435,14 +435,14 @@ void sXClipPushUpdate()
 
 void sClipPop()
 {
-  sVERIFY(ClipIndex > 0);
+  assert(ClipIndex > 0);
   ClipIndex--;
   sChangedRegions();
 }
 
 void sClipExclude(const sRect& r)
 {
-  sVERIFY(ClipIndex != 0);
+  assert(ClipIndex != 0);
   Region temp = sRectToRegion(r);
   XSubtractRegion(ClipStack[ClipIndex], temp, ClipStack[ClipIndex]);
   XDestroyRegion(temp);
@@ -451,7 +451,7 @@ void sClipExclude(const sRect& r)
 
 void sClipRect(const sRect& r)
 {
-  sVERIFY(ClipIndex != 0);
+  assert(ClipIndex != 0);
   Region temp = sRectToRegion(r);
   XIntersectRegion(ClipStack[ClipIndex], temp, ClipStack[ClipIndex]);
   XDestroyRegion(temp);
@@ -466,7 +466,7 @@ void sClipRect(const sRect& r)
 
 static void sForeground(sInt colid)
 {
-  sVERIFY(colid >= 0 && colid < MAX_COLORS);
+  assert(colid >= 0 && colid < MAX_COLORS);
 
   if(ForegroundCol != colid)
   {
@@ -477,7 +477,7 @@ static void sForeground(sInt colid)
 
 void sSetColor2D(sInt colid, sU32 color)
 {
-  sVERIFY(colid >= 0 && colid < MAX_COLORS);
+  assert(colid >= 0 && colid < MAX_COLORS);
 
   if(Color[colid][1] != color)
   {
@@ -506,7 +506,7 @@ void sSetColor2D(sInt colid, sU32 color)
 
 sU32 sGetColor2D(sInt colid)
 {
-  sVERIFY(colid >= 0 && colid < MAX_COLORS);
+  assert(colid >= 0 && colid < MAX_COLORS);
   return Color[colid][1];
 }
 
@@ -919,8 +919,8 @@ sBool sFont2D::LetterExists(sChar letter)
 
 void sFont2D::SetColor(sInt text, sInt back)
 {
-  sVERIFY(text >= 0 && text < MAX_COLORS);
-  sVERIFY(back >= 0 && back < MAX_COLORS);
+  assert(text >= 0 && text < MAX_COLORS);
+  assert(back >= 0 && back < MAX_COLORS);
   prv->BackColor = back;
   prv->TextColor = text;
 }
@@ -930,8 +930,8 @@ void sFont2D::PrintMarked(sInt flags, const sRect* rc, sInt x, sInt y, const sCh
   if(len == -1)
     len = sGetStringLen(text);
 
-  sVERIFY(rc);
-  sVERIFY(pi);
+  assert(rc);
+  assert(pi);
   sRect r(*rc);
   const sChar* ot = text;
   sInt ol = len;

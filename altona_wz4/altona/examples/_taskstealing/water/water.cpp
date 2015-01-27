@@ -200,7 +200,7 @@ void WaterFX::Func(sInt n, sInt threadid)
 
   for(sInt n = n0; n < n1; n++)
   {
-    sVERIFY(n < max);
+    assert(n < max);
     p = parts + n;
 
     // check everyone with everyone (optimized with spatial hashing)
@@ -248,7 +248,7 @@ void WaterFX::Func(sInt n, sInt threadid)
     {
       if(rangestart[i] + rangecount[i] > max)
       {
-        sVERIFY(ranges < 10);   // this should only happen once per particle!
+        assert(ranges < 10);   // this should only happen once per particle!
         rangestart[ranges] = 0;
         rangecount[ranges] = rangestart[i] + rangecount[i] - max;
         rangecount[i] = max - rangestart[i];
@@ -268,7 +268,7 @@ void WaterFX::Func(sInt n, sInt threadid)
 
       for(sInt j = j0; j < j1; j++)
       {
-        sVERIFY(j >= 0 && j < max);
+        assert(j >= 0 && j < max);
 
         if(j >= n)
           continue;
@@ -280,7 +280,7 @@ void WaterFX::Func(sInt n, sInt threadid)
 
         if(lsq < r * r)
         {
-          sVERIFY(nearcount < MAXNEAR);
+          assert(nearcount < MAXNEAR);
           near[nearcount++] = j;
         }
       }
@@ -368,7 +368,7 @@ void WaterFX::Func(sInt n, sInt threadid)
       sInt j1 = j0 + rangecount[range];
       for(sInt j=j0;j<j1;j++)
       {
-        sVERIFY(j>=0 && j<max);
+        assert(j>=0 && j<max);
         if(j>=n) continue;
         q = parts+j;
 

@@ -337,9 +337,9 @@ void OldBitmap::CompressTexture(const OldBitmap* src, sU32 format, sBool alpha)
   sU32 sbuf565[16]; // 888 correctly rounded to (1)565 but each channel still in one byte!
   sU32 error, minerror;
 
-  sVERIFY(src);
-  sVERIFY((src->Kind == BITMAP_ARGB8888) && (src->XSize % 4 == 0) && (src->YSize % 4 == 0));
-  sVERIFY(format == BITMAP_DXT1 || format == BITMAP_DXT3 || format == BITMAP_DXT5);
+  assert(src);
+  assert((src->Kind == BITMAP_ARGB8888) && (src->XSize % 4 == 0) && (src->YSize % 4 == 0));
+  assert(format == BITMAP_DXT1 || format == BITMAP_DXT3 || format == BITMAP_DXT5);
 
   if(format == BITMAP_DXT1)
   {
@@ -382,7 +382,7 @@ void OldBitmap::CompressTexture(const OldBitmap* src, sU32 format, sBool alpha)
 
   do
   {
-    sVERIFY((sizeX % 4 == 0) && (sizeY % 4 == 0));
+    assert((sizeX % 4 == 0) && (sizeY % 4 == 0));
 
     // Take 4x4 pixel blocks from source-image and compress them into destination-image.
     for(y = 0; y < sizeY / 4; y++)
@@ -859,8 +859,8 @@ void OldBitmap::DecompressTexture(const OldBitmap* src)
   sU32* d;
   sU32 sOfs;
 
-  sVERIFY(src);
-  sVERIFY((src->XSize % 4 == 0) && (src->YSize % 4 == 0));
+  assert(src);
+  assert((src->XSize % 4 == 0) && (src->YSize % 4 == 0));
   switch(src->Kind)
   {
   case BITMAP_DXT1:
@@ -871,7 +871,7 @@ void OldBitmap::DecompressTexture(const OldBitmap* src)
     sOfs = 8;
     break;
   default:
-    sVERIFY(0);
+    assert(0);
     break;
   }
 
@@ -887,7 +887,7 @@ void OldBitmap::DecompressTexture(const OldBitmap* src)
 
   do
   {
-    sVERIFY((sizeX % 4 == 0) && (sizeY % 4 == 0));
+    assert((sizeX % 4 == 0) && (sizeY % 4 == 0));
 
     for(y = 0; y < sizeY / 4; y++)
     {

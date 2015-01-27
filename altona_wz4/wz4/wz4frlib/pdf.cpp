@@ -397,7 +397,7 @@ public:
 
 void TaskCodePDF(sStsManager* m, sStsThread* th, sInt start, sInt count, void* data)
 {
-  sVERIFY(count == 1);
+  assert(count == 1);
   tPDF_Render* mi = (tPDF_Render*)data;
   sRay ray;
   sU32* ptr = mi->img->Data;

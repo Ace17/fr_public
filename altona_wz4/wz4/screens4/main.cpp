@@ -92,7 +92,7 @@ void RegisterWZ4Classes()
   Doc->FindType(L"Wz4Mtrl")->Order = 5;
 
   wClass* cl = Doc->FindClass(L"MakeTexture2", L"Texture2D");
-  sVERIFY(cl);
+  assert(cl);
   Doc->Classes.RemOrder(cl);
   Doc->Classes.AddHead(cl);   // order preserving!
 }

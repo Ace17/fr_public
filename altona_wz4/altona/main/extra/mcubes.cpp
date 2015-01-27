@@ -649,7 +649,7 @@ void MarchingCubes::Render(sVector31* parts, sInt pn)
 
   sVector30 spos(CellSize, CellSize, CellSize);
   sVector31 tpos(-CellSize * (GridSize) * 0.5f, -CellSize * (GridSize) * 0.5f, -CellSize * (GridSize) * 0.5f);
-  sVERIFY(ActiveCells[1 - ActiveCellsDB].IsEmpty());
+  assert(ActiveCells[1 - ActiveCellsDB].IsEmpty());
 
   for(sInt z = 0; z < GridSize; z++)
   {
@@ -895,7 +895,7 @@ void MarchingCubes::RenderCell(GeoBuffer* gb, Container* con)
     cp = cp->Next;
   }
 
-  sVERIFY(i4 == fi.pn4);
+  assert(i4 == fi.pn4);
 #endif
 
   // pass 1: skip every second vertex

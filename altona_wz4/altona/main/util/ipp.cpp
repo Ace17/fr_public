@@ -147,7 +147,7 @@ void sRenderTargetManager_::Flush()
       if(sExitFlag)
         sLogF(L"RTM", L"Flush: texture->RefCount != 0 released\n");  // ignore this on shutdown, we don't use the texture anymore (emergency shutdown may happen in a discipline while a render target is in use)
       else
-        sVERIFY(t->RefCount == 0)
+        assert(t->RefCount == 0)
         }
 
         delete t->Texture;

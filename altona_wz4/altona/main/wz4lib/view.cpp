@@ -394,8 +394,8 @@ void WinView::CalcLetterBox(const sTargetSpec& spec)
       xs = ys * Doc->DocOptions.ScreenX / Doc->DocOptions.ScreenY;
     }
 
-    sVERIFY(xs <= spec.Window.SizeX());
-    sVERIFY(ys <= spec.Window.SizeY());
+    assert(xs <= spec.Window.SizeX());
+    assert(ys <= spec.Window.SizeY());
     x0 = x - xs / 2;
     y0 = y - ys / 2;
     LetterboxRect.Init(x0, y0, x0 + xs, y0 + ys);

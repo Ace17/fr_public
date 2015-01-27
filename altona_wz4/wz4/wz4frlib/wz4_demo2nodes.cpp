@@ -1287,7 +1287,7 @@ void RNSpline::Init(Wz4RenderParaSpline* para, sInt ac, Wz4RenderArraySpline* ar
   ScriptSplineKey* dest;
   sInt count = para->Dimensions + 1;
   sInt sum[8];
-  sVERIFY(count >= 1 && count <= 8);
+  assert(count >= 1 && count <= 8);
 
   Spline = new ScriptSpline;
   Spline->Init(count);

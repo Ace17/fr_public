@@ -188,7 +188,7 @@ public:
     // idle? send something invisible
     if(ReadPtr == WritePtr)
     {
-      sVERIFY(len >= 11);
+      assert(len >= 11);
       sCopyMem(buffer, "<div></div>", 11);
       return 11;
     }

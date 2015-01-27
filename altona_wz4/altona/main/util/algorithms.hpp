@@ -782,7 +782,7 @@ public:
   // Returns the top (largest) element of the heap
   ValueType Top() const
   {
-    sVERIFY(Length > 0);
+    assert(Length > 0);
     return Store[0];
   }
 
@@ -830,7 +830,7 @@ sBinaryHeap<Range, Pred>::sBinaryHeap(const Range& range, const Pred& less, sInt
     template<typename Range, typename Pred>
     void sBinaryHeap<Range, Pred>::Pop()
     {
-      sVERIFY(Length > 0);
+      assert(Length > 0);
       sInt remCount = --Length; // length after pop
 
       if(remCount > 0)
@@ -843,7 +843,7 @@ sBinaryHeap<Range, Pred>::sBinaryHeap(const Range& range, const Pred& less, sInt
     template<typename Range, typename Pred>
     Range sBinaryHeap<Range, Pred>::Pop(sInt N)
     {
-      sVERIFY(N >= 0);
+      assert(N >= 0);
 
       Range range = Store;      // copy so it's in a local var (=quicker)
       sInt count = Length;

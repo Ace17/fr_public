@@ -471,7 +471,7 @@ void Wz4Material::Serialize_(streamer& stream, sTexture2D* shadow)
   if(version)
   {
     sInt maxtex = 8;
-    sVERIFY(maxtex == sCOUNTOF(Tex));
+    assert(maxtex == sCOUNTOF(Tex));
 
     if(stream.IsReading())
       Material = new Wz4Shader;

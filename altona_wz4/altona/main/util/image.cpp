@@ -215,7 +215,7 @@ void sImageData::Init2(sInt format, sInt mipmaps, sInt xs, sInt ys, sInt zs)
   sInt miny = 1;
   sInt minz = 1;
 
-  sVERIFY((format & sTEX_TYPE_MASK) != 0);
+  assert((format & sTEX_TYPE_MASK) != 0);
 
   sInt olddatasize = DataSize;
   sInt oldpalettecount = PaletteCount;
@@ -292,7 +292,7 @@ void sImageData::Init2(sInt format, sInt mipmaps, sInt xs, sInt ys, sInt zs)
   }
 
   UnpackedSize = DataSize;
-  sVERIFY(Mipmaps >= 1);
+  assert(Mipmaps >= 1);
 
   // allocate memory, if size has changed.
   // avoid costly reallocations of large arrays!
@@ -312,7 +312,7 @@ void sImageData::Init2(sInt format, sInt mipmaps, sInt xs, sInt ys, sInt zs)
     Data = new sU8[DataSize];
 
   sTotalImageDataMem += DataSize;
-  sVERIFY(!(Palette && PaletteCount == 0));
+  assert(!(Palette && PaletteCount == 0));
 }
 
 void sImageData::InitCoded(sInt codecType, sInt format, sInt mipmaps, sInt xs, sInt ys, sInt zs, const sU8* data, sInt dataSize)
@@ -320,7 +320,7 @@ void sImageData::InitCoded(sInt codecType, sInt format, sInt mipmaps, sInt xs, s
   sDeleteArray(Palette);
   sDeleteArray(Data);
 
-  sVERIFY(codecType > sICT_RAW && codecType < sICT_COUNT); // just use Init2 for unencoded data
+  assert(codecType > sICT_RAW && codecType < sICT_COUNT); // just use Init2 for unencoded data
 
   Format = format;
   SizeX = xs;
@@ -330,7 +330,7 @@ void sImageData::InitCoded(sInt codecType, sInt format, sInt mipmaps, sInt xs, s
   sInt minx, miny, minz;
 
   sGetPixelFormatInfo(Format, BitsPerPixel, minx, miny, PaletteCount);
-  sVERIFY(PaletteCount == 0);
+  assert(PaletteCount == 0);
 
   // determine number of miplevels
   minz = (format & sTEX_TYPE_MASK) == sTEX_3D ? minx : 0;
@@ -396,7 +396,7 @@ void sImageData::Copy(const sImageData* source)
     sCopyMem(Palette, source->Palette, PaletteCount * 4);
 
   sCopyMem(Data, source->Data, DataSize);
-  sVERIFY(!(Palette && PaletteCount == 0));
+  assert(!(Palette && PaletteCount == 0));
 }
 
 void sImageData::Swap(sImageData* source)
@@ -439,7 +439,7 @@ void sImageData::Serialize_(streamer& stream)
 
     if(stream.IsReading())
     {
-      sVERIFY(Format & sTEX_TYPE_MASK);
+      assert(Format & sTEX_TYPE_MASK);
 
       sInt minx, miny, pc;
       sGetPixelFormatInfo(Format, BitsPerPixel, minx, miny, pc);
@@ -504,7 +504,7 @@ void sImageData::Serialize(sReader& s)
 
 class sTextureBase* sImageData::CreateTexture() const
 {
-  sVERIFY(CodecType == sICT_RAW); // can't create textures directly from compressed images
+  assert(CodecType == sICT_RAW); // can't create textures directly from compressed images
 
   sTextureBase* tex = 0;
   sTexture2D* tex2d;
@@ -528,7 +528,7 @@ class sTextureBase* sImageData::CreateTexture() const
 
 class sTextureBase* sImageData::CreateCompressedTexture() const
 {
-  sVERIFY(CodecType == sICT_RAW); // can't create textures directly from compressed images
+  assert(CodecType == sICT_RAW); // can't create textures directly from compressed images
 
   sTextureBase* tex = 0;
   sTexture2D* tex2d;
@@ -561,17 +561,17 @@ class sTextureBase* sImageData::CreateCompressedTexture() const
 
 void sImageData::UpdateTexture(sTextureBase* tex) const
 {
-  sVERIFY(CodecType == sICT_RAW); // can't create textures directly from compressed images
+  assert(CodecType == sICT_RAW); // can't create textures directly from compressed images
   switch(Format & sTEX_TYPE_MASK)
   {
   case sTEX_2D:
-    sVERIFY((Format & sTEX_TYPE_MASK) == sTEX_2D);
+    assert((Format & sTEX_TYPE_MASK) == sTEX_2D);
 
     ((sTexture2D*)tex)->Init(SizeX, SizeY, Format, Mipmaps);
     ((sTexture2D*)tex)->LoadAllMipmaps(Data);
     break;
   case sTEX_CUBE:
-    sVERIFY((Format & sTEX_TYPE_MASK) == sTEX_CUBE);
+    assert((Format & sTEX_TYPE_MASK) == sTEX_CUBE);
 
     ((sTextureCube*)tex)->Init(SizeX, Format, Mipmaps);
     ((sTextureCube*)tex)->LoadAllMipmaps(Data);
@@ -583,7 +583,7 @@ void sImageData::UpdateTexture(sTextureBase* tex) const
 
 void sImageData::UpdateTexture2(sTextureBase*& tex) const
 {
-  sVERIFY(CodecType == sICT_RAW); // can't create textures directly from compressed images
+  assert(CodecType == sICT_RAW); // can't create textures directly from compressed images
   switch(Format & sTEX_TYPE_MASK)
   {
   case sTEX_2D:
@@ -591,7 +591,7 @@ void sImageData::UpdateTexture2(sTextureBase*& tex) const
     if(!tex)
       tex = new sTexture2D;
 
-    sVERIFY((Format & sTEX_TYPE_MASK) == sTEX_2D);
+    assert((Format & sTEX_TYPE_MASK) == sTEX_2D);
 
     ((sTexture2D*)tex)->Init(SizeX, SizeY, Format, Mipmaps);
     ((sTexture2D*)tex)->LoadAllMipmaps(Data);
@@ -601,7 +601,7 @@ void sImageData::UpdateTexture2(sTextureBase*& tex) const
     if(!tex)
       tex = new sTextureCube;
 
-    sVERIFY((Format & sTEX_TYPE_MASK) == sTEX_CUBE);
+    assert((Format & sTEX_TYPE_MASK) == sTEX_CUBE);
 
     ((sTextureCube*)tex)->Init(SizeX, Format, Mipmaps);
     ((sTextureCube*)tex)->LoadAllMipmaps(Data);
@@ -615,10 +615,10 @@ void sImageData::UpdateTexture2(sTextureBase*& tex) const
 
 void sImageData::ConvertFrom(const sImage* imgorig)
 {
-  sVERIFY(imgorig->SizeX == SizeX);
-  sVERIFY(imgorig->SizeY == SizeY);
-  sVERIFY((Format & sTEX_TYPE_MASK) == sTEX_2D);
-  sVERIFY(CodecType == sICT_RAW); // can only write to raw textures
+  assert(imgorig->SizeX == SizeX);
+  assert(imgorig->SizeY == SizeY);
+  assert((Format & sTEX_TYPE_MASK) == sTEX_2D);
+  assert(CodecType == sICT_RAW); // can only write to raw textures
 
   const sImage* img = imgorig;
   sImage* other;
@@ -881,9 +881,9 @@ void sImageData::ConvertFrom(const sImage* imgorig)
 
 void sImageData::ConvertFromCube(sImage** imgptr)
 {
-  sVERIFY(SizeX == SizeY);
-  sVERIFY((Format & sTEX_TYPE_MASK) == sTEX_CUBE);
-  sVERIFY(CodecType == sICT_RAW); // can only write to raw textures
+  assert(SizeX == SizeY);
+  assert((Format & sTEX_TYPE_MASK) == sTEX_CUBE);
+  assert(CodecType == sICT_RAW); // can only write to raw textures
 
   sImage* images[6];
   sImage* other;
@@ -1057,10 +1057,10 @@ void sImageData::ConvertFromCube(sImage** imgptr)
 
 void sImageData::ConvertToCube(sImage** imgptr, sInt mipmap /*=0*/) const
 {
-  sVERIFY(mipmap >= 0 && mipmap < Mipmaps);
-  sVERIFY((Format & sTEX_TYPE_MASK) == sTEX_CUBE);
-  sVERIFY(SizeX == SizeY);
-  sVERIFY(CodecType == sICT_RAW); // no compressed cubemaps yet
+  assert(mipmap >= 0 && mipmap < Mipmaps);
+  assert((Format & sTEX_TYPE_MASK) == sTEX_CUBE);
+  assert(SizeX == SizeY);
+  assert(CodecType == sICT_RAW); // no compressed cubemaps yet
 
   sInt offset = 0;
 
@@ -1076,8 +1076,8 @@ void sImageData::ConvertToCube(sImage** imgptr, sInt mipmap /*=0*/) const
 
   for(sInt f = 0; f < 6; f++)
   {
-    sVERIFY(imgptr[f]->SizeX == xs);
-    sVERIFY(imgptr[f]->SizeY == ys);
+    assert(imgptr[f]->SizeX == xs);
+    assert(imgptr[f]->SizeY == ys);
     sU8* data = Data + f * CubeFaceSize + offset;
 
     sInt pc = xs * ys;
@@ -1337,8 +1337,8 @@ void sImageData::ConvertTo(sImage* img, sInt mipmap) const
     return;
   }
 
-  sVERIFY(mipmap >= 0 && mipmap < Mipmaps);
-  sVERIFY((Format & sTEX_TYPE_MASK) == sTEX_2D);
+  assert(mipmap >= 0 && mipmap < Mipmaps);
+  assert((Format & sTEX_TYPE_MASK) == sTEX_2D);
 
   sInt xs = SizeX;
   sInt ys = SizeY;
@@ -1351,8 +1351,8 @@ void sImageData::ConvertTo(sImage* img, sInt mipmap) const
     ys = ys / 2;
   }
 
-  sVERIFY(img->SizeX == xs);
-  sVERIFY(img->SizeY == ys);
+  assert(img->SizeX == xs);
+  assert(img->SizeY == ys);
 
   sInt pc = xs * ys;
   sU8* d = (sU8*)img->Data;
@@ -1782,12 +1782,12 @@ void sGenerateMipmaps(sImageData* img)
 
 sImage* sDecompressImageData(const sImageData* src)
 {
-  sVERIFY(src->CodecType != sICT_RAW);
-  sVERIFY(src->CodecType >= 0 && src->CodecType < sICT_COUNT);
+  assert(src->CodecType != sICT_RAW);
+  assert(src->CodecType >= 0 && src->CodecType < sICT_COUNT);
 
   // if this assert triggers, you most likely need to #include "engine/imagecodec.hpp"
   // and then call sAddImageCodec() in your main().
-  sVERIFY(DecompressImageHandler[src->CodecType] != 0); // handler must be registered!
+  assert(DecompressImageHandler[src->CodecType] != 0); // handler must be registered!
 
   // decompress to sImage
   sImage* img = DecompressImageHandler[src->CodecType] (src);
@@ -1809,7 +1809,7 @@ sImageData* sDecompressAndConvertImageData(const sImageData* src)
   out->Init2(outFmt, src->Mipmaps, src->SizeX, src->SizeY, src->SizeZ);
   out->Quality = src->Quality;
 
-  sVERIFY((src->Format & sTEX_TYPE_MASK) == sTEX_2D); // only 2D right now
+  assert((src->Format & sTEX_TYPE_MASK) == sTEX_2D); // only 2D right now
   out->ConvertFrom(img);
 
   delete img;
@@ -1818,7 +1818,7 @@ sImageData* sDecompressAndConvertImageData(const sImageData* src)
 
 void sSetDecompressHandler(sInt codecType, sDecompressImageDataHandler handler)
 {
-  sVERIFY(codecType >= 0 && codecType < sICT_COUNT);
+  assert(codecType >= 0 && codecType < sICT_COUNT);
   DecompressImageHandler[codecType] = handler;
 }
 
@@ -1839,7 +1839,7 @@ sTextureBase* sStreamImageAsTexture(sReader& s)
   if(version >= 3)
     s | Quality | CodecType;
 
-  sVERIFY(Format & sTEX_TYPE_MASK);
+  assert(Format & sTEX_TYPE_MASK);
 
   if(CodecType != sICT_RAW) // compressed image
   {
@@ -1855,9 +1855,9 @@ sTextureBase* sStreamImageAsTexture(sReader& s)
     if(s.IsOk())
     {
       sImageData* decomp = sDecompressAndConvertImageData(coded);
-      sVERIFY(decomp != 0);
+      assert(decomp != 0);
       tb = decomp->CreateTexture();
-      sVERIFY(tb != 0);
+      assert(tb != 0);
 
       tb->NameId = NameId;
       delete decomp;
@@ -1935,7 +1935,7 @@ sTextureBase* sStreamImageAsTexture(sReader& s)
   case sTEX_CUBE:
     {
       sTextureCube* tc = new sTextureCube(SizeX, Format, Mipmaps);
-      sVERIFY(!PaletteCount);
+      assert(!PaletteCount);
       sInt face_ys = tc->SizeXY;
       sInt face_bytes = face_ys * tc->BitsPerPixel / 8;
 
@@ -2034,14 +2034,14 @@ void sImage::CopyRect(sImage* src, const sRect& destpos, sInt srcx, sInt srcy)
   sInt xs = destpos.SizeX();
   sInt ys = destpos.SizeY();
 
-  sVERIFY(destpos.x0 >= 0);
-  sVERIFY(destpos.y0 >= 0);
-  sVERIFY(destpos.x1 <= SizeX);
-  sVERIFY(destpos.y1 <= SizeY);
-  sVERIFY(srcx >= 0);
-  sVERIFY(srcy >= 0);
-  sVERIFY(srcx + xs <= src->SizeX);
-  sVERIFY(srcy + ys <= src->SizeY);
+  assert(destpos.x0 >= 0);
+  assert(destpos.y0 >= 0);
+  assert(destpos.x1 <= SizeX);
+  assert(destpos.y1 <= SizeY);
+  assert(srcx >= 0);
+  assert(srcy >= 0);
+  assert(srcx + xs <= src->SizeX);
+  assert(srcy + ys <= src->SizeY);
 
   for(sInt y = 0; y < ys; y++)
   {
@@ -2273,7 +2273,7 @@ void sImage::Copy(sImage* img)
 
 void sImage::Add(sImage* img)
 {
-  sVERIFY(SizeX == img->SizeX && SizeY == img->SizeY);
+  assert(SizeX == img->SizeX && SizeY == img->SizeY);
   sU8* s = (sU8*)img->Data;
   sU8* d = (sU8*)Data;
 
@@ -2307,7 +2307,7 @@ void sImage::ContrastBrightness(sInt contrast, sInt brightness)
 
 void sImage::Mul(sImage* img)
 {
-  sVERIFY(SizeX == img->SizeX && SizeY == img->SizeY);
+  assert(SizeX == img->SizeX && SizeY == img->SizeY);
   sU8* s = (sU8*)img->Data;
   sU8* d = (sU8*)Data;
 
@@ -2317,7 +2317,7 @@ void sImage::Mul(sImage* img)
 
 void sImage::Blend(sImage* img, sBool premultiplied)
 {
-  sVERIFY(SizeX == img->SizeX && SizeY == img->SizeY);
+  assert(SizeX == img->SizeX && SizeY == img->SizeY);
   sU32* s = img->Data;
   sU32* d = Data;
 
@@ -2412,8 +2412,8 @@ sImage* sImage::Half(sBool gammacorrect) const
   sImage* img;
   sU8* d;
 
-  sVERIFY(SizeX > 1);
-  sVERIFY(SizeY > 1);
+  assert(SizeX > 1);
+  assert(SizeY > 1);
 
   img = new sImage;
   img->Init(SizeX / 2, SizeY / 2);
@@ -2762,7 +2762,7 @@ void sImage::CopyRenderTarget()
   sTextureFlags flags;
 
   sBeginSaveRT(data, pitch, flags);
-  sVERIFY(flags == sTEX_ARGB8888);
+  assert(flags == sTEX_ARGB8888);
 
   sInt xs, ys;
   sGetRendertargetSize(xs, ys);
@@ -2789,7 +2789,7 @@ void sImage::CopyRenderTarget()
 
 void sImage::Diff(const sImage* img0, const sImage* img1)
 {
-  sVERIFY(img0->SizeX == img1->SizeX && img0->SizeY == img1->SizeY);
+  assert(img0->SizeX == img1->SizeX && img0->SizeY == img1->SizeY);
 
   Init(img0->SizeX, img0->SizeY);
 
@@ -3004,7 +3004,7 @@ sInt sImage::SaveBMP(sU8* data, sInt size)
     ptr += bpr;
   }
 
-  sVERIFY(ptr == data + Size);
+  assert(ptr == data + Size);
 
   return Size;
 }
@@ -3191,7 +3191,7 @@ sBool sImage::LoadPIC(const sU8* data, sInt size)
           x += count;
         }
 
-        sVERIFY(x == xs);
+        assert(x == xs);
 
         if(hasalpha)
         {
@@ -3232,7 +3232,7 @@ sBool sImage::LoadPIC(const sU8* data, sInt size)
             x += count;
           }
 
-          sVERIFY(x == xs);
+          assert(x == xs);
         }
       }
 
@@ -3576,7 +3576,7 @@ class sTexture2D* sLoadTexture2D(const sImage* img, sInt formatandflags)
   if((formatandflags & sTEX_TYPE_MASK) == 0)
     formatandflags |= sTEX_2D;
 
-  sVERIFY((formatandflags & sTEX_TYPE_MASK) == sTEX_2D);
+  assert((formatandflags & sTEX_TYPE_MASK) == sTEX_2D);
   tex = new sTexture2D(img->SizeX, img->SizeY, formatandflags, (formatandflags & sTEX_NOMIPMAPS) ? 1 : 0);
 
   sBeginAlt();
@@ -3686,7 +3686,7 @@ class sTextureCube* sLoadTextureCube(const sChar* t0, const sChar* t1, const sCh
 
 sInt sDiffImage(sImage* dimg, const sImage* img0, const sImage* img1, sU32 mask /*=0xffffffff*/)
 {
-  sVERIFY(img0->SizeX == img1->SizeX && img0->SizeY == img1->SizeY);
+  assert(img0->SizeX == img1->SizeX && img0->SizeY == img1->SizeY);
   dimg->Init(img0->SizeX, img1->SizeY);
 
   sInt errors = 0;
@@ -3787,12 +3787,12 @@ sImageData* sMergeNormalMaps(const sImageData* img0, const sImageData* img1)
   if(img0->SizeX != img1->SizeX || img0->SizeY != img1->SizeY)
     return 0;
 
-  sVERIFY((img0->Format & sTEX_FORMAT) == sTEX_ARGB8888);
-  sVERIFY((img1->Format & sTEX_FORMAT) == sTEX_ARGB8888);
-  sVERIFY(img0->SizeX == img1->SizeX);
-  sVERIFY(img0->SizeY == img1->SizeY);
-  sVERIFY(img0->Mipmaps == img1->Mipmaps);
-  sVERIFY(img0->CodecType == sICT_RAW && img1->CodecType == sICT_RAW);
+  assert((img0->Format & sTEX_FORMAT) == sTEX_ARGB8888);
+  assert((img1->Format & sTEX_FORMAT) == sTEX_ARGB8888);
+  assert(img0->SizeX == img1->SizeX);
+  assert(img0->SizeY == img1->SizeY);
+  assert(img0->Mipmaps == img1->Mipmaps);
+  assert(img0->CodecType == sICT_RAW && img1->CodecType == sICT_RAW);
 
   sImageData* result = new sImageData;
   result->Init2(img0->Format, img0->Mipmaps, img0->SizeX, img0->SizeY, 1);
@@ -3845,9 +3845,9 @@ sImageData* sMergeNormalMaps(const sImageData* img0, const sImageData* img1)
 
 void sCompressMRGB(sImageData* dst_img, sInt format, const sImageData* src_img)
 {
-  sVERIFY((src_img->Format & sTEX_FORMAT) == sTEX_ARGB32F);
-  sVERIFY(src_img->CodecType == sICT_RAW);
-  sVERIFY((format & sTEX_FORMAT) == sTEX_MRGB8 || (format & sTEX_FORMAT) == sTEX_MRGB16);
+  assert((src_img->Format & sTEX_FORMAT) == sTEX_ARGB32F);
+  assert(src_img->CodecType == sICT_RAW);
+  assert((format & sTEX_FORMAT) == sTEX_MRGB8 || (format & sTEX_FORMAT) == sTEX_MRGB16);
 
   dst_img->Init2((src_img->Format & ~sTEX_FORMAT) | (format & sTEX_FORMAT), src_img->Mipmaps, src_img->SizeX, src_img->SizeY, src_img->SizeZ);
   sInt iend = src_img->GetByteSize() / sizeof(sVector4);
@@ -3878,8 +3878,8 @@ void sCompressMRGB(sImageData* dst_img, sInt format, const sImageData* src_img)
 
 void sDecompressMRGB(sImageData* dst_img, const sImageData* src_img, sF32 alpha /*=1.0f*/)
 {
-  sVERIFY((src_img->Format & sTEX_FORMAT) == sTEX_MRGB8 || (src_img->Format & sTEX_FORMAT) == sTEX_MRGB16);
-  sVERIFY(src_img->CodecType == sICT_RAW);
+  assert((src_img->Format & sTEX_FORMAT) == sTEX_MRGB8 || (src_img->Format & sTEX_FORMAT) == sTEX_MRGB16);
+  assert(src_img->CodecType == sICT_RAW);
   dst_img->Init2((src_img->Format & ~sTEX_FORMAT) | sTEX_ARGB32F, src_img->Mipmaps, src_img->SizeX, src_img->SizeY, src_img->SizeZ);
 
   sVector4* dst = (sVector4*)dst_img->Data;
@@ -3911,9 +3911,9 @@ void sDecompressMRGB(sImageData* dst_img, const sImageData* src_img, sF32 alpha 
 
 void sCompressMRGB(sImageData* img, sInt format)
 {
-  sVERIFY((img->Format & sTEX_FORMAT) == sTEX_ARGB32F);
-  sVERIFY((format & sTEX_FORMAT) == sTEX_MRGB8 || (format & sTEX_FORMAT) == sTEX_MRGB16);
-  sVERIFY(img->CodecType == sICT_RAW);
+  assert((img->Format & sTEX_FORMAT) == sTEX_ARGB32F);
+  assert((format & sTEX_FORMAT) == sTEX_MRGB8 || (format & sTEX_FORMAT) == sTEX_MRGB16);
+  assert(img->CodecType == sICT_RAW);
 
   sU8* temp = img->Data;
   img->Data = 0;
@@ -3942,8 +3942,8 @@ void sCompressMRGB(sImageData* img, sInt format)
 
 void sDecompressMRGB(sImageData* img, sF32 alpha /*=1.0f*/)
 {
-  sVERIFY((img->Format & sTEX_FORMAT) == sTEX_MRGB8 || (img->Format & sTEX_FORMAT) == sTEX_MRGB16);
-  sVERIFY(img->CodecType == sICT_RAW);
+  assert((img->Format & sTEX_FORMAT) == sTEX_MRGB8 || (img->Format & sTEX_FORMAT) == sTEX_MRGB16);
+  assert(img->CodecType == sICT_RAW);
   sU8* temp = img->Data;
   sInt format = img->Format & sTEX_FORMAT;
   img->Data = 0;
@@ -3964,7 +3964,7 @@ void sDecompressMRGB(sImageData* img, sF32 alpha /*=1.0f*/)
   }
   else
   {
-    sVERIFY(format == sTEX_MRGB16);
+    assert(format == sTEX_MRGB16);
     const sU64* src = (sU64*)temp;
 
     for(sInt i = 0; i < iend; i++, dst++)
@@ -3979,8 +3979,8 @@ void sDecompressMRGB(sImageData* img, sF32 alpha /*=1.0f*/)
 
 void sClampToARGB8(sImageData* img, sInt mm /*=0*/)
 {
-  sVERIFY((img->Format & sTEX_TYPE_MASK) == sTEX_2D);
-  sVERIFY(img->CodecType == sICT_RAW);
+  assert((img->Format & sTEX_TYPE_MASK) == sTEX_2D);
+  assert(img->CodecType == sICT_RAW);
 
   sInt check = 1;
 
@@ -4070,10 +4070,10 @@ void sClampToARGB8(sImageData* img, sInt mm /*=0*/)
 sImageData* sConvertARGB8ToHDR(const sImageData* img, sInt format)
 {
   format &= sTEX_FORMAT;
-  sVERIFY((img->Format & sTEX_FORMAT) == sTEX_ARGB8888);
-  sVERIFY(img->CodecType == sICT_RAW);
+  assert((img->Format & sTEX_FORMAT) == sTEX_ARGB8888);
+  assert(img->CodecType == sICT_RAW);
 
-  sVERIFY(format == sTEX_ARGB32F || format == sTEX_MRGB16 || format == sTEX_MRGB8);
+  assert(format == sTEX_ARGB32F || format == sTEX_MRGB16 || format == sTEX_MRGB8);
 
   sImageData* img_dst = new sImageData;
   img_dst->Init2(sTEX_2D | format, img->Mipmaps, img->SizeX, img->SizeY, img->SizeZ);
@@ -4607,7 +4607,7 @@ sFontMap* sImage::CreateFontPage(sFontMapInputParameter& inParam, sInt& outLette
       letterImage->Scale(guiImage, sTRUE);
 
       const sInt bestFreeIndex = FindBestFit(freeRects, cx, cy + filterGapY);
-      sVERIFY(-1 != bestFreeIndex); // Assume all the glyphs fit, as the bitmap size has been chosen big enough (see above)
+      assert(-1 != bestFreeIndex); // Assume all the glyphs fit, as the bitmap size has been chosen big enough (see above)
 
       // put letter into the mainbitmap
       BlitFrom(letterImage, 0, cm->OffsetY, freeRects[bestFreeIndex].x0, freeRects[bestFreeIndex].y0, cx, cy);
@@ -4874,7 +4874,7 @@ void sImage::HalfTransparentRectHole(const sRect& outer, const sRect& hole, sU32
 
 void sImage::AlphaFromLuminance(sImage* img)
 {
-  sVERIFY(SizeX == img->SizeX && SizeY == img->SizeY);
+  assert(SizeX == img->SizeX && SizeY == img->SizeY);
   sU8* s = (sU8*)img->Data;
   sU8* d = (sU8*)Data;
 
@@ -5272,8 +5272,8 @@ void sFloatImage::CopyFrom(const sImage* src)
 
 void sFloatImage::CopyFrom(const sImageData* src)
 {
-  sVERIFY((src->Format & sTEX_FORMAT) == sTEX_ARGB8888);
-  sVERIFY(src->BitsPerPixel == 32);
+  assert((src->Format & sTEX_FORMAT) == sTEX_ARGB8888);
+  assert(src->BitsPerPixel == 32);
   switch(src->Format & sTEX_TYPE_MASK)
   {
   case sTEX_2D:
@@ -5284,7 +5284,7 @@ void sFloatImage::CopyFrom(const sImageData* src)
     Cubemap = 1;
     break;
   case sTEX_3D:
-    sVERIFY(src->SizeZ > 0);
+    assert(src->SizeZ > 0);
     Init(src->SizeX, src->SizeY, src->SizeZ);
     break;
   }
@@ -5315,7 +5315,7 @@ void sFloatImage::CopyTo(sImage* dest) const
 
 void sFloatImage::CopyTo(sImage* dest, sF32 power) const
 {
-  sVERIFY(SizeZ == 1);
+  assert(SizeZ == 1);
   dest->Init(SizeX, SizeY);
   CopyTo(dest->Data, power);
 }
@@ -5391,8 +5391,8 @@ void sFloatImage::Scale(const sFloatImage* src, sInt xs_, sInt ys_)
 
   sInt sx = src->SizeX / SizeX;
   sInt sy = src->SizeY / SizeY;
-  sVERIFY(sx * SizeX == src->SizeX);
-  sVERIFY(sy * SizeY == src->SizeY);
+  assert(sx * SizeX == src->SizeX);
+  assert(sy * SizeY == src->SizeY);
 
   const sF32* s = src->Data;
   sF32* d = Data;
@@ -5468,8 +5468,8 @@ void sFloatImage::Power(sF32 p)
 
 void sFloatImage::Half(sBool linear)
 {
-  sVERIFY((SizeX & 1) == 0);
-  sVERIFY((SizeY & 1) == 0);
+  assert((SizeX & 1) == 0);
+  assert((SizeY & 1) == 0);
 
   sInt xp = 4;
   sInt yp = SizeX * xp;
@@ -5573,13 +5573,13 @@ void sFloatImage::Half(sBool linear)
 void sFloatImage::Downsample(sInt mip, const sFloatImage* src)
 {
   sInt step = 1 << mip;
-  sVERIFY(src->SizeZ == 1);
-  sVERIFY((src->SizeX & (step - 1)) == 0);
-  sVERIFY((src->SizeY & (step - 1)) == 0);
-  sVERIFY(src->SizeX >= step);
-  sVERIFY(src->SizeY >= step);
-  sVERIFY(sIsPower2(src->SizeX));
-  sVERIFY(sIsPower2(src->SizeY));
+  assert(src->SizeZ == 1);
+  assert((src->SizeX & (step - 1)) == 0);
+  assert((src->SizeY & (step - 1)) == 0);
+  assert(src->SizeX >= step);
+  assert(src->SizeY >= step);
+  assert(sIsPower2(src->SizeX));
+  assert(sIsPower2(src->SizeY));
 
   sInt sx = src->SizeX / step;
   sInt sy = src->SizeY / step;

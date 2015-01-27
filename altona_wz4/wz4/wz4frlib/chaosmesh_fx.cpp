@@ -204,10 +204,10 @@ sInt ChaosFXMesh::SplitEdgeAlongPlane(sInt vai, sInt vbi, const sVector4& plane)
 
   sF32 ta = va.Position ^ plane;
   sF32 tb = vb.Position ^ plane;
-  sVERIFY(sFAbs(ta - tb) >= 2.0f * ClassifyEpsilon);
+  assert(sFAbs(ta - tb) >= 2.0f * ClassifyEpsilon);
 
   sF32 t = -ta / (tb - ta);
-  sVERIFY(t >= 0.0f && t <= 1.0f);
+  assert(t >= 0.0f && t <= 1.0f);
 
   ChaosMeshVertexFat dest;
   dest.Position.Fade(t, va.Position, vb.Position);

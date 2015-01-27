@@ -644,7 +644,7 @@ void Compiler::OutputShader(NewShader* ns)
     }
 
     CPP.Print(L"  };\n");
-    CPP.Print(L"  sVERIFY(codes[i])\n");
+    CPP.Print(L"  assert(codes[i])\n");
     CPP.PrintF(L"#endif\n");
     CPP.Print(L"\n");
 

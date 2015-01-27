@@ -1745,7 +1745,7 @@ void sRegexTrans::SetChar(sChar c)
 
 void sRegexTrans::SetGroup(const sChar* c)
 {
-  sVERIFY(*c == '[');
+  assert(*c == '[');
   c++;
 
   if(*c == '^')
@@ -1837,7 +1837,7 @@ void sRegexTrans::SetGroup(const sChar* c)
     else
     {
       sBool found = 0;
-      sVERIFY(h);
+      assert(h);
 
       for(sInt i = 0; i < h1 && !found; i++)
         if(h[i] == *c)
@@ -1850,7 +1850,7 @@ void sRegexTrans::SetGroup(const sChar* c)
     c++;
   }
 
-  sVERIFY(h1 <= h0);
+  assert(h1 <= h0);
 
   if(h)
     h[h1++] = 0;
@@ -2419,7 +2419,7 @@ void sRegex::RemoveEmptyState()
 
 sBool sRegex::MatchPattern(const sChar* string)
 {
-  sVERIFY(Valid);
+  assert(Valid);
 
   sDeleteAll(Markers);
   sRegexTrans* t;
@@ -2507,7 +2507,7 @@ sBool sRegex::GetGroup(sInt n, const sStringDesc& desc, sInt match)
     else
     {
       sInt len = sMin((sInt)(c1 - c0), desc.Size - 1);
-      sVERIFY(len >= 0);
+      assert(len >= 0);
       sCopyMem(desc.Buffer, c0, len * sizeof(sChar));
       desc.Buffer[len] = 0;
       return 1;

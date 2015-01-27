@@ -57,14 +57,14 @@ static sFileLogger* FileLogger = 0;
 // logs all files that are opened via sCreateFile into an array
 void sAddFileLogger(sStaticArray<sPackFileCreateEntry>& namearray)
 {
-  sVERIFY(!FileLogger);
+  assert(!FileLogger);
   FileLogger = new sFileLogger(namearray);
   sAddFileHandler(FileLogger);
 }
 
 void sRemFileLogger()
 {
-  sVERIFY(FileLogger);
+  assert(FileLogger);
   sRemFileHandler(FileLogger);
   sDelete(FileLogger);
 }
@@ -454,7 +454,7 @@ public:
 
 PackerFrontEnd::PackerFrontEnd(PackerBackEnd* backEnd)
 {
-  sVERIFY(backEnd != 0);
+  assert(backEnd != 0);
   BackEnd = backEnd;
 }
 
@@ -613,7 +613,7 @@ void GoodPackerFrontEnd::FindMatch(Match& match, sU32 start, sU32 lookAhead)
     }
   }
 
-  sVERIFY(bestOffset || !bestLen);
+  assert(bestOffset || !bestLen);
 
   match.Offs = bestOffset;
   match.Len = bestLen;

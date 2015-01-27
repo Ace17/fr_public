@@ -1858,7 +1858,7 @@ sBool sIsAbsolutePath(const sChar* a)
 
 sBool sExtractPathDrive(const sChar* path, const sStringDesc& drive)
 {
-  sVERIFY(drive.Size);
+  assert(drive.Size);
   const sChar* ptr = path;
   sInt count = 0;
 
@@ -2258,7 +2258,7 @@ void sReadString(sU32*& data, sChar* buffer, sInt size)
 void sWriteString(sU32*& data, const sChar* buffer)
 {
   sInt len = sGetStringLen(buffer);
-  sVERIFY(len < 0x7ffe);
+  assert(len < 0x7ffe);
 
   *data++ = len;
   len = sAlign(len, 2);
@@ -3004,7 +3004,7 @@ sBool sFormatStringBuffer::Fill()
     goto loop;
   }
 
-  sVERIFY(Dest < End);
+  assert(Dest < End);
 
   if(*Format == 0 || *Format == '%')
   {
@@ -3037,7 +3037,7 @@ void sFormatStringBuffer::GetInfo(sFormatStringInfo& info)
   if(!Fill())
     return;
 
-  sVERIFY(*Format == '%');
+  assert(*Format == '%');
   Format++;
 
   c = *Format++;
@@ -3080,7 +3080,7 @@ void sFormatStringBuffer::GetInfo(sFormatStringInfo& info)
   if(c != 0)
     info.Format = c;
 
-  sVERIFY(info.Format);
+  assert(info.Format);
 }
 
 void sFormatStringBuffer::Add(const sFormatStringInfo& info, const sChar* buffer, sBool sign)
@@ -3822,7 +3822,7 @@ sU32 sRandom::Int32()
 
 sInt sRandom::Int(sInt max_)
 {
-  sVERIFY(max_ >= 1);
+  assert(max_ >= 1);
 
   sU32 max = sU32(max_ - 1);
   sU32 mask = sMakeMask(max);
@@ -3890,7 +3890,7 @@ void sRandomMT::Seed(sU32 seed)
 
 sInt sRandomMT::Int(sInt max_)
 {
-  sVERIFY(max_ >= 1);
+  assert(max_ >= 1);
 
   sU32 max = sU32(max_ - 1);
   sU32 mask = sMakeMask(max);
@@ -3945,7 +3945,7 @@ sF32 sRandomKISS::Float(sF32 max)
 
 sInt sRandomKISS::Int(sInt max_)
 {
-  sVERIFY(max_ >= 1);
+  assert(max_ >= 1);
 
   sU32 max = sU32(max_ - 1);
   sU32 mask = sMakeMask(max);
@@ -5214,7 +5214,7 @@ void sPushMemType(sInt t)
   sThreadContext* tx = sGetThreadContext();
   tx->MemTypeStackIndex++;
 
-  sVERIFY(tx->MemTypeStackIndex < sCOUNTOF(tx->MemTypeStack));
+  assert(tx->MemTypeStackIndex < sCOUNTOF(tx->MemTypeStack));
   tx->MemTypeStack[tx->MemTypeStackIndex] = t;
 }
 
@@ -5222,9 +5222,9 @@ void sPopMemType(sInt t)
 {
   sThreadContext* tx = sGetThreadContext();
 
-  sVERIFY(tx->MemTypeStack[tx->MemTypeStackIndex] == t);
+  assert(tx->MemTypeStack[tx->MemTypeStackIndex] == t);
   tx->MemTypeStackIndex--;
-  sVERIFY(tx->MemTypeStackIndex >= 0);
+  assert(tx->MemTypeStackIndex >= 0);
 }
 
 void* sAllocMem_(sPtr size, sInt align, sInt flags)
@@ -5246,8 +5246,8 @@ void* sAllocMem_(sPtr size, sInt align, sInt flags)
   }
 
   sMemoryHandler* h = sMemoryHandlers[flags & sAMF_MASK];
-  sVERIFY(h);
-  sVERIFY(h->Owner == 0 || h->Owner == tx);
+  assert(h);
+  assert(h->Owner == 0 || h->Owner == tx);
 
 #if !sSTRIPPED
 
@@ -5334,7 +5334,7 @@ void sFreeMem(void* ptr)
       {
         if(p >= h->Start && p < h->End)
         {
-          sVERIFY(h->Owner == 0 || h->Owner == tx);
+          assert(h->Owner == 0 || h->Owner == tx);
           h->Lock();
           sBool r = h->Free(ptr);
           h->Unlock();
@@ -5354,7 +5354,7 @@ void sFreeMem(void* ptr)
 
         if(h && h->End == 0)
         {
-          sVERIFY(h->Owner == 0 || h->Owner == tx);
+          assert(h->Owner == 0 || h->Owner == tx);
           h->Lock();
           sBool r = h->Free(ptr);
           h->Unlock();
@@ -5394,7 +5394,7 @@ sPtr sMemSize(void* ptr)
       {
         if(p >= h->Start && p < h->End)
         {
-          sVERIFY(h->Owner == 0 || h->Owner == tx);
+          assert(h->Owner == 0 || h->Owner == tx);
           h->Lock();
           sPtr r = h->MemSize(ptr);
           h->Unlock();
@@ -5409,7 +5409,7 @@ sPtr sMemSize(void* ptr)
 
       if(h && h->End == 0)
       {
-        sVERIFY(h->Owner == 0 || h->Owner == tx);
+        assert(h->Owner == 0 || h->Owner == tx);
         h->Lock();
         sPtr r = h->MemSize(ptr);
         h->Unlock();
@@ -5465,7 +5465,7 @@ void sMemMark(sBool fatal /*=sTRUE*/)
 
       if(h && h->IncludeInSnapshot)
       {
-        sVERIFY(h->Owner == 0 || h->Owner == tx);
+        assert(h->Owner == 0 || h->Owner == tx);
         h->Lock();
         hash ^= h->MakeSnapshot();
         h->Unlock();
@@ -5725,7 +5725,7 @@ sBool sRender3DLockOwner();
 
 void* sAllocFrame(sPtr size, sInt align)
 {
-  sVERIFY(sRender3DLockOwner());
+  assert(sRender3DLockOwner());
 
   if(sMemFrameUsed == 0)
     sFatal(L"please use sPartitionMemory() in sMain() to allocate frame memory");
@@ -5742,7 +5742,7 @@ void* sAllocFrame(sPtr size, sInt align)
 
 void* sAllocFrameBegin(sInt size, sInt align)
 {
-  sVERIFY(sRender3DLockOwner());
+  assert(sRender3DLockOwner());
 
   if(sMemFrameUsed == 0)
     sFatal(L"please use sPartitionMemory() in sMain() to allocate frame memory");
@@ -5758,7 +5758,7 @@ void* sAllocFrameBegin(sInt size, sInt align)
 
 void sAllocFrameEnd(void* ptr)
 {
-  sVERIFY(sRender3DLockOwner());
+  assert(sRender3DLockOwner());
   sPtr end = (sPtr)ptr;
 
   if(end < sMemFrameUsed || end > sMemFramePtr[sMemFrameToggle] + sMemFrameSize)
@@ -5830,7 +5830,7 @@ static void* sAllocFrameBeginImpl(sThreadContext* ctx, sInt size, sInt align)
   }
 
   ctx->FrameBorrow = ctx->FrameCurrent + size;
-  sVERIFY(ctx->FrameBorrow <= ctx->FrameEnd);
+  assert(ctx->FrameBorrow <= ctx->FrameEnd);
   return (void*)ctx->FrameCurrent;
 }
 
@@ -5841,7 +5841,7 @@ static sINLINE void sAllocFrameEndImpl(sThreadContext* ctx, void* ptr)
 
   sPtr end = (sPtr)ptr;
 
-  sVERIFY(end <= ctx->FrameBorrow);
+  assert(end <= ctx->FrameBorrow);
   ctx->FrameCurrent = end;
   ctx->FrameBorrow = 0;
 
@@ -6119,8 +6119,8 @@ void* sAllocDmaBegin(sInt size, sInt align /*=16*/)
   }
 
   ctx->DmaBorrow = ctx->DmaCurrent + size;
-  sVERIFY(ctx->DmaBorrow <= ctx->DmaEnd);
-  sVERIFY((ctx->DmaCurrent & (align - 1)) == 0);
+  assert(ctx->DmaBorrow <= ctx->DmaEnd);
+  assert((ctx->DmaCurrent & (align - 1)) == 0);
   return (void*)ctx->DmaCurrent;
 }
 
@@ -6133,7 +6133,7 @@ void sAllocDmaEnd(void* ptr)
 
   sPtr end = (sPtr)ptr;
 
-  sVERIFY(end <= ctx->DmaBorrow);
+  assert(end <= ctx->DmaBorrow);
   ctx->DmaCurrent = end;
   ctx->DmaBorrow = 0;
 
@@ -6303,7 +6303,7 @@ sChar* sMemoryPool::AllocString(const sChar* str)
 
 sChar* sMemoryPool::AllocString(const sChar* str, sInt len)
 {
-  sVERIFY(len >= 0);
+  assert(len >= 0);
   sChar* r = Alloc<sChar>(len + 1);
   sCopyMem(r, str, len * sizeof(sChar));
   r[len] = 0;
@@ -6320,7 +6320,7 @@ void sMemoryPool::Push()
 void sMemoryPool::Pop()
 {
   sInt count = Stack.GetCount();
-  sVERIFY(count);
+  assert(count);
   sStackItem* item = &Stack[count - 1];
   Current = item->CBuffer;
   sMemoryPoolBuffer* buf = item->CBuffer;
@@ -7136,7 +7136,7 @@ sMemoryHeap::sMemoryHeap()
 
 void sMemoryHeap::Init(sU8* start, sPtr size)
 {
-  sVERIFY(start);
+  assert(start);
   Start = sPtr(start);
   End = Start + size;
 
@@ -7342,7 +7342,7 @@ void* sMemoryHeap::Alloc(sPtr bytes, sInt align, sInt flags)
 {
   sMemoryHeapFreeNode* n, * p;
   sPtr size = ((bytes + HEADER + MASK) & (~MASK));   // align size to 16'er, including header
-  sVERIFY(bytes < size);                         // overflow check
+  assert(bytes < size);                         // overflow check
 
   if(align < ALIGN)
     align = ALIGN;
@@ -7367,8 +7367,8 @@ void* sMemoryHeap::Alloc(sPtr bytes, sInt align, sInt flags)
 
       if(ae <= fe)                          // does it fit?
       {
-        sVERIFY(as >= fs);
-        sVERIFY(ae <= fe);
+        assert(as >= fs);
+        assert(ae <= fe);
         found = 1;
         break;
       }
@@ -7385,8 +7385,8 @@ void* sMemoryHeap::Alloc(sPtr bytes, sInt align, sInt flags)
 
       if(fs <= as)                          // does it fit?
       {
-        sVERIFY(as >= fs);
-        sVERIFY(ae <= fe);
+        assert(as >= fs);
+        assert(ae <= fe);
         found = 1;
         break;
       }
@@ -7397,7 +7397,7 @@ void* sMemoryHeap::Alloc(sPtr bytes, sInt align, sInt flags)
   {
     if(as != fs)                        // free space at start to pad misalignment
     {
-      sVERIFY(((as - fs) & MASK) == 0);     // free space should be multiple of 16
+      assert(((as - fs) & MASK) == 0);     // free space should be multiple of 16
       n->Size = (as - fs);              // trim node to new size
       p = n;                          // link rest after this node
     }
@@ -7417,8 +7417,8 @@ void* sMemoryHeap::Alloc(sPtr bytes, sInt align, sInt flags)
 
     if(ae != fe)                        // add node at end
     {
-      sVERIFY(((fe - ae) & MASK) == 0);
-      sVERIFY(((fe + HEADER) & MASK) == 0);
+      assert(((fe - ae) & MASK) == 0);
+      assert(((fe + HEADER) & MASK) == 0);
       n = (sMemoryHeapFreeNode*)(ae);
       n->Size = fe - ae;
       FreeList.AddAfter(n, p);
@@ -7432,7 +7432,7 @@ void* sMemoryHeap::Alloc(sPtr bytes, sInt align, sInt flags)
     TotalFree -= size;
     MinTotalFree = sMin(TotalFree, MinTotalFree);
 
-    sVERIFY(((as + HEADER) & MASK) == 0);
+    assert(((as + HEADER) & MASK) == 0);
 
     if(MEMVERBOSE)
       Validate();
@@ -7472,7 +7472,7 @@ sBool sMemoryHeap::Free(void* ptr)
   if(Clear)
     sSetMem((void*)(((sU8*)ptr) - HEADER), 0xee, size);
 
-  sVERIFY(bs >= Start && be <= End);
+  assert(bs >= Start && be <= End);
 
   TotalFree += size;
 
@@ -7540,7 +7540,7 @@ sBool sMemoryHeap::Free(void* ptr)
           goto found;
         }
 
-        sVERIFY(n != start);
+        assert(n != start);
 
         if(n == start)
           break;
@@ -7847,7 +7847,7 @@ void* sGpuHeap::Alloc(sPtr bytes, sInt align, sInt flags)
 {
   sGpuHeapFreeNode* n, * p;
   sPtr size = sAlign(bytes, 16);         // align size to 16'er, including header
-  sVERIFY(bytes <= size);                 // overflow check
+  assert(bytes <= size);                 // overflow check
 
   if(align < 16)
     align = 16;
@@ -7872,8 +7872,8 @@ void* sGpuHeap::Alloc(sPtr bytes, sInt align, sInt flags)
 
       if(ae <= fe)                    // does it fit?
       {
-        sVERIFY(as >= fs);
-        sVERIFY(ae <= fe);
+        assert(as >= fs);
+        assert(ae <= fe);
         found = 1;
         break;
       }
@@ -7890,8 +7890,8 @@ void* sGpuHeap::Alloc(sPtr bytes, sInt align, sInt flags)
 
       if(fs <= as)                    // does it fit?
       {
-        sVERIFY(as >= fs);
-        sVERIFY(ae <= fe);
+        assert(as >= fs);
+        assert(ae <= fe);
         found = 1;
         break;
       }
@@ -7902,7 +7902,7 @@ void* sGpuHeap::Alloc(sPtr bytes, sInt align, sInt flags)
   {
     if(as != fs)                        // free space at start to pad misalignment
     {
-      sVERIFY(((as - fs) & 15) == 0);     // free space should be multiple of 16
+      assert(((as - fs) & 15) == 0);     // free space should be multiple of 16
       n->Size = (as - fs);              // trim node to new size
       p = n;                          // link rest after this node
     }
@@ -7915,12 +7915,12 @@ void* sGpuHeap::Alloc(sPtr bytes, sInt align, sInt flags)
 
     if(ae != fe)                        // add node at end
     {
-      sVERIFY(((fe - ae) & 15) == 0);
-      sVERIFY(((fe) & 15) == 0);
+      assert(((fe - ae) & 15) == 0);
+      assert(((fe) & 15) == 0);
       n = UnusedNodes.RemTail();
 
       if(!n)
-        sVERIFY(0);
+        assert(0);
 
       n->Data = ae;
       n->Size = fe - ae;
@@ -7937,7 +7937,7 @@ void* sGpuHeap::Alloc(sPtr bytes, sInt align, sInt flags)
 
     TotalFree -= size;
     MinTotalFree = sMin(TotalFree, MinTotalFree);
-    sVERIFY((as & 15) == 0);
+    assert((as & 15) == 0);
 
     if(MEMVERBOSE)
       Validate();
@@ -7972,7 +7972,7 @@ sBool sGpuHeap::Free(void* ptr)
   if(old == 0)
     return 0;
 
-  sVERIFY(old->Data == sPtr(ptr));
+  assert(old->Data == sPtr(ptr));
 
   sPtr bytes = old->Size;
   sPtr size = sAlign(bytes, 16);              // align size to 16'er, including header
@@ -7988,7 +7988,7 @@ sBool sGpuHeap::Free(void* ptr)
   if(Clear)
     sSetMem((void*)ptr, 0xee, size);
 
-  sVERIFY(bs >= Start && be <= End);
+  assert(bs >= Start && be <= End);
 
   TotalFree += size;
 
@@ -8087,7 +8087,7 @@ sU8* sSimpleMemPool::Alloc(sInt size, sInt align)
   Current = sAlign(Current, align);
   sU8* result = (sU8*)Current;
   Current += size;
-  sVERIFY(Current <= End);
+  assert(Current <= End);
   return result;
 }
 
@@ -8180,7 +8180,7 @@ sBool sCompES(sU8* s, sU8* d, sInt ssize, sInt& dsize, sInt scan)
           imax = sMin(imax, ssize - ri - si);
           imax = sMin(imax, ri + si - j);
           // while(ri+si+i<ssize && s[j+i]==s[ri+si+i] && j+i<ri+si && i<255+4)
-          sVERIFY(ri + si + imax <= ssize);
+          assert(ri + si + imax <= ssize);
 
           while(i < imax && s[j + i] == s[ri + si + i])
             i++;

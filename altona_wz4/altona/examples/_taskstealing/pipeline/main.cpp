@@ -220,7 +220,7 @@ void MyApp::ThreadCode1(sStsManager* man, sStsThread* th, sInt start, sInt count
     gb->Begin();
   }
 
-  sVERIFY(gb->Used + count <= gb->Alloc);
+  assert(gb->Used + count <= gb->Alloc);
 
   sMatrix34 mat;
 

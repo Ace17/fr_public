@@ -87,7 +87,7 @@ struct ms
 void MergeSort(sU32* s, sU32* b, const sInt i0, const sInt i2)
 {
   sInt n = i2 - i0;
-  sVERIFY(n > 0);
+  assert(n > 0);
 
   if(n == 1)
   {
@@ -106,8 +106,8 @@ void MergeSort(sU32* s, sU32* b, const sInt i0, const sInt i2)
     MergeSort(b, s, i0, i1);
     MergeSort(b, s, i1, i2);
 
-// for(sInt i=i0+1;i<i1;i++)  sVERIFY(b[i-1]<=b[i]);
-// for(sInt i=i1+1;i<i2;i++)  sVERIFY(b[i-1]<=b[i]);
+// for(sInt i=i0+1;i<i1;i++)  assert(b[i-1]<=b[i]);
+// for(sInt i=i1+1;i<i2;i++)  assert(b[i-1]<=b[i]);
 
     sInt s0 = i0;
     sInt s1 = i1;
@@ -133,10 +133,10 @@ void MergeSort(sU32* s, sU32* b, const sInt i0, const sInt i2)
       }
     }
 
-    sVERIFY(s0 == i1 && s1 == i2 && d == i2);
+    assert(s0 == i1 && s1 == i2 && d == i2);
   }
 
-// for(sInt i=i0+1;i<i2;i++)  sVERIFY(s[i-1]<=s[i]);
+// for(sInt i=i0+1;i<i2;i++)  assert(s[i-1]<=s[i]);
 }
 
 void MergeSortMergeTask(sStsManager* m, sStsThread* th, sInt start, sInt count, void* data_)
@@ -152,8 +152,8 @@ void MergeSortMergeTask(sStsManager* m, sStsThread* th, sInt start, sInt count, 
 
 // sDPrintF(L"%08x <- %08x : %08x - %08x - %08x\n",s,b,i0,i1,i2);
 
-// for(sInt i=i0+1;i<i1;i++)  sVERIFY(b[i-1]<=b[i]);
-// for(sInt i=i1+1;i<i2;i++)  sVERIFY(b[i-1]<=b[i]);
+// for(sInt i=i0+1;i<i1;i++)  assert(b[i-1]<=b[i]);
+// for(sInt i=i1+1;i<i2;i++)  assert(b[i-1]<=b[i]);
 
   sInt s0 = i0;
   sInt s1 = i1;
@@ -179,8 +179,8 @@ void MergeSortMergeTask(sStsManager* m, sStsThread* th, sInt start, sInt count, 
     }
   }
 
-  sVERIFY(s0 == i1 && s1 == i2 && d == i2);
-// for(sInt i=i0+1;i<i2;i++)  sVERIFY(s[i-1]<=s[i]);
+  assert(s0 == i1 && s1 == i2 && d == i2);
+// for(sInt i=i0+1;i<i2;i++)  assert(s[i-1]<=s[i]);
 
   sSchedMon->End(th->GetIndex());
 }
@@ -197,7 +197,7 @@ void MergeSortTask(sStsManager* m, sStsThread* th, sInt start, sInt count, void*
   sStsWorkload* wl = data->wl;
 
   sInt n = i2 - i0;
-  sVERIFY(n > 0);
+  assert(n > 0);
 
   if(n == 1)
   {
@@ -208,7 +208,7 @@ void MergeSortTask(sStsManager* m, sStsThread* th, sInt start, sInt count, void*
 // sDPrintF(L"%08x <- %08x : %08x - %08x start\n",s,b,i0,i2);
     MergeSort(s, b, i0, i2);
 // sDPrintF(L"%08x <- %08x : %08x - %08x\n",s,b,i0,i2);
-// for(sInt i=i0+1;i<i2;i++)  sVERIFY(s[i-1]<=s[i]);
+// for(sInt i=i0+1;i<i2;i++)  assert(s[i-1]<=s[i]);
   }
   else
   {
@@ -226,7 +226,7 @@ void MergeSortTask(sStsManager* m, sStsThread* th, sInt start, sInt count, void*
     sStsTask* tm = wl->NewTask(MergeSortMergeTask, data, 1, 1);
 
     sStsSync* sync = wl->Alloc<sStsSync>();
-    sVERIFY(sync);
+    assert(sync);
     data0->parent = data1->parent = sync;
     sync->Count = 0;
     sync->ContinueTask = tm;
@@ -236,7 +236,7 @@ void MergeSortTask(sStsManager* m, sStsThread* th, sInt start, sInt count, void*
     if(data->parent)
     {
       m->AddSync(tm, data->parent);
-      sVERIFY(data->parent->Count > 1);
+      assert(data->parent->Count > 1);
     }
 
     wl->AddTask(t0);
@@ -340,12 +340,12 @@ void MyApp::OnPaint3D()
     }
   }
 
-  sVERIFY(!e);
+  assert(!e);
 
   /*
-     sVERIFY(sCmpMem(SortDestMT.GetData(),SortDestST.GetData(),sizeof(sU32)*SortCount)==0);
-     sVERIFY(sCmpMem(SortDestHS.GetData(),SortDestST.GetData(),sizeof(sU32)*SortCount)==0);
-     sVERIFY(sCmpMem(SortDestHS.GetData(),SortDestMT.GetData(),sizeof(sU32)*SortCount)==0);
+     assert(sCmpMem(SortDestMT.GetData(),SortDestST.GetData(),sizeof(sU32)*SortCount)==0);
+     assert(sCmpMem(SortDestHS.GetData(),SortDestST.GetData(),sizeof(sU32)*SortCount)==0);
+     assert(sCmpMem(SortDestHS.GetData(),SortDestMT.GetData(),sizeof(sU32)*SortCount)==0);
    */
   sSchedMon->End(0);
 

@@ -715,7 +715,7 @@ void MakeRelPath(const sStringDesc& dest, const sChar* path, const sChar* cdir)
 
   plen = sFindFirstChar(path, '\\');
   clen = sFindFirstChar(cdir, '\\');
-  sVERIFY(plen == -1 && clen == -1);
+  assert(plen == -1 && clen == -1);
 
   // different drive letters -> no way to get to a common path
 
@@ -774,7 +774,7 @@ void MakeRelPath(const sStringDesc& dest, const sChar* path, const sChar* cdir)
   while((*d++ = *path++) != 0)
     ;
 
-  sVERIFY(d - dest.Buffer <= dest.Size);
+  assert(d - dest.Buffer <= dest.Size);
 }
 
 void Document::OutputProjectWithDependencies(ProjectData* eproject, sArray<ProjectData*>& alreadyInSolution)

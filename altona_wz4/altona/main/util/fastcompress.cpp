@@ -71,7 +71,7 @@ void sFastLzpCompressor::StartWrite(sU8* ptr)
 
 void sFastLzpCompressor::EndWrite()
 {
-  sVERIFY(BitShift >= 16);
+  assert(BitShift >= 16);
   BitBuffer |= ~0u >> (32 - BitShift); // lots of 1 bits (=0 as exp-golomb)
   sUnalignedLittleEndianStore16(BitPos1, BitBuffer >> 16);
   sUnalignedLittleEndianStore16(BitPos2, BitBuffer & 0xffff);
@@ -123,8 +123,8 @@ sInt sFastLzpCompressor::CompressChunk(sU32 nBytes, sBool isLast)
 {
   sVERIFYSTATIC(WrapMask > 0 && (WrapMask & (WrapMask + 1)) == 0); // power of 2
   sVERIFYSTATIC(ChunkSize < (1 << 24));
-  sVERIFY(nBytes > 0 && nBytes <= ChunkSize);
-  sVERIFY((CurrentPos & (ChunkSize - 1)) == 0);
+  assert(nBytes > 0 && nBytes <= ChunkSize);
+  assert((CurrentPos & (ChunkSize - 1)) == 0);
 
   StartWrite(OutBuffer + LenBytes);
 
@@ -193,7 +193,7 @@ sInt sFastLzpCompressor::CompressChunk(sU32 nBytes, sBool isLast)
   EndWrite();
 
   // write size of block
-  sVERIFY(RawPos - OutBuffer <= (sDInt)MaxOutSize);
+  assert(RawPos - OutBuffer <= (sDInt)MaxOutSize);
   sU32 size = RawPos - (OutBuffer + LenBytes);
   OutBuffer[0] = (size >> 0) & 0xff;
   OutBuffer[1] = (size >> 8) & 0xff;
@@ -233,7 +233,7 @@ sFastLzpCompressor::sFastLzpCompressor()
 
 sFastLzpCompressor::~sFastLzpCompressor()
 {
-  sVERIFY(PWritePos == ~0u);
+  assert(PWritePos == ~0u);
 
   delete[] HashTable;
   delete[] ChunkBuffer;
@@ -242,7 +242,7 @@ sFastLzpCompressor::~sFastLzpCompressor()
 
 sBool sFastLzpCompressor::Compress(sFile* dest, sFile* src)
 {
-  sVERIFY(PWritePos == ~0u); // no piecewise I/O in progress
+  assert(PWritePos == ~0u); // no piecewise I/O in progress
 
   sS64 size = src->GetSize();
   Reset();
@@ -267,7 +267,7 @@ sBool sFastLzpCompressor::Compress(sFile* dest, sFile* src)
 
 void sFastLzpCompressor::StartPiecewise()
 {
-  sVERIFY(PWritePos == ~0u); // no piecewise I/O in progress
+  assert(PWritePos == ~0u); // no piecewise I/O in progress
 
   Reset();
   PWritePos = 0;
@@ -276,7 +276,7 @@ void sFastLzpCompressor::StartPiecewise()
 
 sBool sFastLzpCompressor::WritePiecewise(sFile* dest, const void* buffer, sDInt size)
 {
-  sVERIFY(PWritePos != ~0u);
+  assert(PWritePos != ~0u);
 
   const sU8* bufPtr = (const sU8*)buffer;
 
@@ -313,7 +313,7 @@ sBool sFastLzpCompressor::EndPiecewise(sFile* dest)
 
   sU32 cpm = CurrentPos & WrapMask;
   sU32 size = PWritePos > cpm ? (PWritePos - cpm) : (PWritePos - cpm + 2 * ChunkSize);
-  sVERIFY(size <= ChunkSize);
+  assert(size <= ChunkSize);
 
   sInt outBytes = CompressChunk(size, sTRUE);
   PWritePos = ~0u;
@@ -449,7 +449,7 @@ sInt sFastLzpDecompressor::DecompressChunk(sU32 blockLen, sBool& last, sU8*& ptr
   }
 
   CurrentPos += nBytes;
-  sVERIFY(RawPos - InBuffer <= (sDInt)blockLen);
+  assert(RawPos - InBuffer <= (sDInt)blockLen);
 
   if(RawPos - InBuffer != (sDInt)blockLen) // wrong number of bytes depacked
     return -1;
@@ -498,7 +498,7 @@ sFastLzpDecompressor::~sFastLzpDecompressor()
 
 sBool sFastLzpDecompressor::Decompress(sFile* dest, sFile* src)
 {
-  sVERIFY(PReadPos == ~0u);
+  assert(PReadPos == ~0u);
   sBool last = sFALSE;
   sU8* ptr;
 
@@ -529,7 +529,7 @@ sBool sFastLzpDecompressor::Decompress(sFile* dest, sFile* src)
 
 void sFastLzpDecompressor::StartPiecewise()
 {
-  sVERIFY(PReadPos == ~0u);
+  assert(PReadPos == ~0u);
   Reset();
 
   PReadPos = 0;
@@ -539,7 +539,7 @@ void sFastLzpDecompressor::StartPiecewise()
 
 sBool sFastLzpDecompressor::ReadPiecewise(sFile* src, void* buffer, sDInt size)
 {
-  sVERIFY(PReadPos != ~0u);
+  assert(PReadPos != ~0u);
   sU8* bufPtr = (sU8*)buffer;
 
   while(size > 0)
@@ -549,7 +549,7 @@ sBool sFastLzpDecompressor::ReadPiecewise(sFile* src, void* buffer, sDInt size)
       if(PIsLast) // was the last block, nothing more to read!
         return sFALSE;
 
-      sVERIFY(PReadPos == (CurrentPos & WrapMask));
+      assert(PReadPos == (CurrentPos & WrapMask));
 
       // read block size
       if(!src->Read(InBuffer, 3))
@@ -584,7 +584,7 @@ sBool sFastLzpDecompressor::ReadPiecewise(sFile* src, void* buffer, sDInt size)
 
 void sFastLzpDecompressor::EndPiecewise()
 {
-  sVERIFY(PReadPos != ~0u);
+  assert(PReadPos != ~0u);
   PReadPos = ~0u;
 }
 
@@ -701,13 +701,13 @@ sBool sFastLzpFile::Close()
 
 sBool sFastLzpFile::Read(void* data, sDInt size)
 {
-  sVERIFY(Host && Decomp);
+  assert(Host && Decomp);
   return Decomp->ReadPiecewise(Host, data, size);
 }
 
 sBool sFastLzpFile::Write(const void* data, sDInt size)
 {
-  sVERIFY(Host && Comp);
+  assert(Host && Comp);
   sBool ret = Comp->WritePiecewise(Host, data, size);
   Size += ret ? size : 0;
   return ret;

@@ -70,7 +70,7 @@ void GLERR()
     }
   }
 
-  sVERIFY(ok);
+  assert(ok);
 }
 
 void CompileShader(GLuint* shaderp, GLenum type, const sChar* src)
@@ -199,7 +199,7 @@ void IOSResize2()
   glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, GLES_DepthBuffer);
 
   GLenum err = glCheckFramebufferStatus(GL_FRAMEBUFFER);
-  sVERIFY(err == GL_FRAMEBUFFER_COMPLETE);
+  assert(err == GL_FRAMEBUFFER_COMPLETE);
 }
 
 void ExitGFX()
@@ -485,8 +485,8 @@ void sVertexFormatHandle::Create()
   while(Data[i])
   {
     stream = (Data[i] & sVF_STREAMMASK) >> sVF_STREAMSHIFT;
-// sVERIFY(stream==0)
-    sVERIFY(i < 31);
+// assert(stream==0)
+    assert(i < 31);
 
     Attr[i].Offset = b[stream];
     switch(Data[i] & sVF_TYPEMASK)
@@ -769,7 +769,7 @@ void sGeometry::Draw(sDrawRange* ir, sInt irc, sInt instancecount, sVertexOffset
   {
     if(IUsedElements > 0)
     {
-      sVERIFY(IndexSize == 2);
+      assert(IndexSize == 2);
       glDrawElements(GL_TRIANGLES, IUsedElements, GL_UNSIGNED_SHORT, IPtr);
     }
     else
@@ -804,7 +804,7 @@ void sGeometry::BeginLoadIB(sInt ic, sGeometryDuration duration, void** ip)
 
 void sGeometry::BeginLoadVB(sInt vc, sGeometryDuration duration, void** vp, sInt stream)
 {
-  sVERIFY(stream == 0);
+  assert(stream == 0);
 
   sInt size = Format->GetSize(stream) * vc;
 
@@ -821,13 +821,13 @@ void sGeometry::BeginLoadVB(sInt vc, sGeometryDuration duration, void** vp, sInt
 
 void sGeometry::EndLoadIB(sInt ic)
 {
-  sVERIFY(ic == -1);
+  assert(ic == -1);
 }
 
 void sGeometry::EndLoadVB(sInt vc, sInt stream)
 {
-  sVERIFY(vc == -1);
-  sVERIFY(stream == 0);
+  assert(vc == -1);
+  assert(stream == 0);
 }
 
 void sGeometry::BeginLoad(sVertexFormatHandle* vf, sInt flags, sGeometryDuration duration, sInt vc, sInt ic, void** vp, void** ip)
@@ -902,7 +902,7 @@ sTextureBasePrivate::sTextureBasePrivate()
 
 sTextureBasePrivate::~sTextureBasePrivate()
 {
-  sVERIFY(LoadBuffer == 0);
+  assert(LoadBuffer == 0);
 }
 
 /****************************************************************************/
@@ -947,7 +947,7 @@ void sTexture2D::Destroy2()
 
 void sTexture2D::BeginLoad(sU8*& data, sInt& pitch, sInt mipmap)
 {
-  sVERIFY(LoadBuffer == 0);
+  assert(LoadBuffer == 0);
   pitch = (SizeX >> mipmap) * BitsPerPixel / 8;
   LoadMipmap = mipmap;
   LoadBuffer = new sU8[pitch * (SizeY >> mipmap)];
@@ -1127,7 +1127,7 @@ void sMaterial::Prepare(sVertexFormatHandle* format)
   CompileShader(&vertShader, GL_VERTEX_SHADER, vs.Get());
   CompileShader(&fragShader, GL_FRAGMENT_SHADER, ps.Get());
 
-  sVERIFY(vertShader && fragShader)
+  assert(vertShader && fragShader)
   GLName = glCreateProgram();
 
   GLERR();
@@ -1144,7 +1144,7 @@ void sMaterial::Prepare(sVertexFormatHandle* format)
   glLinkProgram(GLName);
   GLERR();
   glGetProgramiv(GLName, GL_LINK_STATUS, &status);
-  sVERIFY(status != 0);
+  assert(status != 0);
 
   VSSlot[0] = glGetUniformLocation(GLName, "mvp");
   GLERR();

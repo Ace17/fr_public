@@ -455,7 +455,7 @@ void MainWindow::LoadConfig()
       if(s == 2 || s == 3)
       {
         sSplitFrame* sw = (sSplitFrame*)sWire->Childs[0]->Childs[0]->Childs[0];
-        sVERIFY(sw && (sCmpString(sw->GetClassName(), L"sVSplitFrame") == 0 || sCmpString(sw->GetClassName(), L"sHSplitFrame") == 0));
+        assert(sw && (sCmpString(sw->GetClassName(), L"sVSplitFrame") == 0 || sCmpString(sw->GetClassName(), L"sHSplitFrame") == 0));
         sw->PresetPos(1, n);
       }
     }
@@ -526,7 +526,7 @@ void MainWindow::SaveConfig()
   if(s == 2 || s == 3)
   {
     sSplitFrame* sw = (sSplitFrame*)sWire->Childs[0]->Childs[0]->Childs[0];
-    sVERIFY(sw && (sCmpString(sw->GetClassName(), L"sVSplitFrame") == 0 || sCmpString(sw->GetClassName(), L"sHSplitFrame") == 0));
+    assert(sw && (sCmpString(sw->GetClassName(), L"sVSplitFrame") == 0 || sCmpString(sw->GetClassName(), L"sHSplitFrame") == 0));
     tb.PrintF(L"SplitterPos = %d;\n", sw->GetPos(1));
   }
 
@@ -874,7 +874,7 @@ void MainWindow::Load(const sChar* dir, const sChar* file, const sChar* gotohead
   // figure out new tab data
 
   sInt tab = TabWin->GetTab();
-  sVERIFY(tab >= 0);
+  assert(tab >= 0);
 
   sString<sMAXPATH> s;
   s = file;

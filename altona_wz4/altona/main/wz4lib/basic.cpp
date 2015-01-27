@@ -585,7 +585,7 @@ void Texture2D::Serialize_(streamer& stream)
       oldformat = sTRUE;
   }
   else
-    sVERIFY(Cache);
+    assert(Cache);
 
   if(!oldformat)
   {
@@ -594,7 +594,7 @@ void Texture2D::Serialize_(streamer& stream)
   }
 
   Cache->Serialize(stream);
-  sVERIFY((Cache->Format & sTEX_TYPE_MASK) == sTEX_2D);
+  assert((Cache->Format & sTEX_TYPE_MASK) == sTEX_2D);
 
   if(!oldformat)
   {
@@ -700,10 +700,10 @@ void TextureCube::Serialize_(streamer& stream)
   if(stream.IsReading())
     Cache = new sImageData;
   else
-    sVERIFY(Cache);
+    assert(Cache);
 
   Cache->Serialize(stream);
-  sVERIFY((Cache->Format & sTEX_TYPE_MASK) == sTEX_CUBE);
+  assert((Cache->Format & sTEX_TYPE_MASK) == sTEX_CUBE);
 
   if(stream.IsReading())
     Texture = (sTextureCube*)Cache->CreateTexture();

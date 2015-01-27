@@ -580,7 +580,7 @@ void __debugbreak();
 // use these macros instead of the sCONFIG_xxx_xxx ones.
 
 #if !sCONFIG_BUILD_STRIPPED
-#define sDEBUG 1                     // include sVERIFY
+#define sDEBUG 1                     // include assert
 #else
 #define sDEBUG 0
 #endif
@@ -2257,11 +2257,11 @@ sPRINTING0(sFatal, sFormatStringBuffer buf;
 #if sDEBUG
 
 #if sRELEASE
-#define sVERIFY(x) { if(!(x)) sVerifyFalse2(sTXT(__FILE__), __LINE__, sTXT(sTOSTRING8(x)), L""); }
+#define assert(x) { if(!(x)) sVerifyFalse2(sTXT(__FILE__), __LINE__, sTXT(sTOSTRING8(x)), L""); }
 #define sVERIFY2(x, desc) { if(!(x)) sVerifyFalse2(sTXT(__FILE__), __LINE__, sTXT(sTOSTRING8(x)), desc); }
 #define sVERIFYFALSE { sVerifyFalse(sTXT(__FILE__), __LINE__); }
 #else
-#define sVERIFY(x) { if(!(x)){ sDEBUGBREAK; sVerifyFalse2(sTXT(__FILE__), __LINE__, sTXT(sTOSTRING8(x)), L""); } \
+#define assert(x) { if(!(x)){ sDEBUGBREAK; sVerifyFalse2(sTXT(__FILE__), __LINE__, sTXT(sTOSTRING8(x)), L""); } \
 }
 #define sVERIFY2(x, desc) { if(!(x)){ sDEBUGBREAK; sVerifyFalse2(sTXT(__FILE__), __LINE__, sTXT(sTOSTRING8(x)), desc); } \
 }
@@ -2269,7 +2269,7 @@ sPRINTING0(sFatal, sFormatStringBuffer buf;
 #endif
 
 #else
-#define sVERIFY(x) { (void)sizeof(x); }
+#define assert(x) { (void)sizeof(x); }
 #define sVERIFY2(x, desc) { (void)sizeof(x); }
 #define sVERIFYFALSE {; }
 #endif
@@ -2296,7 +2296,7 @@ sPRINTING0(sFatal, sFormatStringBuffer buf;
 
 #define sNOT_IMPLEMENTED_FAIL()    \
   __pragma(message(__FILE__ "("sTOSTRING8 (__LINE__)"): TODO implement "__FUNCTION__))    \
-  sVERIFY(0);
+  assert(0);
 #ifndef NO_TODO
 #define sTODO(msg)  \
   __pragma(message(__FILE__ "("sTOSTRING8 (__LINE__)"): TODO "msg))
@@ -2309,7 +2309,7 @@ sPRINTING0(sFatal, sFormatStringBuffer buf;
   sDPrintF(sTXT(__FILE__) L"(%d): TODO implement "sTXT (__FUNCTION__)L"\n", __LINE__);
 #define sNOT_IMPLEMENTED_FAIL()    \
   sDPrintF(sTXT(__FILE__) L"(%d): TODO implement "sTXT (__FUNCTION__)L"\n", __LINE__);   \
-  sVERIFY(0);
+  assert(0);
 #define sTODO(msg)
 #endif
 
@@ -2341,9 +2341,9 @@ inline sBool sIsInf(sF32 x)
 }
 
 #if sDEBUG
-#define sTRAP_INFNAN(x) sVERIFY(!sIsInfNan(x))
-#define sTRAP_NAN(x) sVERIFY(!sIsNan(x))
-#define sTRAP_INF(x) sVERIFY(!sIsInf(x))
+#define sTRAP_INFNAN(x) assert(!sIsInfNan(x))
+#define sTRAP_NAN(x) assert(!sIsNan(x))
+#define sTRAP_INF(x) assert(!sIsInf(x))
 #else
 #define sTRAP_INFNAN(x)
 #define sTRAP_NAN(x)
@@ -3815,7 +3815,7 @@ protected:
         sDPrintF(L"ReAlloc: Alloc=%d, max=%d, sizeof(Type)=%d\n", Alloc, max, sInt(sizeof(Type)));
 
 #endif
-      sVERIFY(!Data);
+      assert(!Data);
       sTAG_CALLER();
       Data = new Type[max];
       Alloc = Data ? max : 0;
@@ -3991,7 +3991,7 @@ public:
     Used = 0;
   }
 
-// void Add(const Type &e)               { sVERIFY(&e<Data || &e>=Data+Alloc); Grow(1); Data[Used++]=e; }
+// void Add(const Type &e)               { assert(&e<Data || &e>=Data+Alloc); Grow(1); Data[Used++]=e; }
 // Type *Add()                           { Grow(1); return &Data[Used++]; }
 // ! Add all elements from another array
   void Add(const sStaticArray<Type>& a)
@@ -4042,8 +4042,8 @@ public:
   // ! Insert element into array, preserving order (requires copying elements around)
   void AddBefore(const Type& e, sInt p)
   {
-    sVERIFY(&e < Data || &e >= Data + Alloc);
-    sVERIFY(p >= 0 && p <= Used);
+    assert(&e < Data || &e >= Data + Alloc);
+    assert(p >= 0 && p <= Used);
     Grow(1);
 
     for(sInt i = Used; i > p; i--)
@@ -4057,7 +4057,7 @@ public:
   // ! Insert element into array, preserving order (requires copying elements around)
   void AddAfter(const Type& e, sInt p)
   {
-    sVERIFY(&e < Data || &e >= Data + Alloc);
+    assert(&e < Data || &e >= Data + Alloc);
     AddBefore(e, p + 1);
     UsageTrackingUpdate();
   }
@@ -4065,7 +4065,7 @@ public:
   // ! Insert element into array, preserving order (requires copying elements around)
   void AddHead(const Type& e)
   {
-    sVERIFY(&e < Data || &e >= Data + Alloc);
+    assert(&e < Data || &e >= Data + Alloc);
     AddBefore(e, 0);
     UsageTrackingUpdate();
   }
@@ -4073,7 +4073,7 @@ public:
   // ! Insert element into array, preserving order (which is trivial)
   void AddTail(const Type& e)
   {
-    sVERIFY(&e < Data || &e >= Data + Alloc);
+    assert(&e < Data || &e >= Data + Alloc);
     Grow(1);
     Data[Used++] = e;
     UsageTrackingUpdate();
@@ -4081,21 +4081,21 @@ public:
 
   Type& GetTail() const
   {
-    sVERIFY(!IsEmpty());
+    assert(!IsEmpty());
     return Data[Used - 1];
   }
 
   // ! Removing element, NOT preserving order
   void RemAt(sInt p)
   {
-    sVERIFY(IsIndexValid(p));
+    assert(IsIndexValid(p));
     Data[p] = Data[--Used];
   }
 
   // ! Removing element, preserving order (requires copying elements around)
   void RemAtOrder(sInt p)
   {
-    sVERIFY(IsIndexValid(p));
+    assert(IsIndexValid(p));
     Used--;
 
     while(p < Used)
@@ -4108,7 +4108,7 @@ public:
   // ! Removing last element, preserving order (which is trivial)
   Type RemTail()
   {
-    sVERIFY(Used > 0);
+    assert(Used > 0);
     Used--;
     return Data[Used];
   }
@@ -4150,14 +4150,14 @@ public:
   // ! Indexing
   sINLINE const Type & operator [] (sInt p) const
   {
-    sVERIFY(IsIndexValid(p));
+    assert(IsIndexValid(p));
     return Data[p];
   }
 
   // ! Indexing
   sINLINE Type & operator [] (sInt p)
   {
-    sVERIFY(IsIndexValid(p));
+    assert(IsIndexValid(p));
     return Data[p];
   }
 
@@ -4220,7 +4220,7 @@ class sStackArray : public sStaticArray<Type>
 protected:
   void ReAlloc(sInt max)
   {
-    sVERIFY(max <= Max_);
+    assert(max <= Max_);
   }
 
   void Grow(sInt add)
@@ -4235,7 +4235,7 @@ protected:
     }
 
 #endif
-    sVERIFY(sStaticArray<Type>::Used + add <= Max_);
+    assert(sStaticArray<Type>::Used + add <= Max_);
   }
 
   Type Storage[Max_];
@@ -4304,7 +4304,7 @@ public:
    template <typename T> class sExternalArray : public sStaticArray<T>
    {
    protected:
-   virtual void ReAlloc(sInt max) { sVERIFY(max<=sStaticArray<T>::Alloc); }
+   virtual void ReAlloc(sInt max) { assert(max<=sStaticArray<T>::Alloc); }
    virtual void Reset() { sStaticArray<T>::Clear(); }
    public:
    template <sDInt SIZE> sExternalArray(T (&array)[SIZE]) { sStaticArray<T>::Data = array; sStaticArray<T>::Alloc = SIZE; sStaticArray<T>::Used = SIZE; }
@@ -5658,12 +5658,12 @@ public:
   // resizing (only smaller and memory usage will stay the same)
   void Resize(sInt newsize)
   {
-    sVERIFY(Ptr);
+    assert(Ptr);
 
     if(Ptr)
     {
       sInt& size = *(sInt*)Ptr;
-      sVERIFY(newsize >= 0 && newsize <= size);
+      assert(newsize >= 0 && newsize <= size);
       size = newsize;
     }
   }
@@ -5676,7 +5676,7 @@ public:
 
   sInt GetSize() const
   {
-    sVERIFY(Ptr);
+    assert(Ptr);
 
     if(Ptr)
       return sInt(Ptr[0]);
@@ -5687,7 +5687,7 @@ public:
   template<typename T>
   T* GetPtr()
   {
-    sVERIFY(Ptr);
+    assert(Ptr);
 
     if(Ptr)
       return reinterpret_cast<T*>(Ptr + 2);
@@ -5698,7 +5698,7 @@ public:
   template<typename T>
   const T* GetPtr() const
   {
-    sVERIFY(Ptr);
+    assert(Ptr);
 
     if(Ptr)
       return reinterpret_cast<const T*>(Ptr + 2);
@@ -6749,21 +6749,21 @@ public:
   // ! set a bit to 1
   void Set(sInt i)
   {
-    sVERIFY(i >= 0 && i < bits);
+    assert(i >= 0 && i < bits);
     Data[i / 8] |= 1 << (i & 7);
   }
 
   // ! clear a bit to 0
   void Clear(sInt i)
   {
-    sVERIFY(i >= 0 && i < bits);
+    assert(i >= 0 && i < bits);
     Data[i / 8] &= ~(1 << (i & 7));
   }
 
   // ! set a bit to a value 0 or 1
   void Assign(sInt i, sInt v)
   {
-    sVERIFY(i >= 0 && i < bits);
+    assert(i >= 0 && i < bits);
 
     if(v)
       Set(i);
@@ -6774,7 +6774,7 @@ public:
   // ! get a bit. return 0 or 1
   sInt Get(sInt i) const
   {
-    sVERIFY(i >= 0 && i < bits);
+    assert(i >= 0 && i < bits);
     return (Data[i / 8] >> (i & 7)) & 1;
   }
 

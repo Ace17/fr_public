@@ -124,7 +124,7 @@ void sVertexFormatHandle::Create()
       {
         if(firstvert)
         {
-          sVERIFY(dindex < sCOUNTOF(decl));
+          assert(dindex < sCOUNTOF(decl));
           firstvert = 0;
           decl[dindex].Mode = 2;
           decl[dindex].Index = stream;
@@ -132,7 +132,7 @@ void sVertexFormatHandle::Create()
           Streams = stream + 1;
         }
 
-        sVERIFY(dindex < sCOUNTOF(decl));
+        assert(dindex < sCOUNTOF(decl));
         switch(Data[i] & sVF_USEMASK)
         {
         case sVF_NOP:         decl[dindex].Index = -1;
@@ -241,7 +241,7 @@ void sVertexFormatHandle::Create()
 
   // write endmarker
 
-  sVERIFY(dindex < sCOUNTOF(decl));
+  assert(dindex < sCOUNTOF(decl));
   dindex++;
 
   // copy to handle
@@ -277,7 +277,7 @@ static sGeoBuffer* sFindGeoBuffer(sInt bytes, sInt type, sGeometryDuration durat
 
   // allocate new buffer
 
-  sVERIFY(sGeoBufferCount < sMAX_GEOBUFFER);
+  assert(sGeoBufferCount < sMAX_GEOBUFFER);
   sGeoBuffer* gb = &sGeoBuffers[sGeoBufferCount++];
   switch(type)
   {
@@ -298,7 +298,7 @@ static sGeoBuffer* sFindGeoBuffer(sInt bytes, sInt type, sGeometryDuration durat
   gb->Duration = duration;
   gb->Type = type;
   gb->GLName = 0;
-  sVERIFY(bytes <= gb->Alloc);
+  assert(bytes <= gb->Alloc);
   // create GL object for buffer
   switch(gb->Duration)
   {
@@ -377,7 +377,7 @@ void sGeoBufferPart::Unlock(sInt count, sInt size)
     Count = count;
 
   Buffer->Used += sAlign(Count * size, 128);
-  sVERIFY(Buffer->Used <= Buffer->Alloc);
+  assert(Buffer->Used <= Buffer->Alloc);
   glBindBufferARB(Buffer->GLType, Buffer->GLName);
   glUnmapBufferARB(Buffer->GLType);
   GLERR();
@@ -389,7 +389,7 @@ void sGeoBufferPart::Unlock(sInt count, sInt size)
 void sGeometry::Draw(sDrawRange* ir, sInt irc, sInt instancecount, sVertexOffset* off /*=0*/)
 {
   // set vertexformat
-  sVERIFY(!off);      // vertex stream offset currently unsupported
+  assert(!off);      // vertex stream offset currently unsupported
 
   sVertexFormatHandle::OGLDecl* decl = Format->GetDecl();
   sInt stride = 0;
@@ -455,9 +455,9 @@ void sGeometry::Draw(sDrawRange* ir, sInt irc, sInt instancecount, sVertexOffset
 
   // do drawing
 
-  sVERIFY(ir == 0);
-  sVERIFY(irc == 0);
-  sVERIFY(instancecount == 0);
+  assert(ir == 0);
+  assert(irc == 0);
+  assert(instancecount == 0);
 
   if(IndexPart.Buffer)
   {
@@ -522,8 +522,8 @@ void sTexture2D::Destroy2()
 
 void sTexture2D::BeginLoad(sU8*& data, sInt& pitch, sInt mipmap)
 {
-  sVERIFY(LoadBuffer == 0);
-  sVERIFY(mipmap >= 0 && mipmap < Mipmaps);
+  assert(LoadBuffer == 0);
+  assert(mipmap >= 0 && mipmap < Mipmaps);
   sInt xs = SizeX >> mipmap;
   sInt ys = SizeY >> mipmap;
 
@@ -535,7 +535,7 @@ void sTexture2D::BeginLoad(sU8*& data, sInt& pitch, sInt mipmap)
 
 void sTexture2D::EndLoad()
 {
-  sVERIFY(LoadBuffer != 0);
+  assert(LoadBuffer != 0);
   sInt format = 0, channels = 0, type = 0;
 
   sInt xs = SizeX >> LoadMipmap;
@@ -600,7 +600,7 @@ void sTextureCube::EndLoad()
 
 void sPackDXT(sU8* d, sU32* bmp, sInt xs, sInt ys, sInt format, sBool dither)
 {
-  sVERIFY("sPackDXT not supported with opengl")
+  assert("sPackDXT not supported with opengl")
 }
 
 /****************************************************************************/
@@ -673,7 +673,7 @@ void sMaterial::Set(sCBufferBase** cbuffers, sInt cbcount, sBool additive)
    for(sInt i=0;i<cbcount;i++)
    {
     sCBufferBase *cb = cbuffers[i];
-    sVERIFY(cb->Slot<sCBUFFER_MAXSLOT*sCBUFFER_SHADERTYPES);
+    assert(cb->Slot<sCBUFFER_MAXSLOT*sCBUFFER_SHADERTYPES);
     if(cb != CurrentCBs[cb->Slot])
     {
       cb->SetRegs();
@@ -798,8 +798,8 @@ void sMaterial::SetStates(sInt variant_ignored)
     {
       GL_NEVER, GL_LESS, GL_EQUAL, GL_LEQUAL, GL_GREATER, GL_NOTEQUAL, GL_GEQUAL
     };
-    sVERIFY(0 <= alphaFunc);
-    sVERIFY(alphaFunc < sizeof(alphaFuncs));
+    assert(0 <= alphaFunc);
+    assert(alphaFunc < sizeof(alphaFuncs));
     glAlphaFunc(alphaFuncs[alphaFunc], AlphaRef / 255.0f);
   }
 
@@ -1247,7 +1247,7 @@ sTexture2D* sGetCurrentBackZBuffer(void)
 
 void sSetRendertarget(const sRect* vrp, sInt flags, sU32 clearcolor, sTexture2D** tex, sInt count)
 {
-  sVERIFY(0);
+  assert(0);
 }
 
 static void sSetRendertargetPrivate(const sRect* vrp, sInt flags, sU32 color)
@@ -1261,7 +1261,7 @@ void sSetRendertarget(const sRect* vrp, sInt clearflags, sU32 clearcolor)
 
 void sSetRendertarget(const sRect* vrp, sTexture2D* tex, sInt clearflags, sU32 clearcolor)
 {
-  sVERIFY(tex == 0);
+  assert(tex == 0);
 
   // find rect
 
@@ -1359,7 +1359,7 @@ sBool sRender3DBegin()
 
     if(geo->Duration == sGD_STREAM || geo->Duration == sGD_FRAME)
     {
-      sVERIFY(geo->Alloc);
+      assert(geo->Alloc);
       geo->Used = 0;
       geo->Freed = 0;
     }
@@ -1408,7 +1408,7 @@ void sSetTexture(sInt stage, class sTextureBase* tex)
 {
   if(tex)
   {
-    sVERIFY(tex->Mipmaps > 0);
+    assert(tex->Mipmaps > 0);
     switch(tex->Flags & sTEX_TYPE_MASK)
     {
     case sTEX_2D:
@@ -1420,10 +1420,10 @@ void sSetTexture(sInt stage, class sTextureBase* tex)
       glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, tex->Mipmaps - 1);
       break;
     case sTEX_3D:
-      sVERIFY(0);
+      assert(0);
       break;
     case sTEX_CUBE:
-      sVERIFY(0);
+      assert(0);
       break;
     }
   }

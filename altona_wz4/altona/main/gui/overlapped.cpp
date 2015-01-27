@@ -147,7 +147,7 @@ void sSizeBorder::OnPaint2D()
 
 void sSizeBorder::OnDrag(const sWindowDrag& dd)
 {
-  sVERIFY(Parent);
+  assert(Parent);
 
   const sInt b = 15;
   sInt mask = 0;
@@ -256,7 +256,7 @@ void sTitleBorder::OnPaint2D()
 
 void sTitleBorder::OnDrag(const sWindowDrag& dd)
 {
-  sVERIFY(Parent);
+  assert(Parent);
   switch(dd.Mode)
   {
   case sDD_START:

@@ -43,8 +43,8 @@ static sInt FindKnot(const sF32* knots, sInt nKnots, sF32 time)
 
   // binary search for the right knot interval
   sInt l = LowerBound(&knots[sBSPLINE_ORDER], time, nKnots - 2 * sBSPLINE_DEGREE - 1);
-  sVERIFY(l >= 0 && l <= nKnots - 2 * sBSPLINE_ORDER);
-  sVERIFY(knots[l + sBSPLINE_DEGREE] <= time && time <= knots[l + sBSPLINE_DEGREE + 1]);
+  assert(l >= 0 && l <= nKnots - 2 * sBSPLINE_ORDER);
+  assert(knots[l + sBSPLINE_DEGREE] <= time && time <= knots[l + sBSPLINE_DEGREE + 1]);
 
   return l;
 }
@@ -78,7 +78,7 @@ static void Numerical2ndDeriv(sF32* out, const sF32* in, sInt nChans, sInt nSamp
 // Determine threashold for peak determination.
 static sF32 CalcPeakThreshold(const sF32* in, sInt nChans, sInt nSamples, sF32 K)
 {
-  sVERIFY(nChans <= sBSPLINE_MAXCHANNELS);
+  assert(nChans <= sBSPLINE_MAXCHANNELS);
   sF32 avg[sBSPLINE_MAXCHANNELS], absSum = 0.0f, max = 0.0f;
 
   for(sInt i = 0; i < nChans; i++)
@@ -189,7 +189,7 @@ sInt CalcBasis(const sF32* knots, sInt nKnots, sF32 time, sF32* weights)
   else
   {
     first = FindKnot(knots, nKnots, time);
-    sVERIFY(first != -1 && first >= 0 && first + sBSPLINE_DEGREE * 2 + 1 < nKnots);
+    assert(first != -1 && first >= 0 && first + sBSPLINE_DEGREE * 2 + 1 < nKnots);
 
     const sF32* knot = &knots[first];
 
@@ -249,7 +249,7 @@ sInt CalcBasisDeriv(const sF32* knots, sInt nKnots, sF32 time, sF32* weights)
   else
   {
     first = FindKnot(knots, nKnots, time);
-    sVERIFY(first != -1);
+    assert(first != -1);
 
     const sF32* knot = &knots[first];
 
@@ -515,7 +515,7 @@ void sBSplineFitter::LeastSquaresFit(const sF32* samples, sInt nSamples)
 sBool sBSplineFitter::FitCurveImpl(const sF32* samples, sInt nSamples, sF32 maxError, sInt maxRefinements, ErrorMetric metric, void* user)
 {
   sArray<sF32> NewKnots;
-  sVERIFY(nChannels <= sBSPLINE_MAXCHANNELS);
+  assert(nChannels <= sBSPLINE_MAXCHANNELS);
 
   // Initial fit
   LeastSquaresFit(samples, nSamples);

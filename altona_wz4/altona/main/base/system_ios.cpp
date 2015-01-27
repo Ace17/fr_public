@@ -164,7 +164,7 @@ public:
     // sAtomicAdd(&sMemoryUsed, (sDInt)size);
     void* ptr;
 // align = sMax<sInt>(align,sizeof(void*));
-// sVERIFY(align<=4);
+// assert(align<=4);
     ptr = malloc(size);
 
     return ptr;
@@ -195,7 +195,7 @@ void sInitMem1()
     {
       sInt size = DebugHeapSize;
       sDebugHeapBase = (sU8*)malloc(size);
-      sVERIFY(sDebugHeapBase);
+      assert(sDebugHeapBase);
       sDebugHeap.Init(sDebugHeapBase, size);
       sRegisterMemHandler(sAMF_DEBUG, &sDebugHeap);
     }
@@ -206,7 +206,7 @@ void sInitMem1()
   if((flags & sIMF_NORTL) && sMemoryInitSize > 0)
   {
     sMainHeapBase = (sU8*)malloc(sMemoryInitSize);
-    sVERIFY(sMainHeapBase);
+    assert(sMainHeapBase);
 
     if(flags & sIMF_CLEAR)
       sSetMem(sMainHeapBase, 0x77, sMemoryInitSize);
@@ -299,7 +299,7 @@ void* sSTDCALL sThreadTrunk_pthread(void* ptr)
   pthread_t self = pthread_self();
   sLogF(L"sys", L"New sThread started. 0x%x, id is 0x%x\n", self, th->ThreadId);
 
-  sVERIFY(pthread_equal(self, (pthread_t)th->ThreadId));
+  assert(pthread_equal(self, (pthread_t)th->ThreadId));
 
   th->Code(th, th->Userdata);
 
@@ -310,7 +310,7 @@ void* sSTDCALL sThreadTrunk_pthread(void* ptr)
 
 sThread::sThread(void(*code)(sThread*, void*), sInt pri, sInt stacksize, void* userdata, sInt flags /*=0*/)
 {
-  sVERIFY(sizeof(pthread_t) == sCONFIG_PTHREAD_T_SIZE);
+  assert(sizeof(pthread_t) == sCONFIG_PTHREAD_T_SIZE);
 
   TerminateFlag = 0;
   Code = code;
@@ -323,7 +323,7 @@ sThread::sThread(void(*code)(sThread*, void*), sInt pri, sInt stacksize, void* u
   // windows: ThreadHandle = CreateThread(0,stacksize,sThreadTrunk,this,0,(ULONG *)&ThreadId);
 
   int result = pthread_create((pthread_t*)ThreadHandle, sNULL, sThreadTrunk_pthread, this);
-  sVERIFY(result == 0);
+  assert(result == 0);
 
   ThreadId = sU64(*(pthread_t*)ThreadHandle);
 

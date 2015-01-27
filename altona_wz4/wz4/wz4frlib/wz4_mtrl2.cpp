@@ -287,7 +287,7 @@ sCBufferBase* Wz4MtrlType_::MakeSkinCB(sInt SkinMatCount, const sMatrix34CM* Ski
     else
     {
       sInt count = SkinMatCount;
-      sVERIFY(count);
+      assert(count);
       sInt starti = 0;
       sInt startm = SkinMatMap[0];
 
@@ -882,7 +882,7 @@ void SimpleMtrl::Serialize_(streamer& s)
 
   sInt tc = sCOUNTOF(Tex);
   s | tc;
-  sVERIFY(tc <= sCOUNTOF(Tex));
+  assert(tc <= sCOUNTOF(Tex));
 
   for(sInt i = 0; i < tc; i++)
   {
@@ -1124,7 +1124,7 @@ void CustomMtrl::Set(sInt flags, sInt index, const sMatrix34CM* mat, sInt SkinMa
     {
       sMatrix34 tmat, nmat;
 
-      sVERIFY(CustomMtrlType->Viewport);
+      assert(CustomMtrlType->Viewport);
       const sViewport& view = *CustomMtrlType->Viewport;
 
       sVector30 d;
@@ -1223,7 +1223,7 @@ void CustomMtrl::Prepare()
   *desc = 0;
   Format = sCreateVertexFormat(descdata);
 
-  sVERIFY(Shader);
+  assert(Shader);
   Shader->Flags = Flags;
   Shader->BlendColor = Blend;
 

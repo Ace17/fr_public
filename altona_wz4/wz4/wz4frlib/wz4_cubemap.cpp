@@ -66,7 +66,7 @@ void Wz4Cubemap::Init(sInt size)
   Size = size;
   Shift = sFindLowerPower(Size);
   Mask = (Size - 1);
-  sVERIFY((1 << Shift) == Size);
+  assert((1 << Shift) == Size);
   SquareSize = Size * Size;
   CubeSize = 6 * SquareSize;
   Data = new Pixel[CubeSize];
@@ -255,7 +255,7 @@ void Wz4Cubemap::Flat(const Pixel& col)
 
 void Wz4Cubemap::Noise(const GenTexture* grad, sInt freq, sInt oct, sF32 fadeoff, sInt seed, sInt mode)
 {
-  sVERIFY(oct > 0);
+  assert(oct > 0);
 
 // seed = P(seed);
 
@@ -341,13 +341,13 @@ void Wz4Cubemap::ColorMatrixTransform(const Wz4Cubemap* x, const Matrix45& matri
 {
   sInt m[4][5];
 
-  sVERIFY(Size == x->Size);
+  assert(Size == x->Size);
 
   for(sInt i = 0; i < 4; i++)
   {
     for(sInt j = 0; j < 5; j++)
     {
-      sVERIFY(matrix[i][j] >= -127.0f && matrix[i][j] <= 127.0f);
+      assert(matrix[i][j] >= -127.0f && matrix[i][j] <= 127.0f);
       m[i][j] = sInt(matrix[i][j] * 65536.0f);
     }
   }
@@ -383,7 +383,7 @@ void Wz4Cubemap::ColorMatrixTransform(const Wz4Cubemap* x, const Matrix45& matri
 
 void Wz4Cubemap::CoordMatrixTransform(const Wz4Cubemap* in, const sMatrix34& matrix)
 {
-  sVERIFY(Size == in->Size);
+  assert(Size == in->Size);
   sVector30 normal;
   sVector31 pos;
 
@@ -402,7 +402,7 @@ void Wz4Cubemap::CoordMatrixTransform(const Wz4Cubemap* in, const sMatrix34& mat
 
 void Wz4Cubemap::ColorRemap(const Wz4Cubemap* inTex, const GenTexture* mapR, const GenTexture* mapG, const GenTexture* mapB)
 {
-  sVERIFY(Size == inTex->Size);
+  assert(Size == inTex->Size);
 
 // const Pixel *in = inTex->Data;
 // Pixel *out = Data;
@@ -450,8 +450,8 @@ void Wz4Cubemap::ColorRemap(const Wz4Cubemap* inTex, const GenTexture* mapR, con
 
 void Wz4Cubemap::Binary(const Wz4Cubemap* tex0, const Wz4Cubemap* tex1, CombineOp op)
 {
-  sVERIFY(Size == tex0->Size);
-  sVERIFY(Size == tex1->Size);
+  assert(Size == tex0->Size);
+  assert(Size == tex1->Size);
 
 // Pixel *out = Data;
   sInt transIn, transOut;

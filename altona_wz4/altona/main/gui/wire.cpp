@@ -545,7 +545,7 @@ sWindow* sWireMasterWindow::FindWindow(sPoolString name, sInt index)
   if(wc == 0 || index < 0 || index >= wc->Instances.GetCount())
     return 0;
 
-  sVERIFY(wc->IsWindow);
+  assert(wc->IsWindow);
 
   return (sWindow*)(wc->Instances[index].Object);
 }
@@ -564,8 +564,8 @@ void sWireMasterWindow::AddForm(const sChar* name, sObject* obj, const sChar* in
     wc->IsWindow = iswindow;
   }
 
-  sVERIFY(wc->ClassName == obj->GetClassName());
-  sVERIFY(wc->IsWindow == iswindow);
+  assert(wc->ClassName == obj->GetClassName());
+  assert(wc->IsWindow == iswindow);
 
   wc->Instances.AddTail(FormInstance(obj, instancename, wc));
 
@@ -722,7 +722,7 @@ void sWireMasterWindow::ProcessText(const sChar* text, const sChar* reffilename)
 
   _Global();
 
-  sVERIFY(Scan->Errors == 0);
+  assert(Scan->Errors == 0);
   sDelete(Scan);
 }
 
@@ -737,7 +737,7 @@ void sWireMasterWindow::ProcessFile(const sChar* name)
 
   _Global();
 
-  sVERIFY(Scan->Errors == 0);
+  assert(Scan->Errors == 0);
   sDelete(Scan);
 }
 
@@ -978,7 +978,7 @@ sBool sWireMasterWindow::HandleKey(sWindow* win, sU32 key)
   mkey = key & (sKEYQ_MASK | sKEYQ_BREAK);
 
   inst = FindInstance(win);
-  sVERIFY(inst);
+  assert(inst);
   wc = inst->Class;
 
   sFORALL(GlobalKeys, sc)
@@ -1111,7 +1111,7 @@ sBool sWireMasterWindow::HandleDrag(sWindow* win, const sWindowDrag& dd, sInt hi
 
   if(dd.Mode == sDD_START)
   {
-    sVERIFY(DragMessage.IsEmpty());
+    assert(DragMessage.IsEmpty());
     key = 0;
 
     if(dd.Buttons & 1)
@@ -1141,7 +1141,7 @@ sBool sWireMasterWindow::HandleDrag(sWindow* win, const sWindowDrag& dd, sInt hi
       key |= sKEYQ_ALT;
 
     inst = FindInstance(win);
-    sVERIFY(inst);
+    assert(inst);
     wc = inst->Class;
 // CurrentToolName = wc->CurrentTool ? wc->CurrentTool->Text : L""
 
@@ -1179,7 +1179,7 @@ sBool sWireMasterWindow::HandleDrag(sWindow* win, const sWindowDrag& dd, sInt hi
           switch(sc->Cmd->Type)
           {
           case CT_DRAG:
-            sVERIFY(sc->Instance == 0);
+            assert(sc->Instance == 0);
             drag = (CommandDrag*)sc->Cmd;
             DragMessage = drag->Message;
             DragModeQual = sc->Qual;
@@ -1201,12 +1201,12 @@ sBool sWireMasterWindow::HandleDrag(sWindow* win, const sWindowDrag& dd, sInt hi
   {
     if(DragMessage.IsValid())
     {
-      sVERIFY(DragModeFocus == win);
+      assert(DragModeFocus == win);
       DragMessage.Drag(dd);
 
       if(dd.Mode == sDD_STOP)
       {
-        sVERIFY(DragModeFocus == win);
+        assert(DragModeFocus == win);
         DragModeFocus = 0;
         DragMessage.Clear();
       }
@@ -1221,7 +1221,7 @@ sBool sWireMasterWindow::HandleDrag(sWindow* win, const sWindowDrag& dd, sInt hi
   if(dd.Mode == sDD_HOVER)          // now handle hover messages, if sWF_HOVER is enabled
   {
     inst = FindInstance(win);
-    sVERIFY(inst);
+    assert(inst);
     wc = inst->Class;
     sFORALL(wc->Shortcuts, sc)
     {
@@ -1230,7 +1230,7 @@ sBool sWireMasterWindow::HandleDrag(sWindow* win, const sWindowDrag& dd, sInt hi
          sc->Key == KEY_HOVER &&
          sc->Tool == wc->CurrentTool)
       {
-        sVERIFY(sc->Instance == 0);
+        assert(sc->Instance == 0);
         drag = (CommandDrag*)sc->Cmd;
         drag->Message.Drag(dd);
       }
@@ -1243,7 +1243,7 @@ sBool sWireMasterWindow::HandleDrag(sWindow* win, const sWindowDrag& dd, sInt hi
 void sWireMasterWindow::ChangeCurrentTool(sWindow* window, const sChar* name)
 {
   FormInstance* inst = FindInstance(window);
-  sVERIFY(inst);
+  assert(inst);
 
   Form* wc = inst->Class;
   CommandTool* newtool = 0;

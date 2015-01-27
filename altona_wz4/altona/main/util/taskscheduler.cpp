@@ -25,7 +25,7 @@ sStsPerfMon* sSchedMon;
 
 static void sInitSts()
 {
-  sVERIFY(sSched == 0)
+  assert(sSched == 0)
   sSched = new sStsManager(128 * 1024, 512);
 }
 
@@ -176,7 +176,7 @@ sStsThread::sStsThread(sStsManager* m, sInt index, sInt taskcount, sBool thread)
   }
   else
   {
-    sVERIFY(index == 0);
+    assert(index == 0);
     sGetThreadContext()->Thread->SetHomeCore(index);
   }
 }
@@ -268,7 +268,7 @@ sBool sStsThread::Execute()
       if(task->Start < task->End)
         break;
 
-      sVERIFY(task->Start == task->End);
+      assert(task->Start == task->End);
       qu->TaskCount--;
       sAtomicDec(&wl->TasksLeft);
       sAtomicDec(&Manager->TotalTasksLeft);
@@ -287,7 +287,7 @@ sBool sStsThread::Execute()
       data = t->Data;
       code = t->Code;
       count = sMin(end - start, t->Granularity);
-      sVERIFY(count > 0);
+      assert(count > 0);
       t->Start += count;
 
       if(t->Start == t->End)
@@ -315,7 +315,7 @@ sBool sStsThread::Execute()
       if(wl0->TasksLeft == 0 && wl0->TasksRunning == 0)
       {
         Manager->ActiveWorkloads.Rem(wl0);
-        sVERIFY(wl0->Mode == sSWM_RUNNING);
+        assert(wl0->Mode == sSWM_RUNNING);
         wl0->Mode = sSWM_FINISHED;
         wl0->SpinCount = StatSpin;
         StatSpin = 0;
@@ -407,7 +407,7 @@ sU8* sStsWorkload::AllocBytes(sInt bytes)
   if(r > MemEnd)
     sFatal(L"out of sts memory");
 
-  sVERIFY(((r - bytes) & 3) == 0);
+  assert(((r - bytes) & 3) == 0);
   return (sU8*)sPtr(r - bytes);
 }
 
@@ -490,7 +490,7 @@ sStsManager::~sStsManager()
 {
   Finish();
 
-  sVERIFY(ActiveWorkloads.IsEmpty());
+  assert(ActiveWorkloads.IsEmpty());
   sDeleteAll(FreeWorkloads);
 
 // delete[] Mem;
@@ -535,7 +535,7 @@ void sStsManager::StartWorkload(sStsWorkload* wl)
     qu->ExeCount = 0;
   }
 
-  sVERIFY(wl->Mode == sSWM_READY);
+  assert(wl->Mode == sSWM_READY);
   wl->Mode = sSWM_RUNNING;
 
   WorkloadWriteLock();
@@ -586,10 +586,10 @@ sBool sStsManager::HelpWorkload(sStsWorkload* wl)
 
 void sStsManager::EndWorkload(sStsWorkload* wl)
 {
-  sVERIFY(wl->Mode == sSWM_FINISHED);
+  assert(wl->Mode == sSWM_FINISHED);
   wl->Mode = sSWM_IDLE;
-  sVERIFY(wl->TasksLeft == 0);
-  sVERIFY(wl->TasksRunning == 0);
+  assert(wl->TasksLeft == 0);
+  assert(wl->TasksRunning == 0);
   FreeWorkloads.AddTail(wl);
 }
 
@@ -624,12 +624,12 @@ void sStsManager::Start()
 {
   // is it really off?
 
-  sVERIFY(!Running);
+  assert(!Running);
 /*
    for(sInt i=0;i<ThreadCount;i++)
    {
     Threads[i]->Lock->Lock();
-    sVERIFY(Threads[i]->Running==0);
+    assert(Threads[i]->Running==0);
     Threads[i]->Lock->Unlock();
    }
  */
@@ -651,12 +651,12 @@ void sStsManager::StartSingle()
 {
   // is it really off?
 
-  sVERIFY(!Running);
+  assert(!Running);
 /*
    for(sInt i=0;i<ThreadCount;i++)
    {
     Threads[i]->Lock->Lock();
-    sVERIFY(Threads[i]->Running==0);
+    assert(Threads[i]->Running==0);
     Threads[i]->Lock->Unlock();
    }
  */
@@ -712,7 +712,7 @@ void sStsManager::Finish()
 
     sSpin();
    }
-   sVERIFY(TotalTasksLeft==0);
+   assert(TotalTasksLeft==0);
  */
 
   while(TotalTasksLeft > 0)
@@ -723,11 +723,11 @@ void sStsManager::Finish()
    for(sInt i=0;i<ThreadCount;i++)
    {
     Threads[i]->Lock->Lock();
-    sVERIFY(Threads[i]->Running==2);
+    assert(Threads[i]->Running==2);
     Threads[i]->Lock->Unlock();
    }
  */
-  sVERIFY(TotalTasksLeft == 0);
+  assert(TotalTasksLeft == 0);
 
   // release threads
 /*
@@ -756,7 +756,7 @@ void sStsManager::Sync(sStsSync* sync)
    sPtr r = sAtomicAdd(&MemUsed,bytes);
    if(r>MemEnd)
     sFatal(L"out of sts memory");
-   sVERIFY(((r-bytes)&3)==0);
+   assert(((r-bytes)&3)==0);
    return (sU8 *)sPtr(r-bytes);
    }
  */
@@ -778,7 +778,7 @@ sBool sStsManager::StealTasks(sInt to)
       {
         sStsQueue* qu = wl->Queues[t];
         sInt n = qu->SubTaskCount;
-        sVERIFY(n >= 0);
+        assert(n >= 0);
 
         if(n > bestn && qu->DontSteal == 0)
         {
@@ -795,7 +795,7 @@ sBool sStsManager::StealTasks(sInt to)
       {
         sStsQueue* qu = wl->Queues[i];
         sInt n = qu->SubTaskCount;
-        sVERIFY(n >= 0);
+        assert(n >= 0);
 
         if(n > bestn && qu->DontSteal == 0)
         {
@@ -836,7 +836,7 @@ sBool sStsManager::StealTasks(sInt to)
     task = qu->Tasks[qu->TaskCount-1];
     if(task->Start<task->End)
       break;
-    sVERIFY(task->Start==task->End);
+    assert(task->Start==task->End);
     qu->TaskCount--;
     th->DecreaseSync(task);
     sAtomicDec(&wl->TasksLeft);
@@ -870,7 +870,7 @@ sBool sStsManager::StealTasks(sInt to)
     // make sure not to lock two threads at the same time (deadlocks)
 
     Threads[to]->Lock->Lock();
-    sVERIFY(qt->TaskCount + n <= qt->TaskMax);
+    assert(qt->TaskCount + n <= qt->TaskMax);
 
     for(sInt i = 0; i < n; i++)
       qt->Tasks[qt->TaskCount + i] = list[i];
@@ -906,7 +906,7 @@ sBool sStsManager::StealTasks(sInt to)
       }
 
       qu->SubTaskCount -= d;
-      sVERIFY(wl->TasksLeft > 0);
+      assert(wl->TasksLeft > 0);
       sAtomicInc(&wl->TasksLeft);  // count the new tasks before someone can finish old task (in case it't the last task)
       sAtomicInc(&TotalTasksLeft);
       th->Lock->Unlock();
@@ -914,7 +914,7 @@ sBool sStsManager::StealTasks(sInt to)
       // add task
 
       Threads[to]->Lock->Lock();
-      sVERIFY(qt->TaskCount < qt->TaskMax);
+      assert(qt->TaskCount < qt->TaskMax);
       qt->Tasks[qt->TaskCount++] = nt;
       qt->SubTaskCount += d;
       qt->DontSteal = nt->End - nt->Start <= nt->EndGame;
@@ -931,7 +931,7 @@ sBool sStsManager::StealTasks(sInt to)
       // add task
 
       Threads[to]->Lock->Lock();
-      sVERIFY(qt->TaskCount < qt->TaskMax);
+      assert(qt->TaskCount < qt->TaskMax);
       qt->Tasks[qt->TaskCount++] = task;
       qt->SubTaskCount++;
       qt->DontSteal = 1;          // protect this one subtask from getting stolen

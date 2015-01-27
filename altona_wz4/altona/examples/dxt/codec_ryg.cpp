@@ -18,7 +18,7 @@ const sChar* CodecRyg::GetName()
 
 void CodecRyg::Pack(sImage* bmp, sImageData* dxt, sInt level)
 {
-  sVERIFY((dxt->Format & sTEX_FORMAT) == level);
+  assert((dxt->Format & sTEX_FORMAT) == level);
 
   const sImage* img = bmp;
   sImage* other;
@@ -68,7 +68,7 @@ void CodecRyg::Pack(sImage* bmp, sImageData* dxt, sInt level)
 
 void CodecRyg::Unpack(sImage* bmp, sImageData* dxt, sInt level)
 {
-  sVERIFY((dxt->Format & sTEX_FORMAT) == level);
+  assert((dxt->Format & sTEX_FORMAT) == level);
   dxt->ConvertTo(bmp);
 }
 

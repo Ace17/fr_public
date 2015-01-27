@@ -969,7 +969,7 @@ static void CleanName(const sChar* s, const sStringDesc& dest)
   sChar* d = dest.Buffer;
   const sChar* ss = s;
 
-  sVERIFY(sGetStringLen(s) < dest.Size);
+  assert(sGetStringLen(s) < dest.Size);
 
   ss = s;
 
@@ -1203,7 +1203,7 @@ void XSILoader::_Mesh(XSIModel* model, sInt jointid, sBool animated)
   ScanXSIName(meshname);
   Scan.Match('{');
 
-  sVERIFY(Attributes.GetCount() == 0);
+  assert(Attributes.GetCount() == 0);
 
   Wz4Mesh* mesh = new Wz4Mesh;
 
@@ -1502,7 +1502,7 @@ void XSILoader::_Mesh(XSIModel* model, sInt jointid, sBool animated)
     // material
 
     ScanString(name);
-    sVERIFY(cl->Mtrl == 0);
+    assert(cl->Mtrl == 0);
     sPoolString mtrlName = name;
 
     XSIMaterial* mtrl = sFind(Materials, &XSIMaterial::Name, mtrlName);
@@ -1624,8 +1624,8 @@ void XSILoader::_Mesh(XSIModel* model, sInt jointid, sBool animated)
       if(poly)
         vertices = ScanInt();
 
-      sVERIFY(vertices < 256);
-      sVERIFY(elements < 15);
+      assert(vertices < 256);
+      assert(elements < 15);
 
       sInt vi = mesh->Vertices.GetCount();
       Wz4MeshVertex* vp = mesh->Vertices.AddMany(vertices);

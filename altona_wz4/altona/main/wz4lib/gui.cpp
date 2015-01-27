@@ -34,7 +34,7 @@ extern "C" const sChar8 WireTXT[];
 #define STB_VORBIS_NO_FAST_SCALED_FLOAT
 #define malloc(x) sAllocMem(x, 16, 0)
 #define free(x) sFreeMem(x)
-#define assert(x) sVERIFY(x)
+#define assert(x) assert(x)
 #define alloca(x) sALLOCSTACK(sU8, x)
 
 static void qsort(void* base, size_t num, size_t size, int (* comparator)(const void*, const void*))
@@ -596,7 +596,7 @@ void MainWindow::PrepareBackup()
 
 void MainWindow::ShowOp(wOp* op, sInt n)
 {
-  sVERIFY(n >= 0 && n < sCOUNTOF(ViewWin));
+  assert(n >= 0 && n < sCOUNTOF(ViewWin));
   UpdateStatus();
   ViewWin[n]->SetOp(op);
   StackWin->Update();
@@ -2472,7 +2472,7 @@ void MainWindow::CmdDelUnconnected2()
   wOp* op;
   wStackOp* sop;
   wClass* nopclass = Doc->FindClass(L"Nop", L"AnyType");
-  sVERIFY(nopclass);
+  assert(nopclass);
 
   // first, replace all bypassed ops with nops
 
@@ -2492,7 +2492,7 @@ void MainWindow::CmdDelUnconnected2()
             for(sInt i = 1; i < op->Inputs.GetCount(); i++)
             {
               sop = (wStackOp*)op->Inputs[i];
-              sVERIFY(!sop->Page->IsTree);
+              assert(!sop->Page->IsTree);
               sop->Hide = 1;
             }
           }
@@ -2581,7 +2581,7 @@ void MainWindow::MakePresetPath(const sStringDesc& path, wOp* op, const sChar* n
 {
   sString<sMAXPATH> buffer;
 
-  sVERIFY(op);
+  assert(op);
   buffer.PrintF(L"%s/presets/%s_%s_%s.preset", WikiPath, op->Class->OutputType->Symbol, op->Class->Name, name);
   sCopyString(path, buffer);
 }
@@ -2618,7 +2618,7 @@ void MainWindow::ExtractPresetName(const sStringDesc& name, const sChar* path)
 void MainWindow::LoadOpPreset(wOp* op, const sChar* name)
 {
   sString<sMAXPATH> path;
-  sVERIFY(op);
+  assert(op);
   MakePresetPath(path, op, name);
   sLoadObject(path, op);
 }
@@ -2626,7 +2626,7 @@ void MainWindow::LoadOpPreset(wOp* op, const sChar* name)
 void MainWindow::SaveOpPreset(wOp* op, const sChar* name)
 {
   sString<sMAXPATH> path;
-  sVERIFY(op);
+  assert(op);
   MakePresetPath(path, op, name);
   sSaveObject(path, op);
 }
@@ -3834,7 +3834,7 @@ void WinPara::CmdLinkAnim(sDInt offset)
           if(group == 0)
           {
             wClass* clg = Doc->FindClass(L"Group", L"AnyType");
-            sVERIFY(clg);
+            assert(clg);
             group = new wTreeOp;
             group->Init(clg);
             group->Name = L"AnimationVariable";
@@ -5408,7 +5408,7 @@ void WinStack::DragMove(const sWindowDrag& dd, sDInt mode)
 
     if(op && op->Select == 0)
     {
-      sVERIFY(Page);
+      assert(Page);
       sFORALL(Page->Ops, opall)
       opall->Select = 0;
       op->Select = 1;

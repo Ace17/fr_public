@@ -171,7 +171,7 @@ public:
   // ! indexing
   const Type & operator [] (sInt i) const
   {
-    sVERIFY(i >= 0);
+    assert(i >= 0);
 
     if(i >= Used)
       return Default;
@@ -182,7 +182,7 @@ public:
   // ! indexing
   Type & operator [] (sInt i)
   {
-    sVERIFY(i >= 0);
+    assert(i >= 0);
     Grow(i + 1);
     return Data[i];
   }
@@ -190,7 +190,7 @@ public:
   // ! indexing
   const Type& Get(sInt i) const
   {
-    sVERIFY(i >= 0);
+    assert(i >= 0);
 
     if(i >= Used)
       return Default;
@@ -201,7 +201,7 @@ public:
   // ! pre-allocate storage
   void HintSize(sInt i)
   {
-    sVERIFY(i >= 0);
+    assert(i >= 0);
     Grow(i);
   }
 
@@ -746,13 +746,13 @@ public:
 
   const T & operator [] (sInt i) const
   {
-    sVERIFY(i >= 0 && i <= Used);
+    assert(i >= 0 && i <= Used);
     return Items[i >> Log2Size]->Data[i & Mask];
   }
 
   T & operator [] (sInt i)
   {
-    sVERIFY(i >= 0 && i <= Used);
+    assert(i >= 0 && i <= Used);
     return Items[i >> Log2Size]->Data[i & Mask];
   }
 
@@ -764,7 +764,7 @@ public:
 
   void RemTail()
   {
-    sVERIFY(Used);
+    assert(Used);
     Used--;
   }
 
@@ -880,7 +880,7 @@ public:
   explicit sSmallObjectPoolStatic(sInt count, sInt alignment = 4, sInt allocflags = sAMF_DEFAULT)
   {
     TSize = sAlign<sInt>(sizeof(T), alignment);
-    sVERIFY(TSize >= sizeof(void*));
+    assert(TSize >= sizeof(void*));
     InternalPool = (sU8*)sAllocMem(count * TSize, alignment, allocflags);
 
     for(sInt i = 0; i < count - 1; i++)

@@ -33,7 +33,7 @@ static void TestBitIO()
     }
 
     sDInt bytes = writer.Finish();
-    sVERIFY(bytes != -1);
+    assert(bytes != -1);
   }
 
   // reader
@@ -48,11 +48,11 @@ static void TestBitIO()
       sInt len = rand.Int(23) + 1;
       sU32 checkValue = rand.Int32() & ((1 << len) - 1);
       sU32 getValue = reader.GetBits(len);
-      sVERIFY(getValue == checkValue);
+      assert(getValue == checkValue);
     }
 
     sBool ok = reader.Finish();
-    sVERIFY(ok);
+    assert(ok);
   }
 
   // ---- then a lot more of the same to a file
@@ -74,8 +74,8 @@ static void TestBitIO()
     }
 
     bytes = writer.Finish();
-    sVERIFY(bytes != -1);
-    sVERIFY(bytes == file->GetOffset());
+    assert(bytes != -1);
+    assert(bytes == file->GetOffset());
 
     static const sChar8 endTag[] = "0123";
     file->Write(endTag, 4);
@@ -96,12 +96,12 @@ static void TestBitIO()
       sInt len = rand.Int(23) + 1;
       sU32 checkValue = rand.Int32() & ((1 << len) - 1);
       sU32 getValue = reader.GetBits(len);
-      sVERIFY(getValue == checkValue);
+      assert(getValue == checkValue);
     }
 
     sBool ok = reader.Finish();
-    sVERIFY(ok);
-    sVERIFY(file->GetOffset() == bytes);
+    assert(ok);
+    assert(file->GetOffset() == bytes);
 
     // now try reading the end tag bitwise
     reader.Start(file);
@@ -109,14 +109,14 @@ static void TestBitIO()
     for(sInt i = 0; i < 4; i++)
     {
       sBool ok = reader.GetBits(8) == (i + '0');
-      sVERIFY(ok);
-      sVERIFY(reader.IsOk());
+      assert(ok);
+      assert(reader.IsOk());
     }
 
     // check whether reading one bit past the end signals an error
     sInt value = reader.GetBits(1);
-    sVERIFY(value == 0);
-    sVERIFY(!reader.IsOk());
+    assert(value == 0);
+    assert(!reader.IsOk());
 
     // all ok
     reader.Finish();
@@ -137,7 +137,7 @@ static void TestHuffman()
   // load test file
   sDInt size;
   sU8* testData = sLoadFile(L"../../main/base/types.cpp", size);
-  sVERIFY(testData != 0);
+  assert(testData != 0);
 
   // count character frequencies
   sU32 freq[256];
@@ -157,13 +157,13 @@ static void TestHuffman()
   writer.Start(file);
 
   ok = sWriteHuffmanCodeLens(writer, lens, 256);
-  sVERIFY(ok);
+  assert(ok);
 
   for(sInt i = 0; i < size; i++)
     writer.PutBits(code[testData[i]], lens[testData[i]]);
 
   sDInt bytes = writer.Finish();
-  sVERIFY(bytes != -1);
+  assert(bytes != -1);
   sDelete(file);
 
   // ---- reading
@@ -171,30 +171,30 @@ static void TestHuffman()
 
   sDInt packedSize;
   sU8* packedData = sLoadFile(L"types_huff.dat", packedSize);
-  sVERIFY(packedData != 0);
+  assert(packedData != 0);
 
   sBitReader reader;
   reader.Start(packedData, packedSize);
 
   sInt newLens[256];
   ok = sReadHuffmanCodeLens(reader, newLens, 256);
-  sVERIFY(ok);
+  assert(ok);
 
   for(sInt i = 0; i < 256; i++)
-    sVERIFY(lens[i] == newLens[i]);
+    assert(lens[i] == newLens[i]);
 
   sFastHuffmanDecoder huffdec;
   ok = huffdec.Init(lens, 256);
-  sVERIFY(ok);
+  assert(ok);
 
   for(sInt i = 0; i < size; i++)
   {
     sInt sym = huffdec.DecodeSymbol(reader);
-    sVERIFY(sym == testData[i]);
+    assert(sym == testData[i]);
   }
 
   ok = reader.Finish();
-  sVERIFY(ok);
+  assert(ok);
 
   // cleanup
   sDeleteFile(L"types_huff.dat");

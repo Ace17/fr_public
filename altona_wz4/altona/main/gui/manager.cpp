@@ -516,9 +516,9 @@ void sGui_::OnPaint(const sRect& client, const sRect& update)
   sLogF(L"gui", L"[%08x]----------\n", sGetTime());
 #endif
 
-  sVERIFY(BackBufferUsed == 0);
+  assert(BackBufferUsed == 0);
   RecPaint(Root, update);
-  sVERIFY(BackBufferUsed == 0);
+  assert(BackBufferUsed == 0);
   DontQueueEvents = 0;
 
   CheckToolTip();
@@ -1225,12 +1225,12 @@ void sGui_::PaintButton(const sRect& rect, const sChar* text, sInt flags, sInt l
 
 void sGui_::BeginBackBuffer(const sRect& rect)
 {
-  sVERIFY(BackBufferUsed == 0);
+  assert(BackBufferUsed == 0);
   BackBufferUsed = 1;
   BackBufferRect = rect;
 
-  sVERIFY(Client.x0 == 0);
-  sVERIFY(Client.y0 == 0);
+  assert(Client.x0 == 0);
+  assert(Client.y0 == 0);
 
   if(BackBuffer == 0 || BackBuffer->GetSizeX() != Client.x1 || BackBuffer->GetSizeY() != Client.y1)
   {
@@ -1243,7 +1243,7 @@ void sGui_::BeginBackBuffer(const sRect& rect)
 
 void sGui_::EndBackBuffer()
 {
-  sVERIFY(BackBufferUsed == 1);
+  assert(BackBufferUsed == 1);
   BackBufferUsed = 0;
   sRender2DEnd();
   BackBuffer->Paint(BackBufferRect, BackBufferRect.x0, BackBufferRect.y0);
@@ -1293,7 +1293,7 @@ template<class streamer>
 void sGuiTheme::Serialize_(streamer& s)
 {
   sInt version = s.Header(sSerId::sGuiTheme, 1);
-  sVERIFY(version > 0);
+  assert(version > 0);
 
   s | BackColor | DocColor | ButtonColor | TextColor | DrawColor;
   s | SelectColor | HighColor | LowColor | HighColor2 | LowColor2;

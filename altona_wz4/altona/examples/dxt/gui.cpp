@@ -194,10 +194,10 @@ void WinView::SetImage(DocImage* i, sBool loop)
 
     Doc->Codecs[App->Decoder]->Unpack(Decoded, Current->Dxt[App->Coder], format[App->Format]);
 
-    sVERIFY(Difference->SizeX == Current->Image->SizeX);
-    sVERIFY(Decoded->SizeX == Current->Image->SizeX);
-    sVERIFY(Difference->SizeY == Current->Image->SizeY);
-    sVERIFY(Decoded->SizeY == Current->Image->SizeY);
+    assert(Difference->SizeX == Current->Image->SizeX);
+    assert(Decoded->SizeX == Current->Image->SizeX);
+    assert(Difference->SizeY == Current->Image->SizeY);
+    assert(Decoded->SizeY == Current->Image->SizeY);
 
     BrightError[0] = 0;
     LinearError[0] = 0;

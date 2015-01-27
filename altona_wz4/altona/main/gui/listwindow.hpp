@@ -323,7 +323,7 @@ public:
       ClearSelectStatus();
     else
     {
-      sVERIFY(n >= 0 && n < Array->GetCount());
+      assert(n >= 0 && n < Array->GetCount());
       SetSelectStatus(n, 1);
     }
   }

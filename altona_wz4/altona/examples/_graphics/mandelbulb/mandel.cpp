@@ -150,7 +150,7 @@ void OctManager::NewFrame()
   VerticesDrawn = 0;
   DeepestDrawn = 0;
   NodesDrawn = 0;
-  sVERIFY(CurrentTarget == 0);
+  assert(CurrentTarget == 0);
 }
 
 /****************************************************************************/
@@ -238,7 +238,7 @@ void OctManager::ReadbackRender()
     sDInt pitch;
     const sHalfFloat* f16 = (const sHalfFloat*)t->trans->BeginRead(pitch);
 
-    sVERIFY(pitch == 256 * 4 * sizeof(sHalfFloat));
+    assert(pitch == 256 * 4 * sizeof(sHalfFloat));
 
     sFORALL(t->Jobs, job)
     {
@@ -444,7 +444,7 @@ void OctManager::Draw()
   while(!DirtyHandles.IsEmpty())
   {
     gh = DirtyHandles.RemTail();
-    sVERIFY(gh->Valid == 0);
+    assert(gh->Valid == 0);
 
     // check for space
 
@@ -1017,8 +1017,8 @@ void OctNode::Clear()
 
 void OctNode::Free()
 {
-  sVERIFY(!Initializing || OctMan->EndGame);
-  sVERIFY(!Splitting || OctMan->EndGame);
+  assert(!Initializing || OctMan->EndGame);
+  assert(!Splitting || OctMan->EndGame);
 
   for(sInt i = 0; i < 8; i++)
   {
@@ -1091,7 +1091,7 @@ void OctNode::DeleteChilds()
 {
   if(Evictable)
   {
-    sVERIFY(!Splitting);
+    assert(!Splitting);
 
     for(sInt i = 0; i < 8; i++)
     {
@@ -1245,7 +1245,7 @@ void OctNode::MakeChilds0()
 
 void OctNode::Init0(sInt x_, sInt y_, sInt z_, sInt q_)
 {
-  sVERIFY(q == 0);
+  assert(q == 0);
   x = x_;
   y = y_;
   z = z_;
@@ -1280,7 +1280,7 @@ static void MandelTaskFunc(sStsManager*, sStsThread*, sInt start, sInt count, vo
 
 void OctNode::MakeChilds1(sStsWorkload* wl)
 {
-  sVERIFY(Splitting);
+  assert(Splitting);
 
   for(sInt i = 0; i < 8; i++)
   {
@@ -1300,7 +1300,7 @@ void OctNode::MakeChilds1(sStsWorkload* wl)
 
 void OctNode::MakeChilds2()
 {
-  sVERIFY(Splitting);
+  assert(Splitting);
 
   for(sInt i = 0; i < 8; i++)
   {
@@ -1319,7 +1319,7 @@ void OctNode::MakeChilds2()
 
 void OctNode::Init1()
 {
-  sVERIFY(Initializing);
+  assert(Initializing);
 
   // set up constants
 
@@ -1505,7 +1505,7 @@ void OctNode::Init1()
           if(!(VertexUsed + vc <= VertexAlloc && IndexUsed + vc <= IndexAlloc))
             sDPrintF(L"%d %d %d | %d %d %d\n", VertexUsed, vc, VertexAlloc, IndexUsed, vc, IndexAlloc);
 
-          sVERIFY(VertexUsed + vc <= VertexAlloc && IndexUsed + vc <= IndexAlloc);
+          assert(VertexUsed + vc <= VertexAlloc && IndexUsed + vc <= IndexAlloc);
 
           for(sInt i = 0; i < vc; i += 3)
           {
@@ -1524,7 +1524,7 @@ void OctNode::Init1()
                                 + (n1 * n1) * (tz + e0z)
                                 + (n1) * (ty + e0y)
                                 + (1) * (tx + e0x);
-              sVERIFY(cacheindex >= 0 && cacheindex < n1 * n1 * n1 * 3);
+              assert(cacheindex >= 0 && cacheindex < n1 * n1 * n1 * 3);
               verts[j] = icache[cacheindex];
 
               if(verts[j] == -1)
@@ -1592,7 +1592,7 @@ void OctNode::Init1()
 
 void OctNode::Init2()
 {
-  sVERIFY(Initializing);
+  assert(Initializing);
   OctMan->AllocHandle(GeoHandle);
   GeoHandle.Alloc(VertexUsed, IndexUsed);
 #if BLOBHEAP

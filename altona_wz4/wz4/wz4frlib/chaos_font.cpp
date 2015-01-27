@@ -560,7 +560,7 @@ void ChaosFont::Paint()
     }
   }
 
-  sVERIFY(vc > 0);
+  assert(vc > 0);
   Geo->EndLoadVB(vc, 0);
 
   PrintBuffer.Clear();

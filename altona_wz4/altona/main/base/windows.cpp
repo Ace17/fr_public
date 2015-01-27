@@ -50,7 +50,7 @@ void sGetAppDataDir(const sStringDesc& str)
 {
   sChar path[sMAXPATH];
   HRESULT result = SHGetFolderPath(NULL, CSIDL_APPDATA | CSIDL_FLAG_CREATE, NULL, 0, path);
-  sVERIFY(result == S_OK);
+  assert(result == S_OK);
   sSPrintF(str, L"%p/", path);
 }
 
@@ -164,7 +164,7 @@ void sUpdateWindow(const sRect& r)
 void sSetMousePointer(sInt code)
 {
   static sInt oldcursor = 0xaaaaaaaa;
-  sVERIFY(code >= 0 && code < sMP_MAX);
+  assert(code >= 0 && code < sMP_MAX);
 
   if(Cursors[code])                         // when GDI is not initialized, we can not set the cursor, but we still can enable/disable it!
     SetCursor(Cursors[code]);
@@ -636,19 +636,19 @@ sBool sSystemMessageDialog(const sChar* label, sInt flags, const sChar* title)
 
 void sClipFlush()
 {
-  sVERIFY(ClipIndex == 0);
+  assert(ClipIndex == 0);
 }
 
 void sClipPush()
 {
-  sVERIFY(ClipIndex < MAX_CLIPS);
+  assert(ClipIndex < MAX_CLIPS);
   ClipStackResult[ClipIndex] = GetClipRgn(sGDIDC, ClipStack[ClipIndex]);
   ClipIndex++;
 }
 
 void sClipPop()
 {
-  sVERIFY(ClipIndex > 0);
+  assert(ClipIndex > 0);
   ClipIndex--;
   SelectClipRgn(sGDIDC, ClipStackResult[ClipIndex] ? ClipStack[ClipIndex] : 0);
 }
@@ -671,7 +671,7 @@ void sClipRect(const sRect& r)
 
 void sSetColor2D(sInt colid, sU32 color)
 {
-  sVERIFY(colid >= 0 && colid < MAX_BRUSHES);
+  assert(colid >= 0 && colid < MAX_BRUSHES);
   color = GDICOL(color);
 
   if(BrushColor[colid] != color)
@@ -686,13 +686,13 @@ void sSetColor2D(sInt colid, sU32 color)
 
 sU32 sGetColor2D(sInt colid)
 {
-  sVERIFY(colid >= 0 && colid < MAX_BRUSHES);
+  assert(colid >= 0 && colid < MAX_BRUSHES);
   return GDICOL(BrushColor[colid]);
 }
 
 void sRect2D(sInt x0, sInt y0, sInt x1, sInt y1, sInt colid)
 {
-  sVERIFY(colid >= 0 && colid < MAX_BRUSHES);
+  assert(colid >= 0 && colid < MAX_BRUSHES);
 
   if(x0 != x1 && y0 != y1)
   {
@@ -703,7 +703,7 @@ void sRect2D(sInt x0, sInt y0, sInt x1, sInt y1, sInt colid)
 
 void sRect2D(const sRect& r, sInt colid)
 {
-  sVERIFY(colid >= 0 && colid < MAX_BRUSHES);
+  assert(colid >= 0 && colid < MAX_BRUSHES);
 
   if(r.SizeX() > 0 && r.SizeY() > 0)
     FillRect(sGDIDC, (const RECT*)&r, BrushHandle[colid]);
@@ -742,7 +742,7 @@ void sRectFrame2D(sInt x0, sInt y0, sInt x1, sInt y1, sInt colid)
 
 void sLine2D(sInt x0, sInt y0, sInt x1, sInt y1, sInt colid)
 {
-  sVERIFY(colid >= 0 && colid < MAX_BRUSHES);
+  assert(colid >= 0 && colid < MAX_BRUSHES);
   SelectObject(sGDIDC, BrushPen[colid]);
   MoveToEx(sGDIDC, x0, y0, 0);
   LineTo(sGDIDC, x1, y1);
@@ -750,7 +750,7 @@ void sLine2D(sInt x0, sInt y0, sInt x1, sInt y1, sInt colid)
 
 void sLine2D(sInt* list, sInt count, sInt colid)
 {
-  sVERIFY(colid >= 0 && colid < MAX_BRUSHES);
+  assert(colid >= 0 && colid < MAX_BRUSHES);
 
   if(count < 2)
     return;
@@ -764,7 +764,7 @@ void sLine2D(sInt* list, sInt count, sInt colid)
 
 void sLineList2D(sInt* list, sInt count, sInt colid)
 {
-  sVERIFY(colid >= 0 && colid < MAX_BRUSHES);
+  assert(colid >= 0 && colid < MAX_BRUSHES);
   SelectObject(sGDIDC, BrushPen[colid]);
 
   for(sInt i = 0; i < count; i++)
@@ -822,8 +822,8 @@ HBITMAP Render2DBM;
 void sRender2DBegin(sInt xs, sInt ys)
 {
   HDC screendc;
-  sVERIFY(Render2DMode == 0);
-  sVERIFY(WMPaintDC == 0)
+  assert(Render2DMode == 0);
+  assert(WMPaintDC == 0)
   WMPaintDC = sGDIDC;
 
   Render2DMode = 1;
@@ -847,8 +847,8 @@ void sRender2DBegin(sInt xs, sInt ys)
 
 void sRender2DBegin(sImage2D* img)
 {
-  sVERIFY(Render2DMode == 0);
-  sVERIFY(WMPaintDC == 0)
+  assert(Render2DMode == 0);
+  assert(WMPaintDC == 0)
   WMPaintDC = sGDIDC;
 
   Render2DMode = 3;
@@ -861,8 +861,8 @@ void sRender2DBegin(sImage2D* img)
 
 void sRender2DBegin()
 {
-  sVERIFY(Render2DMode == 0);
-  sVERIFY(WMPaintDC == 0)
+  assert(Render2DMode == 0);
+  assert(WMPaintDC == 0)
   WMPaintDC = sGDIDC;
 
   Render2DMode = 2;
@@ -878,8 +878,8 @@ void sRender2DBegin()
 
 void sRender2DEnd()
 {
-  sVERIFY(Render2DMode != 0);
-  sVERIFY(sGDIDC);
+  assert(Render2DMode != 0);
+  assert(sGDIDC);
 
   if(Render2DMode == 1)
   {
@@ -909,8 +909,8 @@ void sRender2DSet(sU32* data)
 {
   BITMAPINFO bmi;
 
-  sVERIFY(Render2DMode == 1 || Render2DMode == 3);
-  sVERIFY(sGDIDC);
+  assert(Render2DMode == 1 || Render2DMode == 3);
+  assert(sGDIDC);
 
   bmi.bmiHeader.biSize = sizeof(bmi.bmiHeader);
   bmi.bmiHeader.biWidth = Render2DSizeX;
@@ -925,8 +925,8 @@ void sRender2DGet(sU32* data)
 {
   BITMAPINFO bmi;
 
-  sVERIFY(Render2DMode == 1 || Render2DMode == 3);
-  sVERIFY(sGDIDC);
+  assert(Render2DMode == 1 || Render2DMode == 3);
+  assert(sGDIDC);
 
   bmi.bmiHeader.biSize = sizeof(bmi.bmiHeader);
   bmi.bmiHeader.biWidth = Render2DSizeX;
@@ -1272,8 +1272,8 @@ sBool sFont2D::LetterExists(sChar letter)
 
 void sFont2D::SetColor(sInt text, sInt back)
 {
-  sVERIFY(text >= 0 && text < MAX_BRUSHES);
-  sVERIFY(back >= 0 && back < MAX_BRUSHES);
+  assert(text >= 0 && text < MAX_BRUSHES);
+  assert(back >= 0 && back < MAX_BRUSHES);
   prv->BackPen = back;
   prv->BackColor = BrushColor[back];
   prv->TextColor = BrushColor[text];
@@ -1284,8 +1284,8 @@ void sFont2D::PrintMarked(sInt flags, const sRect* rc, sInt x, sInt y, const sCh
   if(len == -1)
     len = sGetStringLen(text);
 
-  sVERIFY(rc);
-  sVERIFY(pi);
+  assert(rc);
+  assert(pi);
   sRect r(*rc);
   const sChar* ot = text;
   sInt ol = len;
