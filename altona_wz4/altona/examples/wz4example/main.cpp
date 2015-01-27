@@ -20,10 +20,10 @@
 
 void RegisterWZ4Classes()
 {
-  for(sInt i=0;i<2;i++)
+  for(sInt i = 0; i < 2; i++)
   {
-    sREGOPS(basic,0);
-    sREGOPS(poc,0);
+    sREGOPS(basic, 0);
+    sREGOPS(poc, 0);
   }
 }
 
@@ -31,7 +31,7 @@ void RegisterWZ4Classes()
 
 void sMain()
 {
-  sInit(sISF_2D|sISF_3D ,1280,1024);
+  sInit(sISF_2D | sISF_3D, 1280, 1024);
   sInitGui();
   sSetWindowMode(sWM_MAXIMIZED);
 
@@ -43,8 +43,9 @@ void sMain()
   App->MainInit();
 
   sString<sMAXPATH> name;
-  name.PrintF(L"wz4example V%d.%d",WZ4_VERSION,WZ4_REVISION);
+  name.PrintF(L"wz4example V%d.%d", WZ4_VERSION, WZ4_REVISION);
   sSetWindowName(name);
 }
 
 /****************************************************************************/
+

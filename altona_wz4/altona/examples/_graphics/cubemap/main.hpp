@@ -22,30 +22,32 @@
 
 class MyApp : public sApp
 {
-  sPainter *Painter;
+  sPainter* Painter;
   sViewport View;
   sMaterialEnv Env;
   sTiming Timer;
   sInt time;
 
-  sGeometry *TorusGeo;
-  sMaterial *TorusMtrl;
-  sTextureCube *TorusCubemap;
-  sTexture2D *TorusDepth;
+  sGeometry* TorusGeo;
+  sMaterial* TorusMtrl;
+  sTextureCube* TorusCubemap;
+  sTexture2D* TorusDepth;
 
-  sGeometry *CubeGeo;
-  sMaterial *CubeMtrl;
-  sTexture2D *CubeTex;
+  sGeometry* CubeGeo;
+  sMaterial* CubeMtrl;
+  sTexture2D* CubeTex;
   sArray<sMatrix34> CubeMats;
 
   void RenderCubemap();
   void RenderScene();
   void PaintCubes();
+
 public:
   MyApp();
   ~MyApp();
   void OnPaint3D();
-  void OnInput(const sInput2Event &ie);
+  void OnInput(const sInput2Event& ie);
 };
 
 /****************************************************************************/
+

@@ -10,17 +10,22 @@
 
 /****************************************************************************/
 
-#define MAX_CODECS  8
+#define MAX_CODECS 8
 
 class DocCodec
 {
 public:
-  DocCodec() {}
-  virtual ~DocCodec() {}
+  DocCodec()
+  {
+  }
 
-  virtual const sChar *GetName() = 0;
-  virtual void Pack(sImage *bmp,sImageData *dxt,sInt level=1) = 0;
-  virtual void Unpack(sImage *bmp,sImageData *dxt,sInt level=1) = 0;
+  virtual ~DocCodec()
+  {
+  }
+
+  virtual const sChar* GetName() = 0;
+  virtual void Pack(sImage* bmp, sImageData* dxt, sInt level = 1) = 0;
+  virtual void Unpack(sImage* bmp, sImageData* dxt, sInt level = 1) = 0;
 };
 
 /****************************************************************************/
@@ -30,11 +35,14 @@ class DocImage : public sObject
 public:
   sInt CompressionTime[MAX_CODECS][4];
 
-  sImage *Image;
-  sImageData *Dxt[MAX_CODECS];
+  sImage* Image;
+  sImageData* Dxt[MAX_CODECS];
 
   sString<256> Name;
-  const sChar *GetName() { return Name; }
+  const sChar* GetName()
+  {
+    return Name;
+  }
 
   DocImage();
   ~DocImage();
@@ -49,13 +57,14 @@ class Document : public sObject
 public:
   Document();
   ~Document();
-  sArray<DocImage *> Images;
-  DocCodec *Codecs[MAX_CODECS];
+  sArray<DocImage*> Images;
+  DocCodec* Codecs[MAX_CODECS];
 
-  void Scan(const sChar *name);
-  void LoadImage(const sChar *path,const sChar *name);
+  void Scan(const sChar* name);
+  void LoadImage(const sChar* path, const sChar* name);
 };
 
-extern Document *Doc;
+extern Document* Doc;
 
 /****************************************************************************/
+

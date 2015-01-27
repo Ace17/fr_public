@@ -17,25 +17,24 @@
 /****************************************************************************/
 /****************************************************************************/
 
-CodecNVIDIA::CodecNVIDIA() 
+CodecNVIDIA::CodecNVIDIA()
 {
 }
 
-CodecNVIDIA::~CodecNVIDIA() 
+CodecNVIDIA::~CodecNVIDIA()
 {
 }
 
-const sChar *CodecNVIDIA::GetName()
+const sChar* CodecNVIDIA::GetName()
 {
   return L"nVIDIA";
 }
 
 /****************************************************************************/
 
-void CodecNVIDIA::Pack(sImage *bmp,sImageData *dxt,sInt level)
+void CodecNVIDIA::Pack(sImage* bmp, sImageData* dxt, sInt level)
 {
   bmp->Save(L"test.tga");
-
   switch(level)
   {
   case sTEX_DXT1:
@@ -65,9 +64,8 @@ void CodecNVIDIA::Pack(sImage *bmp,sImageData *dxt,sInt level)
   dxt->ConvertFrom(&temp);
 }
 
-void CodecNVIDIA::Unpack(sImage *bmp,sImageData *dxt,sInt level)
+void CodecNVIDIA::Unpack(sImage* bmp, sImageData* dxt, sInt level)
 {
-
 }
 
 /****************************************************************************/

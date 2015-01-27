@@ -13,7 +13,6 @@
 
 /****************************************************************************/
 
-
 class sFreeflightCamera
 {
   sVector31 Pos;
@@ -37,17 +36,31 @@ class sFreeflightCamera
 public:
   sFreeflightCamera();
 
-  void OnInput(const sInput2Event &ie);
-  void OnFrame(sInt ticks,sF32 jitter);
-  void MakeViewport(sViewport &view);
-  void SetCenter(const sVector31 &center);
-  void SetPos(const sVector31 &pos) { Pos = pos; }
-  void Set(sMatrix34 mat,sF32 zoom);
-  void SetSpeed(sInt n) { SpeedGrade = n; }
-  sInt GetSpeed() { return SpeedGrade; }
-  void SpaceshipMode(sBool b) { Spaceship = b; }
+  void OnInput(const sInput2Event& ie);
+  void OnFrame(sInt ticks, sF32 jitter);
+  void MakeViewport(sViewport& view);
+  void SetCenter(const sVector31& center);
+  void SetPos(const sVector31& pos)
+  {
+    Pos = pos;
+  }
+
+  void Set(sMatrix34 mat, sF32 zoom);
+  void SetSpeed(sInt n)
+  {
+    SpeedGrade = n;
+  }
+
+  sInt GetSpeed()
+  {
+    return SpeedGrade;
+  }
+
+  void SpaceshipMode(sBool b)
+  {
+    Spaceship = b;
+  }
 };
 
 /****************************************************************************/
-
 

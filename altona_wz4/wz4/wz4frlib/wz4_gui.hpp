@@ -20,6 +20,7 @@ struct Wz4RenderParaSpline;
 class sMathPaper
 {
   sFRect DragStart;               // range when drag was started
+
 public:
   sMathPaper();
   ~sMathPaper();
@@ -34,13 +35,13 @@ public:
 
   sMessage ScrollMsg;
   void Paint2D();
-  void DragScroll(const sWindowDrag &dd);
-  void DragZoom(const sWindowDrag &dd,sDInt mode=3);
+  void DragScroll(const sWindowDrag& dd);
+  void DragZoom(const sWindowDrag& dd, sDInt mode = 3);
 };
 
 class Wz4SplineCed : public wCustomEditor
 {
-  wOp *Op;
+  wOp* Op;
   sMathPaper Grid;
 
   static sFRect SaveRange;
@@ -87,34 +88,34 @@ class Wz4SplineCed : public wCustomEditor
   };
 
   sU32 Color[CHANNELS];
-  sArray<Wz4RenderArraySpline *> Curves[CHANNELS];
-  
+  sArray<Wz4RenderArraySpline*> Curves[CHANNELS];
+
   struct DragItem
   {
-    Wz4RenderArraySpline *Key;
+    Wz4RenderArraySpline* Key;
     sF32 Time;
     sF32 Value;
   };
   sArray<DragItem> DragItems;
   sF32 DragCenterX;
   sF32 DragCenterY;
-  sInt GrabCam(sF32 *data);
+  sInt GrabCam(sF32* data);
 
 public:
-  Wz4SplineCed(wOp *op);
+  Wz4SplineCed(wOp* op);
   ~Wz4SplineCed();
   void Tag();
   void UpdateInfo();
-  void MakeHandle(Wz4RenderArraySpline *key,sRect &r);
-  Wz4RenderArraySpline *Hit(sInt mx,sInt my,sInt &curve);
+  void MakeHandle(Wz4RenderArraySpline* key, sRect& r);
+  Wz4RenderArraySpline* Hit(sInt mx, sInt my, sInt& curve);
   void Sort();
-  void LineSplit(sInt x0,sInt y0,sInt x1,sInt y1,sInt curve);
+  void LineSplit(sInt x0, sInt y0, sInt x1, sInt y1, sInt curve);
 
-  void OnCalcSize(sInt &xs,sInt &ys);
-  void OnLayout(const sRect &Client);
-  void OnPaint2D(const sRect &Client);
+  void OnCalcSize(sInt& xs, sInt& ys);
+  void OnLayout(const sRect& Client);
+  void OnPaint2D(const sRect& Client);
   sBool OnKey(sU32 key);
-  void OnDrag(const sWindowDrag &dd,const sRect &Client);
+  void OnDrag(const sWindowDrag& dd, const sRect& Client);
   void OnChangeOp();
   void OnTime(sInt time);
 
@@ -134,15 +135,15 @@ public:
   void CmdTimeFromKey();
   void CmdReverseTime();
 
-  void DragScroll(const sWindowDrag &dd);
-  void DragZoom(const sWindowDrag &dd);
-  void DragHandle(const sWindowDrag &dd,sDInt axis=3);
-  void DragScale(const sWindowDrag &dd,sDInt axis=3);
-  void DragFrame(const sWindowDrag &dd,sDInt mode=0);
-  void DragInsert(const sWindowDrag &dd);
-  void DragCopyCam(const sWindowDrag &dd);
-  void DragTime(const sWindowDrag &dd);
-  void DragScissor(const sWindowDrag &dd,sDInt mode);
+  void DragScroll(const sWindowDrag& dd);
+  void DragZoom(const sWindowDrag& dd);
+  void DragHandle(const sWindowDrag& dd, sDInt axis = 3);
+  void DragScale(const sWindowDrag& dd, sDInt axis = 3);
+  void DragFrame(const sWindowDrag& dd, sDInt mode = 0);
+  void DragInsert(const sWindowDrag& dd);
+  void DragCopyCam(const sWindowDrag& dd);
+  void DragTime(const sWindowDrag& dd);
+  void DragScissor(const sWindowDrag& dd, sDInt mode);
 };
 
 /****************************************************************************/
@@ -184,7 +185,7 @@ class Wz4TimelineCed : public wCustomEditor
 
   struct Clip
   {
-    wOp *Op;
+    wOp* Op;
     sInt Start;
     sInt Length;
     sInt Line;
@@ -203,29 +204,29 @@ class Wz4TimelineCed : public wCustomEditor
   sArray<Clip> Clips;
 
 public:
-  Wz4TimelineCed(wOp *op);
+  Wz4TimelineCed(wOp* op);
   ~Wz4TimelineCed();
   void Tag();
   void UpdateInfo();
-  void MakeRect(Clip *,sRect &r);
-  Clip *Hit(sInt x,sInt y);
+  void MakeRect(Clip*, sRect& r);
+  Clip* Hit(sInt x, sInt y);
   sInt XToS(sInt x);
   sInt XToV(sInt x);
-  Clip *FindClip(wOp *op);
-  void ScrollTo(Clip *clip);
-  void SelectClip(Clip *clip);
+  Clip* FindClip(wOp* op);
+  void ScrollTo(Clip* clip);
+  void SelectClip(Clip* clip);
 
-  void OnPaint2D(const sRect &Client);
-  void OnDrag(const sWindowDrag &dd,const sRect &client);
+  void OnPaint2D(const sRect& Client);
+  void OnDrag(const sWindowDrag& dd, const sRect& client);
   void OnChangeOp();
   sBool OnKey(sU32 key);
   void OnTime(sInt time);
 
-  void DragScroll(const sWindowDrag &dd);
-  void DragZoom(const sWindowDrag &dd);
-  void DragHandle(const sWindowDrag &dd,sDInt mode);
-  void DragFrame(const sWindowDrag &dd,sDInt mode);
-  void DragTime(const sWindowDrag &dd);
+  void DragScroll(const sWindowDrag& dd);
+  void DragZoom(const sWindowDrag& dd);
+  void DragHandle(const sWindowDrag& dd, sDInt mode);
+  void DragFrame(const sWindowDrag& dd, sDInt mode);
+  void DragTime(const sWindowDrag& dd);
 
   void CmdPopup();
   void CmdReset();
@@ -259,7 +260,7 @@ class Wz4BeatCed : public wCustomEditor
   sInt WaveTime1;
   sInt WaveBS;
   sInt WaveBPS;
-  sImage2D *WaveImg;
+  sImage2D* WaveImg;
 
   static sInt Time0;
   static sInt Time1;
@@ -284,38 +285,38 @@ class Wz4BeatCed : public wCustomEditor
 
   struct Beat
   {
-    wOp *Op;
-    struct Wz4RenderParaBeat *Para;
+    wOp* Op;
+    struct Wz4RenderParaBeat* Para;
     sInt Steps;
     sRect Client;
-    sInt *Lookup;
+    sInt* Lookup;
 
-    Beat(wOp *op);
+    Beat(wOp* op);
     ~Beat();
 
     sU8 GetStep(sInt i);
-    void SetStep(sInt i,sU8 byte);
+    void SetStep(sInt i, sU8 byte);
     sU8 GetStepAbs(sInt i);
-    void SetStepAbs(sInt i,sU8 byte);
+    void SetStepAbs(sInt i, sU8 byte);
     void UpdateLoop();
   };
-  sArray<Beat *> Beats;
+  sArray<Beat*> Beats;
 
-  Beat *DragBeat;
+  Beat* DragBeat;
   sInt DragBeatPos;
   sInt DragBeatStart;
   sInt DragSubMode;
   sInt Cursor;
   sInt CursorLength;
 
-  class RNBeat *BeatNode;
-  wOp *EditOp;
-  Beat *EditBeat;
+  class RNBeat* BeatNode;
+  wOp* EditOp;
+  Beat* EditBeat;
 
   sArray<sU8> Clipboard;
 
 public:
-  Wz4BeatCed(wOp *op);
+  Wz4BeatCed(wOp* op);
   ~Wz4BeatCed();
   void Tag();
 
@@ -324,20 +325,20 @@ public:
   void UpdateInfo();
   void UpdateSpline();
 
-  void OnPaint2D(const sRect &Client);
+  void OnPaint2D(const sRect& Client);
   void PaintWave();
   void PaintSpline();
-  void OnDrag(const sWindowDrag &dd,const sRect &client);
+  void OnDrag(const sWindowDrag& dd, const sRect& client);
   void OnChangeOp();
   sBool OnKey(sU32 key);
   void OnTime(sInt time);
 
-  void DragScroll(const sWindowDrag &dd);
-  void DragZoom(const sWindowDrag &dd);
-//  void DragHandle(const sWindowDrag &dd,sDInt mode);
-  void DragFrame(const sWindowDrag &dd,sDInt mode);
-  void DragTime(const sWindowDrag &dd);
-  void DragSelect(const sWindowDrag &dd,sDInt mode);
+  void DragScroll(const sWindowDrag& dd);
+  void DragZoom(const sWindowDrag& dd);
+// void DragHandle(const sWindowDrag &dd,sDInt mode);
+  void DragFrame(const sWindowDrag& dd, sDInt mode);
+  void DragTime(const sWindowDrag& dd);
+  void DragSelect(const sWindowDrag& dd, sDInt mode);
 
   void CmdPopup();
   void CmdReset();
@@ -352,5 +353,4 @@ public:
 };
 
 /****************************************************************************/
-
 

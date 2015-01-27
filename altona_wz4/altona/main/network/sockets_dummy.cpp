@@ -14,84 +14,79 @@
 
 #include "base/system.hpp"
 
-sNetworkStatus sGetNetworkStatus() { return sNET_DISCONNECTED; }
+sNetworkStatus sGetNetworkStatus()
+{
+  return sNET_DISCONNECTED;
+}
 
 /****************************************************************************/
 /****************************************************************************/
 
-sBool sGetLocalHostName(const sStringDesc &str)
+sBool sGetLocalHostName(const sStringDesc& str)
 {
-  str.Buffer[0]=0;
+  str.Buffer[0] = 0;
   return sFALSE;
 }
 
-sBool sGetLocalAddress(sIPAddress &address)
-{
-  sClear(address);
-  return sFALSE;
-}
-
-sBool sResolveName(const sChar *hostname, sIPAddress &address)
+sBool sGetLocalAddress(sIPAddress& address)
 {
   sClear(address);
   return sFALSE;
 }
 
+sBool sResolveName(const sChar* hostname, sIPAddress& address)
+{
+  sClear(address);
+  return sFALSE;
+}
+
 /****************************************************************************/
 /****************************************************************************/
 
-
-sTCPSocket::sTCPSocket() 
-{ 
+sTCPSocket::sTCPSocket()
+{
   P = 0;
-  TransferError=0;
+  TransferError = 0;
 }
 
-sTCPSocket::~sTCPSocket() 
-{ 
+sTCPSocket::~sTCPSocket()
+{
 }
-
 
 sBool sTCPSocket::IsConnected()
 {
   return sFALSE;
 }
 
-
 void sTCPSocket::Disconnect()
 {
 }
 
-
-sBool sTCPSocket::GetPeerAddress(sIPAddress &address)
+sBool sTCPSocket::GetPeerAddress(sIPAddress& address)
 {
   sClear(address);
   return sFALSE;
 }
 
-
-sBool sTCPSocket::GetPeerPort(sIPPort &port)
+sBool sTCPSocket::GetPeerPort(sIPPort& port)
 {
   sClear(port);
-  return sFALSE; 
+  return sFALSE;
 }
 
-
-sBool sTCPSocket::Write(const void *buffer, sDInt bytes, sDInt &written)
+sBool sTCPSocket::Write(const void* buffer, sDInt bytes, sDInt& written)
 {
-  written=0;
+  written = 0;
   TransferError |= 2;
   return sFALSE;
 }
 
-
-sBool sTCPSocket::Read(void *buffer, sDInt size, sDInt &read)
+sBool sTCPSocket::Read(void* buffer, sDInt size, sDInt& read)
 {
-  read=0;
+  read = 0;
   TransferError |= 1;
   return sFALSE;
 }
-
 
 // enable/disable Nagle algorithm. Don't use this unless you really know what
 // you're doing and why!
@@ -131,36 +126,36 @@ sBool sTCPHostSocket::Listen(sIPPort port)
 
 // wait for a new connection. A return value of sFALSE indicates an error,
 // in case of timeout, "connection" will be set to NULL
-sBool sTCPHostSocket::WaitForNewConnection(sTCPSocket *&connection, sInt timeout)
+sBool sTCPHostSocket::WaitForNewConnection(sTCPSocket*& connection, sInt timeout)
 {
-  connection=0;
+  connection = 0;
   return sFALSE;
 }
 
-
-sBool sTCPHostSocket::WaitForEvents(sInt &numreads, sTCPSocket **reads, sInt& numwrites, sTCPSocket **writes, sTCPSocket **newconn, sInt timeout)
+sBool sTCPHostSocket::WaitForEvents(sInt& numreads, sTCPSocket** reads, sInt& numwrites, sTCPSocket** writes, sTCPSocket** newconn, sInt timeout)
 {
-  if (newconn) *newconn=0;
-  numreads=numwrites=0;
+  if(newconn)
+    *newconn = 0;
+
+  numreads = numwrites = 0;
   return sFALSE;
 }
 
-
-void sTCPHostSocket::CloseConnection(sTCPSocket *&connection)
+void sTCPHostSocket::CloseConnection(sTCPSocket*& connection)
 {
 }
-
 
 sTCPSocket* sTCPHostSocket::Accept()
 {
   return 0;
 }
+
 /****************************************************************************/
 /****************************************************************************/
 
-sUDPSocket::sUDPSocket() 
-{ 
-  P=0;
+sUDPSocket::sUDPSocket()
+{
+  P = 0;
 }
 
 sUDPSocket::~sUDPSocket()
@@ -194,22 +189,23 @@ sBool sUDPSocket::Wait(sBool read, sBool write, sInt timeout)
 }
 
 // get packet
-sBool sUDPSocket::Read(void *buffer, sInt size, sInt &read, sIPAddress &srcaddr, sIPPort &srcport)
+sBool sUDPSocket::Read(void* buffer, sInt size, sInt& read, sIPAddress& srcaddr, sIPPort& srcport)
 {
-  read=0;
+  read = 0;
   return sFALSE;
 }
 
 // send packet to destination
-sBool sUDPSocket::Write(const sIPAddress &destaddr, sIPPort destport, const void *buffer, sInt size)
+sBool sUDPSocket::Write(const sIPAddress& destaddr, sIPPort destport, const void* buffer, sInt size)
 {
   return sFALSE;
 }
 
 // broadcast packet to everyone
-sBool sUDPSocket::Broadcast(sIPPort destport, const void *buffer, sInt size)
+sBool sUDPSocket::Broadcast(sIPPort destport, const void* buffer, sInt size)
 {
   return sFALSE;
 }
 
 #endif // sPLATFORM(s)
+

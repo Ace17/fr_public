@@ -29,24 +29,24 @@ struct Wz4ShaderEnv
   sF32 ZoomX;
   sF32 ZoomY;
 
-  void Set(const sViewport *vp,sF32 focalrange);
-  void Set(const sViewport *vp,const sMatrix34 &mat);
-  void SetShadow(const sViewport *vp);
-  sInt Visible(const sAABBox &box) const;
+  void Set(const sViewport* vp, sF32 focalrange);
+  void Set(const sViewport* vp, const sMatrix34& mat);
+  void SetShadow(const sViewport* vp);
+  sInt Visible(const sAABBox& box) const;
 };
 
 class Wz4Shader : public sMaterial
 {
 public:
   Wz4Shader();
-  void SelectShaders(sVertexFormatHandle *);
-//  void Set(sMaterialEnv *env);
-  void SetUV(Wz4ShaderUV *cb,const sViewport *vp);
-  void SetCam(Wz4ShaderCamera *cb,const sViewport *vp);
-  void SetUV(Wz4ShaderUV *cb,const Wz4ShaderEnv *env);
-  void SetCam(Wz4ShaderCamera *cb,const Wz4ShaderEnv *env);
+  void SelectShaders(sVertexFormatHandle*);
+// void Set(sMaterialEnv *env);
+  void SetUV(Wz4ShaderUV* cb, const sViewport* vp);
+  void SetCam(Wz4ShaderCamera* cb, const sViewport* vp);
+  void SetUV(Wz4ShaderUV* cb, const Wz4ShaderEnv* env);
+  void SetCam(Wz4ShaderCamera* cb, const Wz4ShaderEnv* env);
 
-  void MakeMatrix(sInt id,sInt flags,sF32 scale,sF32 *m0,sF32 *m1);
+  void MakeMatrix(sInt id, sInt flags, sF32 scale, sF32* m0, sF32* m1);
   sVector4 UVMatrix0[2];
   sVector4 UVMatrix1[2];
   sMatrix34 UVMatrix2;
@@ -56,20 +56,20 @@ public:
 class Wz4Material : public wObject
 {
 public:
-  Wz4Shader *Material;
-  wObject *Tex[8];
-  sVertexFormatHandle *Format;
+  Wz4Shader* Material;
+  wObject* Tex[8];
+  sVertexFormatHandle* Format;
   sString<64> Name;
-  Wz4Material *TempPtr;
+  Wz4Material* TempPtr;
 
   Wz4Material();
   ~Wz4Material();
-  void CopyFrom(Wz4Material *);
-  template <class streamer> void Serialize_(streamer &stream,sTexture2D *shadow=0);
-  void Serialize(sWriter &stream,sTexture2D *shadow=0);
-  void Serialize(sReader &stream,sTexture2D *shadow=0);
+  void CopyFrom(Wz4Material*);
+  template<class streamer>
+  void Serialize_(streamer& stream, sTexture2D* shadow = 0);
+  void Serialize(sWriter& stream, sTexture2D* shadow = 0);
+  void Serialize(sReader& stream, sTexture2D* shadow = 0);
 };
 
 /****************************************************************************/
-
 

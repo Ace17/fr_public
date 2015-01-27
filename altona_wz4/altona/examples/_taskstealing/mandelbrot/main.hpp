@@ -17,10 +17,10 @@
 
 class MyApp : public sApp
 {
-  sPainter *Painter;
-  sTexture2D *Tex[2];
-  sMaterial *Mtrl;
-  sGeometry *Geo;
+  sPainter* Painter;
+  sTexture2D* Tex[2];
+  sMaterial* Mtrl;
+  sGeometry* Geo;
 
   sViewport View;
   sMaterialEnv Env;
@@ -29,15 +29,14 @@ class MyApp : public sApp
   sBool DBuf;
   sTextBuffer tb;
 
-  void Update(sTexture2D *);
+  void Update(sTexture2D*);
+
 public:
   MyApp();
   ~MyApp();
   void OnPaint3D();
-  void OnInput(const sInput2Event &ie);
+  void OnInput(const sInput2Event& ie);
 };
 
-
 /****************************************************************************/
-
 

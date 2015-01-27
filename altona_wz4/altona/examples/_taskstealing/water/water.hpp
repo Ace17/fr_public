@@ -32,7 +32,7 @@ class WaterFX
   enum Constants
   {
     HASHSIZE = 0x400,
-    HASHMASK = HASHSIZE-1,
+    HASHMASK = HASHSIZE - 1,
 
     STEPX = 1,
     STEPY = 17,
@@ -49,7 +49,7 @@ class WaterFX
   };
 
   HashIndex HashTable[HASHSIZE];
-  sArray<WaterParticle> *Parts[2];
+  sArray<WaterParticle>* Parts[2];
   sVector4 Planes[4];
   sArray<counterforcevector> CounterForce;
   sVector30 LastCounterForce;
@@ -57,16 +57,28 @@ class WaterFX
 public:
   WaterFX();
   ~WaterFX();
-  const sArray<WaterParticle> &GetArray() const { return *Parts[0]; }
-  sArray<WaterParticle> &GetArray() { return *Parts[0]; }
-  sInt GetCount() const { return Parts[0]->GetCount(); }
-  void Reset();
-  void AddRain(sInt count,sU32 color);
-  void AddDrop(sInt count,sU32 color,sF32 radius);
-  void Nudge(const sVector30 &speed);
-  void Step(class sStsManager *sched,class sStsWorkload *wl);
+  const sArray<WaterParticle>& GetArray() const
+  {
+    return *Parts[0];
+  }
 
-  void Func(sInt n,sInt threadid);
+  sArray<WaterParticle>& GetArray()
+  {
+    return *Parts[0];
+  }
+
+  sInt GetCount() const
+  {
+    return Parts[0]->GetCount();
+  }
+
+  void Reset();
+  void AddRain(sInt count, sU32 color);
+  void AddDrop(sInt count, sU32 color, sF32 radius);
+  void Nudge(const sVector30& speed);
+  void Step(class sStsManager* sched, class sStsWorkload* wl);
+
+  void Func(sInt n, sInt threadid);
 
   sF32 GravityY;
   sF32 CentralGravity;
@@ -74,10 +86,7 @@ public:
   sF32 InnerForce;
   sF32 InteractRadius;
   sF32 Friction;
-
 };
 
 /****************************************************************************/
-
-
 

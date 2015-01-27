@@ -8,7 +8,6 @@
 #include "main.hpp"
 #include "util/scanner.hpp"
 
-
 /****************************************************************************/
 /****************************************************************************/
 
@@ -23,14 +22,15 @@ void sMain()
   sScanner scan;
 
   scan.Init();
-  scan.Flags = sSF_ESCAPECODES|sSF_CPPCOMMENT|sSF_NUMBERCOMMENT|sSF_TYPEDNUMBERS|sSF_SEMICOMMENT;
+  scan.Flags = sSF_ESCAPECODES | sSF_CPPCOMMENT | sSF_NUMBERCOMMENT | sSF_TYPEDNUMBERS | sSF_SEMICOMMENT;
   scan.DefaultTokens();
-  scan.AddToken(L"linefeed",TOK_LINEFEED);
-  scan.AddToken(L"include",TOK_INCLUDE);
+  scan.AddToken(L"linefeed", TOK_LINEFEED);
+  scan.AddToken(L"include", TOK_INCLUDE);
   scan.StartFile(L"test_source.txt");
 
-  sTextBuffer tb;  
-  while(scan.Token!=sTOK_END && scan.Errors==0)
+  sTextBuffer tb;
+
+  while(scan.Token != sTOK_END && scan.Errors == 0)
   {
     switch(scan.Token)
     {
@@ -43,17 +43,18 @@ void sMain()
         scan.Scan();
         sPoolString name;
         scan.ScanString(name);
+
         if(scan.IncludeFile(name))
-          tb.PrintF(L"[include %q] ",name);
+          tb.PrintF(L"[include %q] ", name);
         else
-          tb.PrintF(L"[include %q failed] ",name);
+          tb.PrintF(L"[include %q failed] ", name);
       }
       break;
     case '{':
       {
         sPoolString skip;
-        scan.ScanRaw(skip,'{','}');
-        tb.PrintF(L"[raw %q] ",skip);
+        scan.ScanRaw(skip, '{', '}');
+        tb.PrintF(L"[raw %q] ", skip);
       }
       break;
     default:

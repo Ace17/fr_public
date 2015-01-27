@@ -8,7 +8,7 @@
 /**************************************************************************+*/
 
 #include "doc.hpp"
-//#include "gui.hpp"
+// #include "gui.hpp"
 #include "build.hpp"
 #include "base/system.hpp"
 #include "util/image.hpp"
@@ -19,9 +19,9 @@
 #include "wz4lib/wz4shaders.hpp"
 #include "gui/color.hpp"
 
-class wDocument *Doc;
+class wDocument* Doc;
 
-#define LOGIT 0 //!sRELEASE
+#define LOGIT 0 // !sRELEASE
 
 /****************************************************************************/
 /***                                                                      ***/
@@ -33,7 +33,7 @@ wPaintInfo::wPaintInfo()
 {
   Window = 0;
   Op = 0;
-  Client.Init(0,0,0,0);
+  Client.Init(0, 0, 0, 0);
   Enable3D = 0;
   ViewLog = 0;
 
@@ -45,7 +45,7 @@ wPaintInfo::wPaintInfo()
   HandleColor = 0;
   HandleColorIndex = 0;
   DontPaintHandles = 0;
-  SelectFrame.Init(0,0,0,0);
+  SelectFrame.Init(0, 0, 0, 0);
   SelectMode = 0;
 
   PosX = 0;
@@ -71,7 +71,7 @@ wPaintInfo::wPaintInfo()
   Lod = 2;    // high lod
   Image = 0;
   AlphaImage = 0;
-  Rect.Init(0,0,0,0);
+  Rect.Init(0, 0, 0, 0);
   SetCam = 0;
   SetCamZoom = 0;
   MTMFlag = 0;
@@ -99,29 +99,30 @@ wPaintInfo::wPaintInfo()
   DrawMtrl->Prepare(sVertexFormatBasic);
 
   TexGeo = new sGeometry;
-  TexGeo->Init(sGF_QUADLIST,sVertexFormatSingle);
-  TexDummy = new sTexture2D(16,16,sTEX_ARGB8888,1);
+  TexGeo->Init(sGF_QUADLIST, sVertexFormatSingle);
+  TexDummy = new sTexture2D(16, 16, sTEX_ARGB8888, 1);
   TexMtrl = new sSimpleMaterial;
   TexMtrl->Texture[0] = TexDummy;
-  TexMtrl->TFlags[0] = sMTF_LEVEL0|sMTF_TILE;
+  TexMtrl->TFlags[0] = sMTF_LEVEL0 | sMTF_TILE;
   TexMtrl->Prepare(sVertexFormatSingle);
 
   TexAMtrl = new AlphaMtrl;
   TexAMtrl->Texture[0] = TexDummy;
-  TexAMtrl->TFlags[0] = sMTF_LEVEL0|sMTF_TILE;
+  TexAMtrl->TFlags[0] = sMTF_LEVEL0 | sMTF_TILE;
   TexAMtrl->Prepare(sVertexFormatSingle);
 
   LineGeo = new sGeometry;
-  LineGeo->Init(sGF_LINELIST,sVertexFormatBasic);
+  LineGeo->Init(sGF_LINELIST, sVertexFormatBasic);
 
   LineGeo2 = new sGeometry;
-  LineGeo2->Init(sGF_LINELIST,sVertexFormatBasic);
+  LineGeo2->Init(sGF_LINELIST, sVertexFormatBasic);
 
   static sInt countdown = 5;
-  if(countdown>0) 
+
+  if(countdown > 0)
     countdown--;
   else
-    sLog(L"wz4",L"do not create wPaintInfo objects every frame. It's expensive!\n");
+    sLog(L"wz4", L"do not create wPaintInfo objects every frame. It's expensive!\n");
 }
 
 wPaintInfo::~wPaintInfo()
@@ -141,20 +142,21 @@ wPaintInfo::~wPaintInfo()
   delete LineGeo2;
 }
 
-void wPaintInfo::AddHandle(wOp *op,sInt id,const sRect &r,sInt mode,sInt *t,sF32 *x,sF32 *y,sF32 *z,sInt arrayline)
+void wPaintInfo::AddHandle(wOp* op, sInt id, const sRect& r, sInt mode, sInt* t, sF32* x, sF32* y, sF32* z, sInt arrayline)
 {
   sVERIFY(op);
-  sVERIFY(id>0);
+  sVERIFY(id > 0);
 
   sInt index = Handles.GetCount();
   sInt selindex = -1;
-  sBool sel = IsSelected(op,id);
-  wHandleSelectTag *tag;
+  sBool sel = IsSelected(op, id);
+  wHandleSelectTag* tag;
+
   if(sel)
   {
-    sFORALL(Doc->SelectedHandleTags,tag)
+    sFORALL(Doc->SelectedHandleTags, tag)
     {
-      if(tag->Op==op && tag->Id==id)
+      if(tag->Op == op && tag->Id == id)
       {
         selindex = _i;
         break;
@@ -162,7 +164,7 @@ void wPaintInfo::AddHandle(wOp *op,sInt id,const sRect &r,sInt mode,sInt *t,sF32
     }
   }
 
-  wHandle *hnd = Handles.AddMany(1);
+  wHandle* hnd = Handles.AddMany(1);
   hnd->Op = op;
   hnd->Id = id;
   hnd->Mode = mode;
@@ -173,7 +175,7 @@ void wPaintInfo::AddHandle(wOp *op,sInt id,const sRect &r,sInt mode,sInt *t,sF32
   hnd->HitBox = r;
   hnd->Local = HandleTrans;
   hnd->ArrayLine = arrayline;
-  hnd->Selected = sel;    
+  hnd->Selected = sel;
   hnd->Index = index;
   hnd->SelectIndex = selindex;
 
@@ -182,55 +184,59 @@ void wPaintInfo::AddHandle(wOp *op,sInt id,const sRect &r,sInt mode,sInt *t,sF32
     SelectedHandles.AddTail(index);
   }
 }
-  
+
 sBool wPaintInfo::SelectionNotEmpty()
 {
-  return Doc->SelectedHandleTags.GetCount()>0; 
+  return Doc->SelectedHandleTags.GetCount() > 0;
 }
 
 void wPaintInfo::ClearHandleSelection()
 {
-  wHandle *hnd;
-  wOp *op;
+  wHandle* hnd;
+  wOp* op;
 
   Dragging = 0;
-  sFORALL(Handles,hnd)
-    if(hnd->Op) hnd->Op->HighlightArrayLine = -1;
+  sFORALL(Handles, hnd)
 
-  sFORALL(Doc->AllOps,op)
-    op->SelectedHandles.Clear();
+  if(hnd->Op)
+    hnd->Op->HighlightArrayLine = -1;
+
+  sFORALL(Doc->AllOps, op)
+  op->SelectedHandles.Clear();
 
   SelectedHandles.Clear();
   Doc->SelectedHandleTags.Clear();
 }
 
-sBool wPaintInfo::IsSelected(wOp *op,sInt id) const
+sBool wPaintInfo::IsSelected(wOp* op, sInt id) const
 {
   return op->SelectedHandles[id];
 }
 
-sInt wPaintInfo::FirstSelectedId(wOp *op) const
+sInt wPaintInfo::FirstSelectedId(wOp* op) const
 {
   sInt max = op->SelectedHandles.GetCount();
-  for(sInt i=1;i<max;i++)
+
+  for(sInt i = 1; i < max; i++)
   {
     if(op->SelectedHandles[i])
       return i;
   }
+
   return 0;
 }
 
-void wPaintInfo::SelectHandle(wHandle *hit,sInt mode)
+void wPaintInfo::SelectHandle(wHandle* hit, sInt mode)
 {
-  wHandleSelectTag *tag = 0;     
-  wOp *op=0;
-  wHandle *lasthnd = 0;
+  wHandleSelectTag* tag = 0;
+  wOp* op = 0;
+  wHandle* lasthnd = 0;
   sBool found = 0;
   switch(mode)
   {
   case 0: // clear all, then set. This mode is special, since it updates SelectedHandles immediatly!
     ClearHandleSelection();
-    Doc->SelectedHandleTags.AddTail(wHandleSelectTag(hit->Op,hit->Id));
+    Doc->SelectedHandleTags.AddTail(wHandleSelectTag(hit->Op, hit->Id));
     SelectedHandles.AddTail(hit->Index);
     hit->Selected = 1;
     hit->SelectIndex = 0;
@@ -241,13 +247,16 @@ void wPaintInfo::SelectHandle(wHandle *hit,sInt mode)
     break;
 
   case 1: // add to handles
-    if(!IsSelected(hit->Op,hit->Id))
+
+    if(!IsSelected(hit->Op, hit->Id))
     {
       lasthnd = hit;
-      Doc->SelectedHandleTags.AddTail(wHandleSelectTag(hit->Op,hit->Id));
+      Doc->SelectedHandleTags.AddTail(wHandleSelectTag(hit->Op, hit->Id));
     }
-    sFORALL(Doc->AllOps,op)
-      op->HighlightArrayLine = -1;
+
+    sFORALL(Doc->AllOps, op)
+    op->HighlightArrayLine = -1;
+
     if(lasthnd)
     {
       lasthnd->Op->HighlightArrayLine = lasthnd->ArrayLine;
@@ -258,52 +267,54 @@ void wPaintInfo::SelectHandle(wHandle *hit,sInt mode)
     break;
 
   case 2: // rem from handles
-    sFORALL(Doc->SelectedHandleTags,tag)
+    sFORALL(Doc->SelectedHandleTags, tag)
     {
-      if(tag->Id==hit->Id && tag->Op==hit->Op)
+      if(tag->Id == hit->Id && tag->Op == hit->Op)
       {
         Doc->SelectedHandleTags.RemAt(_i);
         break;
       }
     }
-    sFORALL(Doc->AllOps,op)
-      op->HighlightArrayLine = -1;
+    sFORALL(Doc->AllOps, op)
+    op->HighlightArrayLine = -1;
     break;
   case 3: // toggle
     found = 0;
-    sFORALL(Doc->SelectedHandleTags,tag)
+    sFORALL(Doc->SelectedHandleTags, tag)
     {
-      if(tag->Id==hit->Id && tag->Op==hit->Op)
+      if(tag->Id == hit->Id && tag->Op == hit->Op)
       {
         Doc->SelectedHandleTags.RemAt(_i);
         found = 1;
         break;
       }
     }
+
     if(!found)
-      Doc->SelectedHandleTags.AddTail(wHandleSelectTag(hit->Op,hit->Id));
-    sFORALL(Doc->AllOps,op)
-      op->HighlightArrayLine = -1;
+      Doc->SelectedHandleTags.AddTail(wHandleSelectTag(hit->Op, hit->Id));
+
+    sFORALL(Doc->AllOps, op)
+    op->HighlightArrayLine = -1;
     break;
   }
+
   sGui->Notify(*op);
 }
 
-
-void wPaintInfo::PaintHandles(const sMatrix34 *mat)
+void wPaintInfo::PaintHandles(const sMatrix34* mat)
 {
   if(DontPaintHandles)
     return;
 
-  wHandleSelectTag *tag;
-  wOp *op;
+  wHandleSelectTag* tag;
+  wOp* op;
 
   // update wOp::SelectedHandles
 
-  sFORALL(Doc->AllOps,op)
-    op->SelectedHandles.Clear();
-  sFORALL(Doc->SelectedHandleTags,tag)
-    tag->Op->SelectedHandles[tag->Id] = 1;
+  sFORALL(Doc->AllOps, op)
+  op->SelectedHandles.Clear();
+  sFORALL(Doc->SelectedHandleTags, tag)
+  tag->Op->SelectedHandles[tag->Id] = 1;
 
   // clear all intermediate handle structures
 
@@ -311,8 +322,10 @@ void wPaintInfo::PaintHandles(const sMatrix34 *mat)
   Handles.Clear();
   HandleTrans.Init();
   HandleTransI.Init();
+
   if(mat)
     Transform3D(*mat);
+
   if(ShowHandles)
   {
 /*
@@ -322,14 +335,14 @@ void wPaintInfo::PaintHandles(const sMatrix34 *mat)
       case 1:  HandleColor = 0xffff00ff;  break;
       case 2:  HandleColor = 0xff00ffff;  break;
     }
-*/
+ */
     HandleColor = 0xffffff00;
     HandleColorIndex = 0;
-    sSetColor2D(HandleColorIndex,HandleColor);
+    sSetColor2D(HandleColorIndex, HandleColor);
 
     if(Enable3D)
     {
-      sSetTarget(sTargetPara(0,0,Spec));
+      sSetTarget(sTargetPara(0, 0, Spec));
       HandleView.Orthogonal = sVO_PIXELS;
       HandleView.SetTargetCurrent();
       HandleView.Prepare();
@@ -337,28 +350,31 @@ void wPaintInfo::PaintHandles(const sMatrix34 *mat)
       View->Model.Init();
       View->Prepare();
     }
-    PaintHandlesR(Op,0);
+
+    PaintHandlesR(Op, 0);
+
     if(SelectMode)
     {
       sRect rr;
       rr = SelectFrame;
       rr.Sort();
+
       if(Enable3D)
       {
         rr.x0 -= Client.x0;
         rr.y0 -= Client.y0;
         rr.x1 -= Client.x0;
         rr.y1 -= Client.y0;
-        
+
         sU32 col = 0xffffff00;
-        PaintAddLine(rr.x0-0.5f,rr.y0-0.5f,1, rr.x1-0.5f,rr.y0-0.5f,1, col,sTRUE);
-        PaintAddLine(rr.x1-0.5f,rr.y0-0.5f,1, rr.x1-0.5f,rr.y1-0.5f,1, col,sTRUE);
-        PaintAddLine(rr.x1-0.5f,rr.y1-0.5f,1, rr.x0-0.5f,rr.y1-0.5f,1, col,sTRUE);
-        PaintAddLine(rr.x0-0.5f,rr.y1-0.5f,1, rr.x0-0.5f,rr.y0-0.5f,1, col,sTRUE);
+        PaintAddLine(rr.x0 - 0.5f, rr.y0 - 0.5f, 1, rr.x1 - 0.5f, rr.y0 - 0.5f, 1, col, sTRUE);
+        PaintAddLine(rr.x1 - 0.5f, rr.y0 - 0.5f, 1, rr.x1 - 0.5f, rr.y1 - 0.5f, 1, col, sTRUE);
+        PaintAddLine(rr.x1 - 0.5f, rr.y1 - 0.5f, 1, rr.x0 - 0.5f, rr.y1 - 0.5f, 1, col, sTRUE);
+        PaintAddLine(rr.x0 - 0.5f, rr.y1 - 0.5f, 1, rr.x0 - 0.5f, rr.y0 - 0.5f, 1, col, sTRUE);
       }
       else
       {
-        sRectFrame2D(rr,sGC_YELLOW);
+        sRectFrame2D(rr, sGC_YELLOW);
       }
     }
 
@@ -369,76 +385,91 @@ void wPaintInfo::PaintHandles(const sMatrix34 *mat)
   }
 }
 
-void wPaintInfo::PaintHandlesR(wOp *parent,sBool paint)
+void wPaintInfo::PaintHandlesR(wOp* parent, sBool paint)
 {
-  wOp *input;
-  wOpInputInfo *info;
+  wOp* input;
+  wOpInputInfo* info;
   sMatrix34 mat;
   sMatrix34 mati;
 
   // don't go deeper if we switch 2D/3d mode!
 
-  if(parent->Select && parent->Page==Doc->CurrentPage)
+  if(parent->Select && parent->Page == Doc->CurrentPage)
     paint = 1;
   switch(HandleMode)
   {
-    case 0: HandleEnable = 1; break;
-    case 1: HandleEnable = (parent->Select && parent->Page==Doc->CurrentPage); break;
-    case 2: HandleEnable = paint; break;
+  case 0: HandleEnable = 1;
+    break;
+  case 1: HandleEnable = (parent->Select && parent->Page == Doc->CurrentPage);
+    break;
+  case 2: HandleEnable = paint;
+    break;
   }
-  if(parent->Select) HandleColor = 0xffff00ff;
-  else if(paint) HandleColor = 0xff00ffff;
-  else HandleColor = 0xffffff00;
+
+  if(parent->Select)
+    HandleColor = 0xffff00ff;
+  else if(paint)
+    HandleColor = 0xff00ffff;
+  else
+    HandleColor = 0xffffff00;
+
   if(!Enable3D)
-    sSetColor2D(HandleColorIndex,HandleColor);
+    sSetColor2D(HandleColorIndex, HandleColor);
 
   if(parent->Class->Handles)
   {
-    if(Enable3D && parent->Class->OutputType->GuiSets & wTG_2D) return;
-    if(!Enable3D && parent->Class->OutputType->GuiSets & wTG_3D) return;
+    if(Enable3D && parent->Class->OutputType->GuiSets & wTG_2D)
+      return;
+
+    if(!Enable3D && parent->Class->OutputType->GuiSets & wTG_3D)
+      return;
   }
 
   // actually paint/add handles
 
   if(parent->Class->Handles)
   {
-    mat  = HandleTrans;
+    mat = HandleTrans;
     mati = HandleTransI;
-    (*parent->Class->Handles)(*this,parent);
+    (*parent->Class->Handles)(*this, parent);
   }
 
   // recurse
 
   if(!(parent->Class->Flags & wCF_BLOCKHANDLES))
   {
-    sFORALL(parent->Inputs,input)
-      PaintHandlesR(input,paint);
-    sFORALL(parent->Links,info)
-      if(info->Link)
-        PaintHandlesR(info->Link,paint);
+    sFORALL(parent->Inputs, input)
+    PaintHandlesR(input, paint);
+    sFORALL(parent->Links, info)
+
+    if(info->Link)
+      PaintHandlesR(info->Link, paint);
   }
 
   // restore matrices
 
   if(parent->Class->Handles)
   {
-    HandleTrans  = mat;
+    HandleTrans = mat;
     HandleTransI = mati;
   }
 }
 
-void wPaintInfo::PaintHandle(sInt x,sInt y,sRect &r,sBool select)
+void wPaintInfo::PaintHandle(sInt x, sInt y, sRect& r, sBool select)
 {
-  r.Init(x-3,y-3,x+4,y+4);
+  r.Init(x - 3, y - 3, x + 4, y + 4);
   sRect rr = r;
+
   if(!Enable3D)
   {
-    sRectFrame2D(r,HandleColorIndex);
+    sRectFrame2D(r, HandleColorIndex);
+
     if(select)
     {
       rr.Extend(-1);
-      sRect2D(rr,sGC_SELECT);
+      sRect2D(rr, sGC_SELECT);
     }
+
     sClipExclude(r);
   }
   else
@@ -447,30 +478,31 @@ void wPaintInfo::PaintHandle(sInt x,sInt y,sRect &r,sBool select)
     rr.y0 -= Client.y0;
     rr.x1 -= Client.x0;
     rr.y1 -= Client.y0;
-    
-    PaintAddRect2D(rr,HandleColor);
+
+    PaintAddRect2D(rr, HandleColor);
     rr.Extend(-1);
-    PaintAddRect2D(rr,sGetColor2D(select ? sGC_SELECT : sGC_BLACK));
+    PaintAddRect2D(rr, sGetColor2D(select ? sGC_SELECT : sGC_BLACK));
   }
 }
 
-void wPaintInfo::PaintAddRect2D(const sRect &rr,sU32 col)
+void wPaintInfo::PaintAddRect2D(const sRect& rr, sU32 col)
 {
   static const sInt BatchSize = 16384; // verts
 
   if(!TexGeoVP)
   {
-    TexGeo->BeginLoadVB(BatchSize,sGD_STREAM,(void**) &TexGeoVP);
+    TexGeo->BeginLoadVB(BatchSize, sGD_STREAM, (void**)&TexGeoVP);
     TexGeoVC = 0;
   }
 
-  TexGeoVP[TexGeoVC+0].Init(rr.x0-0.5f,rr.y0-0.5f,1,col,0,0);
-  TexGeoVP[TexGeoVC+1].Init(rr.x1-0.5f,rr.y0-0.5f,1,col,1,0);
-  TexGeoVP[TexGeoVC+2].Init(rr.x1-0.5f,rr.y1-0.5f,1,col,1,1);
-  TexGeoVP[TexGeoVC+3].Init(rr.x0-0.5f,rr.y1-0.5f,1,col,0,1);
+  TexGeoVP[TexGeoVC + 0].Init(rr.x0 - 0.5f, rr.y0 - 0.5f, 1, col, 0, 0);
+  TexGeoVP[TexGeoVC + 1].Init(rr.x1 - 0.5f, rr.y0 - 0.5f, 1, col, 1, 0);
+  TexGeoVP[TexGeoVC + 2].Init(rr.x1 - 0.5f, rr.y1 - 0.5f, 1, col, 1, 1);
+  TexGeoVP[TexGeoVC + 3].Init(rr.x0 - 0.5f, rr.y1 - 0.5f, 1, col, 0, 1);
   TexGeoVC += 4;
 
   sVERIFY(TexGeoVC <= BatchSize);
+
   if(TexGeoVC == BatchSize)
     PaintFlushRect();
 }
@@ -486,31 +518,32 @@ void wPaintInfo::PaintFlushRect()
 
   // paint
   sCBuffer<sSimpleMaterialEnvPara> cb;
-  cb.Data->Set(HandleView,*Env);
+  cb.Data->Set(HandleView, *Env);
   DrawMtrl->Set(&cb);
   TexGeo->Draw();
 }
 
-void wPaintInfo::PaintAddLine(sF32 x0,sF32 y0,sF32 z0,sF32 x1,sF32 y1,sF32 z1,sU32 col,sBool zoff)
+void wPaintInfo::PaintAddLine(sF32 x0, sF32 y0, sF32 z0, sF32 x1, sF32 y1, sF32 z1, sU32 col, sBool zoff)
 {
   static const sInt BatchSize = 16384; // verts
   sInt ind = zoff ? 1 : 0;
 
   if(!LineGeoVP[ind])
   {
-    sGeometry *geo = zoff ? LineGeo : LineGeo2;
-    geo->BeginLoadVB(BatchSize,sGD_STREAM,(void**) &LineGeoVP[ind]);
+    sGeometry* geo = zoff ? LineGeo : LineGeo2;
+    geo->BeginLoadVB(BatchSize, sGD_STREAM, (void**)&LineGeoVP[ind]);
     LineGeoVC[ind] = 0;
   }
 
-  sVertexBasic *vp = LineGeoVP[ind];
-  sInt &vc = LineGeoVC[ind];
+  sVertexBasic* vp = LineGeoVP[ind];
+  sInt& vc = LineGeoVC[ind];
 
-  vp[vc+0].Init(x0,y0,z0,col);
-  vp[vc+1].Init(x1,y1,z1,col);
+  vp[vc + 0].Init(x0, y0, z0, col);
+  vp[vc + 1].Init(x1, y1, z1, col);
   vc += 2;
 
   sVERIFY(vc <= BatchSize);
+
   if(vc == BatchSize)
     PaintFlushLine(zoff);
 }
@@ -518,8 +551,8 @@ void wPaintInfo::PaintAddLine(sF32 x0,sF32 y0,sF32 z0,sF32 x1,sF32 y1,sF32 z1,sU
 void wPaintInfo::PaintFlushLine(sBool zoff)
 {
   sInt ind = zoff ? 1 : 0;
-  sGeometry *geo = zoff ? LineGeo : LineGeo2;
-  sSimpleMaterial *mtrl = zoff ? DrawMtrl : FlatMtrl;
+  sGeometry* geo = zoff ? LineGeo : LineGeo2;
+  sSimpleMaterial* mtrl = zoff ? DrawMtrl : FlatMtrl;
 
   if(!LineGeoVP[ind])
     return;
@@ -530,7 +563,7 @@ void wPaintInfo::PaintFlushLine(sBool zoff)
 
   // paint
   sCBuffer<sSimpleMaterialEnvPara> cb;
-  cb.Data->Set(HandleView,*Env);
+  cb.Data->Set(HandleView, *Env);
   mtrl->Set(&cb);
   geo->Draw();
 }
@@ -541,7 +574,7 @@ void wPaintInfo::ClearMisc()
   sClear(ParaF);
 }
 
-void wPaintInfo::SetSizeTex2D(sInt xs,sInt ys)
+void wPaintInfo::SetSizeTex2D(sInt xs, sInt ys)
 {
   if(Enable3D)
   {
@@ -553,29 +586,32 @@ void wPaintInfo::SetSizeTex2D(sInt xs,sInt ys)
     Rect.x0 = Client.x0 + PosX;
     Rect.y0 = Client.y0 + PosY;
   }
+
   sInt zoom = Zoom2D;     // windows can't handle larger than 32k pixels!
-  while(zoom>8 && ((xs<<(zoom-8))>0x4000 || (ys<<(zoom-8))>0x4000))
+
+  while(zoom > 8 && ((xs << (zoom - 8)) > 0x4000 || (ys << (zoom - 8)) > 0x4000))
     zoom--;
-  Rect.x1 = Rect.x0 + ((xs<<zoom)>>8);
-  Rect.y1 = Rect.y0 + ((ys<<zoom)>>8);
+
+  Rect.x1 = Rect.x0 + ((xs << zoom) >> 8);
+  Rect.y1 = Rect.y0 + ((ys << zoom) >> 8);
 }
 
-void wPaintInfo::MapTex2D(sF32 xin,sF32 yin,sInt &xout,sInt &yout)
+void wPaintInfo::MapTex2D(sF32 xin, sF32 yin, sInt& xout, sInt& yout)
 {
-  xout = sInt(xin*Rect.SizeX())+Rect.x0;
-  yout = sInt(yin*Rect.SizeY())+Rect.y0;
+  xout = sInt(xin * Rect.SizeX()) + Rect.x0;
+  yout = sInt(yin * Rect.SizeY()) + Rect.y0;
 }
 
-void wPaintInfo::PaintTex2D(sTexture2D *tex)
+void wPaintInfo::PaintTex2D(sTexture2D* tex)
 {
   if(Enable3D)
   {
     sViewport view;
-    sVertexSingle *vp;
+    sVertexSingle* vp;
     sRect r;
     sF32 s;
 
-    sSetTarget(sTargetPara(sST_CLEARALL,sGetColor2D(sGC_BACK),Spec));
+    sSetTarget(sTargetPara(sST_CLEARALL, sGetColor2D(sGC_BACK), Spec));
 
     view.Orthogonal = sVO_PIXELS;
     view.SetTargetCurrent();
@@ -595,15 +631,17 @@ void wPaintInfo::PaintTex2D(sTexture2D *tex)
       cb.Data->Set(view);
       TexMtrl->Set(&cb);
     }
-    TexGeo->BeginLoadVB(4,sGD_STREAM,(void **)&vp);
+
+    TexGeo->BeginLoadVB(4, sGD_STREAM, (void**)&vp);
+
     if(Tile)
     {
       sInt xs = Rect.SizeX();
       sInt ys = Rect.SizeY();
-      r.x0 = Rect.x0-xs;
-      r.y0 = Rect.y0-ys;
-      r.x1 = r.x0+xs*3;
-      r.y1 = r.y0+xs*3;
+      r.x0 = Rect.x0 - xs;
+      r.y0 = Rect.y0 - ys;
+      r.x1 = r.x0 + xs * 3;
+      r.y1 = r.y0 + xs * 3;
       s = 3;
     }
     else
@@ -611,10 +649,11 @@ void wPaintInfo::PaintTex2D(sTexture2D *tex)
       r = Rect;
       s = 1;
     }
-    vp[0].Init(r.x0-0.5f,r.y0-0.5f,1,0xffffffff,0,0);
-    vp[1].Init(r.x1-0.5f,r.y0-0.5f,1,0xffffffff,s,0);
-    vp[2].Init(r.x1-0.5f,r.y1-0.5f,1,0xffffffff,s,s);
-    vp[3].Init(r.x0-0.5f,r.y1-0.5f,1,0xffffffff,0,s);
+
+    vp[0].Init(r.x0 - 0.5f, r.y0 - 0.5f, 1, 0xffffffff, 0, 0);
+    vp[1].Init(r.x1 - 0.5f, r.y0 - 0.5f, 1, 0xffffffff, s, 0);
+    vp[2].Init(r.x1 - 0.5f, r.y1 - 0.5f, 1, 0xffffffff, s, s);
+    vp[3].Init(r.x0 - 0.5f, r.y1 - 0.5f, 1, 0xffffffff, 0, s);
 
     TexGeo->EndLoadVB();
     TexGeo->Draw();
@@ -622,95 +661,104 @@ void wPaintInfo::PaintTex2D(sTexture2D *tex)
   }
 }
 
-void wPaintInfo::PaintTex2D(sImage *img)
+void wPaintInfo::PaintTex2D(sImage* img)
 {
   if(!Enable3D)
   {
     sString<256> info;
 
-    info.PrintF(L"%d x %d",img->SizeX,img->SizeY);
+    info.PrintF(L"%d x %d", img->SizeX, img->SizeY);
 
     sInt xs = Rect.SizeX();
     sInt ys = Rect.SizeY();
+
     if(Alpha)
     {
-      AlphaImage->Init(img->SizeX,img->SizeY);
-      for(sInt i=0;i<img->SizeX*img->SizeY;i++)
+      AlphaImage->Init(img->SizeX, img->SizeY);
+
+      for(sInt i = 0; i < img->SizeX * img->SizeY; i++)
       {
-        sU32 a = img->Data[i]>>24;
-        AlphaImage->Data[i] = 0xff000000 | (a<<16) | (a<<8) | a;
+        sU32 a = img->Data[i] >> 24;
+        AlphaImage->Data[i] = 0xff000000 | (a << 16) | (a << 8) | a;
       }
+
       img = AlphaImage;
     }
 
-    sRect all(img->SizeX,img->SizeY);
+    sRect all(img->SizeX, img->SizeY);
+
     if(Tile)
     {
       sRect r;
-      r.x0 = Rect.x0-xs;
-      r.y0 = Rect.y0-ys;
-      r.x1 = r.x0+xs*3;
-      r.y1 = r.y0+xs*3;
-      sRectHole2D(Client,r,sGC_BACK);
-      sGui->FixedFont->Print(0,r.x0,r.y1+6,info);
-      for(sInt y=-1;y<=1;y++)
+      r.x0 = Rect.x0 - xs;
+      r.y0 = Rect.y0 - ys;
+      r.x1 = r.x0 + xs * 3;
+      r.y1 = r.y0 + xs * 3;
+      sRectHole2D(Client, r, sGC_BACK);
+      sGui->FixedFont->Print(0, r.x0, r.y1 + 6, info);
+
+      for(sInt y = -1; y <= 1; y++)
       {
-        for(sInt x=-1;x<=1;x++)
+        for(sInt x = -1; x <= 1; x++)
         {
-          r.x0 = Rect.x0+xs*x;
-          r.y0 = Rect.y0+ys*y;
-          r.x1 = r.x0+xs;
-          r.y1 = r.y0+ys;
-          sStretch2D(img->Data,img->SizeX,all,r);
+          r.x0 = Rect.x0 + xs * x;
+          r.y0 = Rect.y0 + ys * y;
+          r.x1 = r.x0 + xs;
+          r.y1 = r.y0 + ys;
+          sStretch2D(img->Data, img->SizeX, all, r);
         }
       }
     }
     else
     {
-      sRectHole2D(Client,Rect,sGC_BACK);
-      sGui->FixedFont->Print(0,Rect.x0,Rect.y1+6,info);
-      sStretch2D(img->Data,img->SizeX,all,Rect);
+      sRectHole2D(Client, Rect, sGC_BACK);
+      sGui->FixedFont->Print(0, Rect.x0, Rect.y1 + 6, info);
+      sStretch2D(img->Data, img->SizeX, all, Rect);
     }
   }
 }
 
-void wPaintInfo::LineTex2D(sF32 x0,sF32 y0,sF32 x1,sF32 y1)
+void wPaintInfo::LineTex2D(sF32 x0, sF32 y0, sF32 x1, sF32 y1)
 {
   if(!Enable3D && HandleEnable)
   {
-    sInt ix0,iy0,ix1,iy1;
+    sInt ix0, iy0, ix1, iy1;
 
-    MapTex2D(x0,y0,ix0,iy0);
-    MapTex2D(x1,y1,ix1,iy1);
-    sLine2D(ix0,iy0,ix1,iy1,HandleColorIndex);
+    MapTex2D(x0, y0, ix0, iy0);
+    MapTex2D(x1, y1, ix1, iy1);
+    sLine2D(ix0, iy0, ix1, iy1, HandleColorIndex);
   }
 }
 
-void wPaintInfo::HandleTex2D(wOp *op,sInt id,sF32 &x,sF32 &y,sInt arrayline)
+void wPaintInfo::HandleTex2D(wOp* op, sInt id, sF32& x, sF32& y, sInt arrayline)
 {
   if(!Enable3D && HandleEnable)
   {
-    sInt ix,iy;
+    sInt ix, iy;
     sRect r;
 
-    MapTex2D(x,y,ix,iy);
+    MapTex2D(x, y, ix, iy);
 
-    PaintHandle(ix,iy,r,IsSelected(op,id));
-    AddHandle(op,id,r,wHM_TEX2D,0,&x,&y,0,arrayline);
+    PaintHandle(ix, iy, r, IsSelected(op, id));
+    AddHandle(op, id, r, wHM_TEX2D, 0, &x, &y, 0, arrayline);
   }
 }
 
 /****************************************************************************/
 
-sBool wPaintInfo::Map3D(const sVector31 &pos,sF32 &x,sF32 &y,sF32 *zp=0)
+sBool wPaintInfo::Map3D(const sVector31& pos, sF32& x, sF32& y, sF32* zp = 0)
 {
   sVector4 screen;
   screen = pos * View->MVPMatrix();
-  if(screen.z>0.001f)
+
+  if(screen.z > 0.001f)
   {
-    x = View->Target.x0 + View->Target.SizeX() * (1+screen.x/screen.w)* 0.5f;
-    y = View->Target.y0 + View->Target.SizeY() * (1-screen.y/screen.w)* 0.5f;
-    if(zp) *zp = screen.z/screen.w;
+    x = View->Target.x0 + View->Target.SizeX() * (1 + screen.x / screen.w) * 0.5f;
+    y = View->Target.y0 + View->Target.SizeY() * (1 - screen.y / screen.w) * 0.5f;
+
+    if(zp)
+      *zp = screen.z / screen.w;
+
     return 1;
   }
   else
@@ -721,24 +769,24 @@ sBool wPaintInfo::Map3D(const sVector31 &pos,sF32 &x,sF32 &y,sF32 *zp=0)
   }
 }
 
-void wPaintInfo::Handle3D(wOp *op,sInt id,sVector31 &pos,sInt mode,sInt arrayline)
+void wPaintInfo::Handle3D(wOp* op, sInt id, sVector31& pos, sInt mode, sInt arrayline)
 {
-  Handle3D(op,id,&pos.x,&pos.y,&pos.z,mode,arrayline);
+  Handle3D(op, id, &pos.x, &pos.y, &pos.z, mode, arrayline);
 }
 
-void wPaintInfo::Handle3D(wOp *op,sInt id,sF32 *xx,sF32 *yy,sF32 *zz,sInt mode,sInt arrayline)
+void wPaintInfo::Handle3D(wOp* op, sInt id, sF32* xx, sF32* yy, sF32* zz, sInt mode, sInt arrayline)
 {
   sRect r;
-  sF32 x,y;
+  sF32 x, y;
 
   if(HandleEnable)
   {
-    if(mode==wHM_RAY && Dragging && IsSelected(op,id))
+    if(mode == wHM_RAY && Dragging && IsSelected(op, id))
     {
-      wHandleSelectTag *tag;
-      sFORALL(Doc->SelectedHandleTags,tag)
+      wHandleSelectTag* tag;
+      sFORALL(Doc->SelectedHandleTags, tag)
       {
-        if(tag->Op==op && tag->Id==id)
+        if(tag->Op == op && tag->Id == id)
         {
           *xx += tag->Drag.x;
           *yy += tag->Drag.y;
@@ -746,36 +794,37 @@ void wPaintInfo::Handle3D(wOp *op,sInt id,sF32 *xx,sF32 *yy,sF32 *zz,sInt mode,s
         }
       }
     }
-    sVector31 pos(*xx,*yy,*zz);
 
-    if(Map3D(pos*HandleTrans,x,y))
-      PaintHandle(sInt(x),sInt(y),r,IsSelected(op,id));
+    sVector31 pos(*xx, *yy, *zz);
 
-    AddHandle(op,id,r,mode,0,xx,yy,zz,arrayline);
+    if(Map3D(pos * HandleTrans, x, y))
+      PaintHandle(sInt(x), sInt(y), r, IsSelected(op, id));
+
+    AddHandle(op, id, r, mode, 0, xx, yy, zz, arrayline);
   }
 }
 
-void wPaintInfo::Line3D(const sVector31 &a,const sVector31 &b,sU32 color,sBool zoff)
+void wPaintInfo::Line3D(const sVector31& a, const sVector31& b, sU32 color, sBool zoff)
 {
-  sF32 x0,y0,z0,x1,y1,z1;
+  sF32 x0, y0, z0, x1, y1, z1;
 
-  if(HandleEnable && Map3D(a*HandleTrans,x0,y0,&z0) && Map3D(b*HandleTrans,x1,y1,&z1))
+  if(HandleEnable && Map3D(a * HandleTrans, x0, y0, &z0) && Map3D(b * HandleTrans, x1, y1, &z1))
   {
     x0 -= Client.x0;
     y0 -= Client.y0;
     x1 -= Client.x0;
     y1 -= Client.y0;
 
-    if(color==0)
+    if(color == 0)
       color = HandleColor;
-    else if(color==0xffffffffU)
-      color = 0xff000000 | ((HandleColor&0xfefefe)>>1);
+    else if(color == 0xffffffffU)
+      color = 0xff000000 | ((HandleColor & 0xfefefe) >> 1);
 
-    PaintAddLine(x0,y0,z0,x1,y1,z1,color,zoff);
+    PaintAddLine(x0, y0, z0, x1, y1, z1, color, zoff);
   }
 }
 
-void wPaintInfo::Transform3D(const sMatrix34 &mat)
+void wPaintInfo::Transform3D(const sMatrix34& mat)
 {
   HandleTrans = mat * HandleTrans;
   HandleTransI = HandleTrans;
@@ -791,54 +840,57 @@ void wPaintInfo::PaintMtrl()
   sInt tx = 24;
   sF32 ro = 2;
   sF32 ri = 0.5;
-  sF32 u,v,fx,fy;
-  sU16 *ip;
+  sF32 u, v, fx, fy;
+  sU16* ip;
 
-  sGeometry *Geo = new sGeometry;     // usually i hate new in frame-loops
-  Geo->Init(sGF_TRILIST|sGF_INDEX16,sVertexFormatStandard);
+  sGeometry* Geo = new sGeometry;     // usually i hate new in frame-loops
+  Geo->Init(sGF_TRILIST | sGF_INDEX16, sVertexFormatStandard);
 
+  sVertexStandard* vp;
+  Geo->BeginLoadVB(tx * ty, sGD_STREAM, (void**)&vp);
 
-  sVertexStandard *vp;
-  Geo->BeginLoadVB(tx*ty,sGD_STREAM,(void **)&vp);
-
-  for(sInt y=0;y<ty;y++)
+  for(sInt y = 0; y < ty; y++)
   {
-    for(sInt x=0;x<tx;x++)
+    for(sInt x = 0; x < tx; x++)
     {
-      u = sF32(x)/tx; fx = u*sPI2F;
-      v = sF32(y)/ty; fy = v*sPI2F;
-      vp->px = -sFCos(fy)*(ro+sFSin(fx)*ri);
-      vp->py = -sFCos(fx)*ri;
-      vp->pz = sFSin(fy)*(ro+sFSin(fx)*ri);
-      vp->nx = -sFCos(fy)*sFSin(fx);
+      u = sF32(x) / tx;
+      fx = u * sPI2F;
+      v = sF32(y) / ty;
+      fy = v * sPI2F;
+      vp->px = -sFCos(fy) * (ro + sFSin(fx) * ri);
+      vp->py = -sFCos(fx) * ri;
+      vp->pz = sFSin(fy) * (ro + sFSin(fx) * ri);
+      vp->nx = -sFCos(fy) * sFSin(fx);
       vp->ny = -sFCos(fx);
-      vp->nz = sFSin(fy)*sFSin(fx);
+      vp->nz = sFSin(fy) * sFSin(fx);
       vp->u0 = u;
       vp->v0 = v;
       vp++;
     }
   }
+
   Geo->EndLoadVB();
-  
-  Geo->BeginLoadIB(tx*ty*6,sGD_STREAM,(void **)&ip);
-  for(sInt y=0;y<ty;y++)
+
+  Geo->BeginLoadIB(tx * ty * 6, sGD_STREAM, (void**)&ip);
+
+  for(sInt y = 0; y < ty; y++)
   {
-    for(sInt x=0;x<tx;x++)
+    for(sInt x = 0; x < tx; x++)
     {
-      sQuad(ip,0,
-        (y+0)%ty*tx+(x+0)%tx,
-        (y+1)%ty*tx+(x+0)%tx,
-        (y+1)%ty*tx+(x+1)%tx,
-        (y+0)%ty*tx+(x+1)%tx);
+      sQuad(ip, 0,
+            (y + 0) % ty * tx + (x + 0) % tx,
+            (y + 1) % ty * tx + (x + 0) % tx,
+            (y + 1) % ty * tx + (x + 1) % tx,
+            (y + 0) % ty * tx + (x + 1) % tx);
     }
   }
+
   Geo->EndLoadIB();
 
   Geo->Draw();
 
   delete Geo;
 }
-
 
 /****************************************************************************/
 /***                                                                      ***/
@@ -864,36 +916,44 @@ wType::wType()
   EquivalentType = 0;
 }
 
-sBool wType::IsType(wType *type)
+sBool wType::IsType(wType* type)
 {
-  wType *owntype = this;
+  wType* owntype = this;
+
   do
   {
-    if(type==owntype)
+    if(type == owntype)
       return 1;
+
     owntype = owntype->Parent;
   }
   while(owntype);
+
   return 0;
 }
 
-sBool wType::IsTypeOrConversion(wType *type)
+sBool wType::IsTypeOrConversion(wType* type)
 {
-  wClass *cl;
+  wClass* cl;
 
-  if(IsType(type)) return 1;
-  sFORALL(Doc->Conversions,cl)
-    if(cl->OutputType->IsType(type) && IsType(cl->Inputs[0].Type))
-      return 1;
+  if(IsType(type))
+    return 1;
+
+  sFORALL(Doc->Conversions, cl)
+
+  if(cl->OutputType->IsType(type) && IsType(cl->Inputs[0].Type))
+    return 1;
+
   return 0;
 }
 
-void wType::Show(wObject *obj,wPaintInfo &pi)
+void wType::Show(wObject* obj, wPaintInfo& pi)
 {
-  if(pi.Enable3D) 
-    sSetTarget(sTargetPara(sST_CLEARALL,pi.BackColor,pi.Spec));
+  if(pi.Enable3D)
+    sSetTarget(sTargetPara(sST_CLEARALL, pi.BackColor, pi.Spec));
   else
-    sRect2D(pi.Client,sGC_BACK);
+    sRect2D(pi.Client, sGC_BACK);
+
   pi.PaintHandles();
 }
 
@@ -933,8 +993,8 @@ wClass::wClass()
 
 void wClass::Tag()
 {
-  wClassInputInfo *in;
-  sFORALL(Inputs,in)
+  wClassInputInfo* in;
+  sFORALL(Inputs, in)
   {
     in->Type->Need();
     in->DefaultClass->Need();
@@ -965,31 +1025,33 @@ void wPage::Tag()
 
 void wPage::DefaultName()
 {
-  sInt max = Doc->Pages.GetCount()+2;
-  sU8 *mask = new sU8[max];
-  sSetMem(mask,0,max);
+  sInt max = Doc->Pages.GetCount() + 2;
+  sU8* mask = new sU8[max];
+  sSetMem(mask, 0, max);
   sInt val;
-  wPage *page;
+  wPage* page;
 
-  Name=L"new page";
+  Name = L"new page";
 
-  sFORALL(Doc->Pages,page)
+  sFORALL(Doc->Pages, page)
   {
-    if(sCmpMem(page->Name,L"new page ",sizeof(sChar)*9)==0)
+    if(sCmpMem(page->Name, L"new page ", sizeof(sChar) * 9) == 0)
     {
-      const sChar *s = page->Name+9;
-      if(sScanInt(s,val))
+      const sChar* s = page->Name + 9;
+
+      if(sScanInt(s, val))
       {
-        if(val<max && val>=0)
+        if(val < max && val >= 0)
           mask[val] = 1;
       }
     }
   }
-  for(sInt i=1;i<max;i++)
+
+  for(sInt i = 1; i < max; i++)
   {
-    if(mask[i]==0)
+    if(mask[i] == 0)
     {
-      sSPrintF(Name,L"new page %d",i);
+      sSPrintF(Name, L"new page %d", i);
       break;
     }
   }
@@ -997,25 +1059,29 @@ void wPage::DefaultName()
   delete[] mask;
 }
 
-sBool wPage::CheckDest(wOp *op0,sInt x,sInt y,sInt w,sInt h,sBool move)
+sBool wPage::CheckDest(wOp* op0, sInt x, sInt y, sInt w, sInt h, sBool move)
 {
-  wStackOp *op;
-  sRect r0,r1;
+  wStackOp* op;
+  sRect r0, r1;
 
-  if(x<0 || x+w>=wPAGEXS) return 0;
-  if(y<0 || y+h>=wPAGEYS) return 0;
+  if(x < 0 || x + w >= wPAGEXS)
+    return 0;
+
+  if(y < 0 || y + h >= wPAGEYS)
+    return 0;
 
   if(op0 && op0->Class->Flags & wCF_COMMENT)
     return 1;
 
-  r0.Init(x,y,x+w,y+h);
-  sFORALL(Ops,op)
+  r0.Init(x, y, x + w, y + h);
+  sFORALL(Ops, op)
   {
     if(!(op->Class->Flags & wCF_COMMENT))
     {
       if(!move || !op->Select)
       {
-        r1.Init(op->PosX,op->PosY,op->PosX+op->SizeX,op->PosY+op->SizeY);
+        r1.Init(op->PosX, op->PosY, op->PosX + op->SizeX, op->PosY + op->SizeY);
+
         if(r0.IsInside(r1))
           return 0;
       }
@@ -1024,58 +1090,67 @@ sBool wPage::CheckDest(wOp *op0,sInt x,sInt y,sInt w,sInt h,sBool move)
   return 1;
 }
 
-sBool wPage::CheckMove(sInt dx,sInt dy,sInt dw,sInt dh,sBool move)
+sBool wPage::CheckMove(sInt dx, sInt dy, sInt dw, sInt dh, sBool move)
 {
-  wStackOp *op0;
+  wStackOp* op0;
 
-  sFORALL(Ops,op0)
+  sFORALL(Ops, op0)
   {
     if(op0->Select)
     {
       if(!CheckDest(op0,
-         op0->PosX+dx,
-         op0->PosY+dy,
-         sClamp(op0->SizeX+dw,1,wPAGEXS-op0->SizeX-dw),
-         sClamp(op0->SizeY+dh,1,wPAGEYS-op0->SizeY-dh),
-         move))
+                    op0->PosX + dx,
+                    op0->PosY + dy,
+                    sClamp(op0->SizeX + dw, 1, wPAGEXS - op0->SizeX - dw),
+                    sClamp(op0->SizeY + dh, 1, wPAGEYS - op0->SizeY - dh),
+                    move))
         return 0;
     }
   }
   return 1;
 }
 
-void wPage::Rem(wOp *op)
+void wPage::Rem(wOp* op)
 {
   if(IsTree)
-    Tree.RemOrder((wTreeOp *)op);
+    Tree.RemOrder((wTreeOp*)op);
   else
-    Ops.Rem((wStackOp *)op);
+    Ops.Rem((wStackOp*)op);
 }
 
-template <class streamer> void wPage::Serialize_(streamer &s)
+template<class streamer>
+void wPage::Serialize_(streamer& s)
 {
-  wStackOp *sop;
-  wTreeOp *top;
+  wStackOp* sop;
+  wTreeOp* top;
 
-  sInt version = s.Header(sSerId::wPage,1);
-  if(version>0)
+  sInt version = s.Header(sSerId::wPage, 1);
+
+  if(version > 0)
   {
     s | Name | IsTree | ScrollX | ScrollY;
 
     s.ArrayNew(Ops);
-    sFORALL(Ops,sop)
-      s | sop;
+    sFORALL(Ops, sop)
+    s | sop;
 
     s.ArrayNew(Tree);
-    sFORALL(Tree,top)
-      s  | top;
+    sFORALL(Tree, top)
+    s | top;
 
     s.Footer();
   }
 }
 
-void wPage::Serialize(sWriter &s) { Serialize_(s); }
-void wPage::Serialize(sReader &s) { Serialize_(s); }
+void wPage::Serialize(sWriter& s)
+{
+  Serialize_(s);
+}
+
+void wPage::Serialize(sReader& s)
+{
+  Serialize_(s);
+}
 
 /****************************************************************************/
 /***                                                                      ***/
@@ -1108,7 +1183,7 @@ wOp::wOp() : SelectedHandles(0)
   ScriptSourceOffset = 0;
   ScriptSourceValid = 0;
   Script = 0;
-  
+
   Name = L"";
   Class = 0;
   Page = 0;
@@ -1130,25 +1205,26 @@ wOp::wOp() : SelectedHandles(0)
   GCObj = 0;
   RefParent = 0;
   RefObj = 0;
-
 }
 
-
-void wOp::Init(wClass *cl)
+void wOp::Init(wClass* cl)
 {
   sVERIFY(cl);
 
-  wClassInputInfo *info;
+  wClassInputInfo* info;
   Class = cl;
 
   // during loading, default ops get initialized twice!
 
   if(EditString)
-    for(sInt i=0;i<EditStringCount;i++)
+    for(sInt i = 0; i < EditStringCount; i++)
       delete EditString[i];
+
   delete[] EditString;
-  delete[] (sU32 *)EditData;   EditData = 0;
-  delete[] (sU32 *)HelperData;  HelperData = 0;
+  delete[] (sU32*)EditData;
+  EditData = 0;
+  delete[] (sU32*)HelperData;
+  HelperData = 0;
   EditStringCount = 0;
   EditString = 0;
   Links.Clear();
@@ -1160,41 +1236,48 @@ void wOp::Init(wClass *cl)
 
   // now initialize
 
-  if(Class->ParaWords>0)
+  if(Class->ParaWords > 0)
   {
     EditData = new sU32[Class->ParaWords];
-    sSetMem(EditData,0,Class->ParaWords*sizeof(sU32));
+    sSetMem(EditData, 0, Class->ParaWords * sizeof(sU32));
   }
 
-  if(Class->HelperWords>0)
+  if(Class->HelperWords > 0)
   {
     HelperData = new sU32[Class->HelperWords];
-    sSetMem(HelperData,0,Class->HelperWords*sizeof(sU32));
+    sSetMem(HelperData, 0, Class->HelperWords * sizeof(sU32));
   }
 
-  if(Class->ParaStrings>0)
+  if(Class->ParaStrings > 0)
   {
     EditStringCount = Class->ParaStrings;
-    EditString = new sTextBuffer *[Class->ParaStrings];
-    for(sInt i=0;i<EditStringCount;i++)
+    EditString = new sTextBuffer*[Class->ParaStrings];
+
+    for(sInt i = 0; i < EditStringCount; i++)
       EditString[i] = new sTextBuffer;
   }
 
-  sFORALL(Class->Inputs,info)
+  sFORALL(Class->Inputs, info)
   {
-    wOpInputInfo *link = Links.AddMany(1);
+    wOpInputInfo* link = Links.AddMany(1);
     link->Link = 0;
     link->LinkName = L"";
     link->Select = 0;
     switch(info->Flags & wCIF_METHODMASK)
     {
-      case wCIF_METHODLINK:   link->Select = 1; break;
-      case wCIF_METHODBOTH:   link->Select = 0; break;
-      case wCIF_METHODCHOOSE: link->Select = 2; break;
-      case wCIF_METHODANIM:   link->Select = 1; break;
+    case wCIF_METHODLINK:   link->Select = 1;
+      break;
+    case wCIF_METHODBOTH:   link->Select = 0;
+      break;
+    case wCIF_METHODCHOOSE: link->Select = 2;
+      break;
+    case wCIF_METHODANIM:   link->Select = 1;
+      break;
     }
+
     link->Default = 0;
     link->DefaultUsed = 0;
+
     if(info->DefaultClass)
     {
       link->Default = new wOp;
@@ -1203,34 +1286,35 @@ void wOp::Init(wClass *cl)
   }
 
   (*Class->SetDefaults)(this);
-	/*
-  if((Class->Flags & wCF_LOAD) && Links.GetCount()==1)
-    Links[0].LinkName = Doc->LastName;
-  if(Class->Flags & wCF_STORE)
-    Name = Doc->LastName;
-		*/
+  /*
+     if((Class->Flags & wCF_LOAD) && Links.GetCount()==1)
+     Links[0].LinkName = Doc->LastName;
+     if(Class->Flags & wCF_STORE)
+     Name = Doc->LastName;
+   */
 /*
-  if(Class->ArrayCount)
-  {
+   if(Class->ArrayCount)
+   {
     for(sInt i=0;i<2;i++)
     {
       sU32 *data = new sU32[Class->ArrayCount];
       sSetMem(data,0,Class->ArrayCount*4);
       ArrayData.AddTail(data);
     }
-  }
-  */
+   }
+ */
 }
-
 
 wOp::~wOp()
 {
   OpsTotal--;
-  for(sInt i=0;i<EditStringCount;i++)
+
+  for(sInt i = 0; i < EditStringCount; i++)
     delete EditString[i];
+
   delete[] EditString;
-  delete[] (sU32 *)EditData;
-  delete[] (sU32 *)HelperData;
+  delete[] (sU32*)EditData;
+  delete[] (sU32*)HelperData;
   sDeleteAll(ArrayData);
   delete Script;
 
@@ -1248,14 +1332,14 @@ void wOp::Finalize()
 
 void wOp::Tag()
 {
-  wOpInputInfo *info;
+  wOpInputInfo* info;
   sNeed(Inputs);
   sNeed(Outputs);
   sNeed(WeakOutputs);
   sNeed(OldInputs);
   sNeed(Conversions);
   sNeed(Extractions);
-  sFORALL(Links,info)
+  sFORALL(Links, info)
   {
     info->Link->Need();
     info->Default->Need();
@@ -1267,7 +1351,7 @@ void wOp::Tag()
   Page->Need();
 }
 
-void wOp::CopyFrom(wOp *src)
+void wOp::CopyFrom(wOp* src)
 {
   sVERIFY(Class == 0);
 
@@ -1275,20 +1359,21 @@ void wOp::CopyFrom(wOp *src)
   Name = src->Name;
   Bypass = src->Bypass;
 
-  sCopyMem(EditData,src->EditData,sizeof(sU32)*Class->ParaWords);
+  sCopyMem(EditData, src->EditData, sizeof(sU32) * Class->ParaWords);
 
-  for(sInt i=0;i<Class->ParaStrings;i++)
+  for(sInt i = 0; i < Class->ParaStrings; i++)
   {
     EditString[i]->Clear();
     EditString[i]->Print(src->EditString[i]->Get());
   }
 
-  for(sInt i=0;i<Class->Inputs.GetCount();i++)
+  for(sInt i = 0; i < Class->Inputs.GetCount(); i++)
   {
     Links[i].Select = src->Links[i].Select;
     Links[i].LinkName = src->Links[i].LinkName;
     Links[i].Link = 0;
     Links[i].Default = 0;
+
     if(src->Links[i].Default)
     {
       Links[i].Default = new wOp();
@@ -1296,11 +1381,11 @@ void wOp::CopyFrom(wOp *src)
     }
   }
 
-  void *as,*ad;
-  sFORALL(src->ArrayData,as)
+  void* as, * ad;
+  sFORALL(src->ArrayData, as)
   {
     ad = new sU32[Class->ArrayCount];
-    sCopyMem(ad,as,Class->ArrayCount*4);
+    sCopyMem(ad, as, Class->ArrayCount * 4);
     ArrayData.AddTail(ad);
   }
 
@@ -1310,12 +1395,12 @@ void wOp::CopyFrom(wOp *src)
   UpdateScript();
 }
 
-wType *wOp::OutputType()
+wType* wOp::OutputType()
 {
-  wOp *cur = this;
+  wOp* cur = this;
 
   // go up from this op while the type isn't determined.
-  while(cur->Class->Flags & (wCF_TYPEFROMINPUT|wCF_LOAD))
+  while(cur->Class->Flags & (wCF_TYPEFROMINPUT | wCF_LOAD))
   {
     if(cur->Class->Flags & wCF_LOAD) // load: continue to link #0
       cur = cur->Links[0].Link;
@@ -1329,20 +1414,22 @@ wType *wOp::OutputType()
   return cur->Class->OutputType;
 }
 
-wOp *wOp::MakeConversionTo(wType *type,sInt callid)
+wOp* wOp::MakeConversionTo(wType* type, sInt callid)
 {
-  wClass *cl;
-  wOp *convop;
-    
-  sFORALL(Doc->Conversions,cl)
-    if(cl->OutputType->IsType(type) && Class->OutputType->IsType(cl->Inputs[0].Type))
-      goto found;
+  wClass* cl;
+  wOp* convop;
+
+  sFORALL(Doc->Conversions, cl)
+
+  if(cl->OutputType->IsType(type) && Class->OutputType->IsType(cl->Inputs[0].Type))
+    goto found;
 
   return 0;
-found:
-  sFORALL(Conversions,convop)
-    if(convop->Class==cl && callid==convop->BuilderNodeCallId)
-      return convop;
+  found:
+  sFORALL(Conversions, convop)
+
+  if(convop->Class == cl && callid == convop->BuilderNodeCallId)
+    return convop;
 
   convop = new wOp;
   convop->Init(cl);
@@ -1352,43 +1439,47 @@ found:
   return convop;
 }
 
-wOp *wOp::MakeExtractionTo(const sChar *filter)
+wOp* wOp::MakeExtractionTo(const sChar* filter)
 {
   sInt len;
-  wClass *cl;
-  wOp *op;
-  
-  len = sFindFirstChar(filter,'.');
-  if(len==-1)
+  wClass* cl;
+  wOp* op;
+
+  len = sFindFirstChar(filter, '.');
+
+  if(len == -1)
     len = sGetStringLen(filter);
 
   // find existing conversion
 
-  sFORALL(Extractions,op)
+  sFORALL(Extractions, op)
   {
-    if(sCmpString(filter,op->EditString[0]->Get())==0)
+    if(sCmpString(filter, op->EditString[0]->Get()) == 0)
     {
-      if(op->Inputs.GetCount()==0)
+      if(op->Inputs.GetCount() == 0)
         op->Inputs.AddTail(this);
+
       return op;
     }
   }
 
   // find required conversion class, create new conversion op
-    
-  sFORALL(Doc->Extractions,cl)
+
+  sFORALL(Doc->Extractions, cl)
   {
-    wType *outType = OutputType();
+    wType* outType = OutputType();
 
     if(outType && outType->IsType(cl->Inputs[0].Type) // conversion can accept me
-      && sCmpStringLen(cl->Extract,filter,len)==0)
+       && sCmpStringLen(cl->Extract, filter, len) == 0)
     {
       op = new wOp;
       op->Init(cl);
       *op->EditString[0] = filter;
       Extractions.AddTail(op);
-      if(op->Inputs.GetCount()==0)
+
+      if(op->Inputs.GetCount() == 0)
         op->Inputs.AddTail(this);
+
       return op;
     }
   }
@@ -1398,19 +1489,22 @@ wOp *wOp::MakeExtractionTo(const sChar *filter)
   return 0;
 }
 
-
-void *wOp::AddArray(sInt pos)
+void* wOp::AddArray(sInt pos)
 {
   HighlightArrayLine = -1;
-  if(pos==-1)
+
+  if(pos == -1)
     pos = ArrayData.GetCount();
-  if(Class->ArrayCount>0 && pos>=0 && pos<=ArrayData.GetCount())
+
+  if(Class->ArrayCount > 0 && pos >= 0 && pos <= ArrayData.GetCount())
   {
-    sU32 *mem = new sU32[Class->ArrayCount];
-    sSetMem(mem,0,Class->ArrayCount*4);
+    sU32* mem = new sU32[Class->ArrayCount];
+    sSetMem(mem, 0, Class->ArrayCount * 4);
+
     if(Class->SetDefaultsArray)
-      (*Class->SetDefaultsArray)(this,pos,mem);
-    ArrayData.AddBefore(mem,pos);
+      (*Class->SetDefaultsArray)(this, pos, mem);
+
+    ArrayData.AddBefore(mem, pos);
     return mem;
   }
   else
@@ -1422,9 +1516,10 @@ void *wOp::AddArray(sInt pos)
 void wOp::RemArray(sInt pos)
 {
   HighlightArrayLine = -1;
-  if(Class->ArrayCount>=0 && pos>=0 && pos<ArrayData.GetCount())
+
+  if(Class->ArrayCount >= 0 && pos >= 0 && pos < ArrayData.GetCount())
   {
-    void *mem = ArrayData[pos];
+    void* mem = ArrayData[pos];
     ArrayData.RemAtOrder(pos);
     delete[] (sU8*)mem;
   }
@@ -1436,12 +1531,14 @@ void wOp::UpdateScript()
   ScriptSourceOffset = 0;
   ScriptSourceLine = 0;
 
-  const sChar *source = ScriptSource.Get();
+  const sChar* source = ScriptSource.Get();
 
-  while(sIsSpace(*source)) source++;
+  while(sIsSpace(*source))
+    source++;
 
   sInt lastmax = ScriptParas.GetCount();
   ScriptParas.Clear();
+
   if(*source)
   {
     sScanner Scan;
@@ -1455,11 +1552,12 @@ void wOp::UpdateScript()
     if(Scan.IfName(L"gui"))
     {
       Scan.Match('{');
-      while(!Scan.Errors && Scan.Token!='}')
+
+      while(!Scan.Errors && Scan.Token != '}')
       {
         if(Scan.IfName(L"group"))
         {
-          wScriptParaInfo *wi = ScriptParas.AddMany(1);
+          wScriptParaInfo* wi = ScriptParas.AddMany(1);
           sClear(*wi);
           wi->StringVal = L"";
           wi->Type = 0;
@@ -1476,13 +1574,15 @@ void wOp::UpdateScript()
 
           // keywords
 
-keywords:
+          keywords:
+
           if(Scan.IfName(L"global"))
           {
             global = 1;
             HasGlobal = 1;
             goto keywords;
           }
+
           if(Scan.IfName(L"nolabel"))
           {
             guiflags |= 1;
@@ -1493,16 +1593,19 @@ keywords:
 
           if(Scan.IfName(L"float"))
             type = ScriptTypeFloat;
+
           if(Scan.IfName(L"float30"))
           {
             type = ScriptTypeFloat;
             count = 3;
           }
+
           if(Scan.IfName(L"float31"))
           {
             type = ScriptTypeFloat;
             count = 3;
           }
+
           if(Scan.IfName(L"float4"))
           {
             type = ScriptTypeFloat;
@@ -1532,9 +1635,9 @@ keywords:
 
           // create type
 
-          if(type!=-1)
+          if(type != -1)
           {
-            wScriptParaInfo *wi = ScriptParas.AddMany(1);
+            wScriptParaInfo* wi = ScriptParas.AddMany(1);
             wi->Type = type;
             wi->Min = -1024;
             wi->Max = 1024;
@@ -1546,29 +1649,33 @@ keywords:
             wi->GuiExtras = extra;
             wi->GuiFlags = guiflags;
             sBool setdefault = 0;
-            if(ScriptParas.GetCount()>lastmax)
+
+            if(ScriptParas.GetCount() > lastmax)
             {
               setdefault = 1;
               sClear(wi->IntVal);
               wi->StringVal = L"";
             }
+
             Scan.ScanName(wi->Name);
 
             // modifications
 
-            if(type==ScriptTypeInt || type==ScriptTypeFloat)
+            if(type == ScriptTypeInt || type == ScriptTypeFloat)
             {
-              if(count==-1)
+              if(count == -1)
               {
                 if(Scan.IfToken('['))
                 {
                   sInt n = Scan.ScanInt();
-                  if(n<1)
+
+                  if(n < 1)
                     Scan.Error(L"dimension of array < 1");
-                  else if(n>4)
+                  else if(n > 4)
                     Scan.Error(L"dimension of array > 4");
                   else
                     wi->Count = n;
+
                   Scan.Match(']');
                 }
               }
@@ -1576,6 +1683,7 @@ keywords:
               {
                 wi->Count = count;
               }
+
               if(Scan.IfToken('('))
               {
                 if(wi->GuiFlags & 2)
@@ -1587,12 +1695,15 @@ keywords:
                   wi->Min = Scan.ScanFloat();
                   Scan.Match(sTOK_ELLIPSES);
                   wi->Max = Scan.ScanFloat();
-  loopintflags:
+                  loopintflags:
+
                   if(Scan.IfName(L"step"))
                   {
                     wi->Step = Scan.ScanFloat();
+
                     if(Scan.IfToken(','))
                       wi->RStep = Scan.ScanFloat();
+
                     goto loopintflags;
                   }
                   else if(Scan.IfName(L"logstep"))
@@ -1603,46 +1714,56 @@ keywords:
                   else if(Scan.IfName(L"hex"))
                   {
                     wi->GuiExtras = 4;
-                    if(Scan.Token==sTOK_INT)
-                      wi->GuiExtras = sClamp(Scan.ScanInt(),0,8);
+
+                    if(Scan.Token == sTOK_INT)
+                      wi->GuiExtras = sClamp(Scan.ScanInt(), 0, 8);
+
                     goto loopintflags;
                   }
                 }
+
                 Scan.Match(')');
               }
+
               if(wi->GuiChoices.IsEmpty() && (wi->GuiFlags & 2))
                 wi->GuiChoices = L"-|on";
+
               if(Scan.IfToken('='))
               {
                 wi->Default = Scan.ScanFloat();
+
                 if(setdefault)
                 {
                   wi->FloatVal[0] = wi->FloatVal[1] = wi->FloatVal[2] = wi->FloatVal[3] = wi->Default;
                 }
               }
             }
-            else if(type==ScriptTypeColor)
+            else if(type == ScriptTypeColor)
             {
               if(Scan.IfToken('('))
               {
                 sPoolString rgb;
                 Scan.ScanString(rgb);
-                if(rgb==L"rgb")
+
+                if(rgb == L"rgb")
                   wi->GuiExtras = 1;
-                else if(rgb==L"rgba")
+                else if(rgb == L"rgba")
                   wi->GuiExtras = 0;
                 else
                   Scan.Error(L"colors must be 'rgb' or 'rgba");
+
                 Scan.Match(')');
               }
+
               if(Scan.IfToken('='))
               {
                 sU32 def = Scan.ScanInt();
+
                 if(setdefault)
                   wi->ColorVal = def;
               }
             }
-            else if(type==ScriptTypeString)
+            else if(type == ScriptTypeString)
             {
               if(Scan.IfToken('='))
               {
@@ -1650,11 +1771,13 @@ keywords:
                 {
                   sPoolString str;
                   Scan.ScanString(str);
+
                   if(setdefault)
                     wi->StringVal = str;
                 }
               }
             }
+
             Scan.Match(';');
           }
           else
@@ -1663,40 +1786,45 @@ keywords:
           }
         }
       }
-      if(Scan.Token=='}')
+
+      if(Scan.Token == '}')
       {
         ScriptSourceOffset = Scan.Stream->ScanPtr - ScriptSource.Get();
         ScriptSourceLine = Scan.Stream->Line;
       }
+
       Scan.Match('}');
+
       if(Scan.Errors)
         CalcErrorString = sPoolString(Scan.ErrorMsg);
     }
-    ScriptSourceValid = (Scan.Token!=sTOK_END) || HasGlobal;
+
+    ScriptSourceValid = (Scan.Token != sTOK_END) || HasGlobal;
   }
 }
 
-void wOp::MakeSource(sTextBuffer &tb)
+void wOp::MakeSource(sTextBuffer& tb)
 {
-  wScriptParaInfo *para;
+  wScriptParaInfo* para;
   tb.Clear();
+
   if(!ScriptSourceValid)
     return;
 
   sString<256> opname;
-  
+
   // pretty printed operator name for #line directive
 
   if(Page)
   {
     if(Page->IsTree)
     {
-      opname.PrintF(L"page '%s'",Page->Name);
+      opname.PrintF(L"page '%s'", Page->Name);
     }
     else
     {
-      wStackOp *sop = (wStackOp *) this;
-      opname.PrintF(L"page '%s' pos %d %d",Page->Name,sop->PosX,sop->PosY);
+      wStackOp* sop = (wStackOp*)this;
+      opname.PrintF(L"page '%s' pos %d %d", Page->Name, sop->PosX, sop->PosY);
     }
   }
   else
@@ -1706,46 +1834,54 @@ void wOp::MakeSource(sTextBuffer &tb)
 
   // insert parameters
 
-  tb.PrintF(L"#line 1 \"%s, generated\"\n",opname);
-  sFORALL(ScriptParas,para)
+  tb.PrintF(L"#line 1 \"%s, generated\"\n", opname);
+  sFORALL(ScriptParas, para)
   {
-    if(para->Type!=0)         // type 0 is group label
+    if(para->Type != 0)         // type 0 is group label
     {
       if(para->Global)
         tb.Print(L"global ");
-      static const sChar *tname[] = { L"???",L"int",L"float",L"string",L"color" };
-      tb.PrintF(L"%s : %s",para->Name,tname[para->Type]);
-      sVERIFY(para->Count>0);
-      if(para->Count>1)
-        tb.PrintF(L"[%d] = [ ",para->Count);
+
+      static const sChar* tname[] =
+      {
+        L"???", L"int", L"float", L"string", L"color"
+      };
+      tb.PrintF(L"%s : %s", para->Name, tname[para->Type]);
+      sVERIFY(para->Count > 0);
+
+      if(para->Count > 1)
+        tb.PrintF(L"[%d] = [ ", para->Count);
       else
         tb.Print(L" = ");
-      for(sInt i=0;i<para->Count;i++)
+
+      for(sInt i = 0; i < para->Count; i++)
       {
-        if(i>0)
+        if(i > 0)
           tb.Print(L",");
         switch(para->Type)
         {
         case ScriptTypeInt:
-          tb.PrintF(L"%d",para->IntVal[i]);
+          tb.PrintF(L"%d", para->IntVal[i]);
           break;
         case ScriptTypeFloat:
-          tb.PrintF(L"%f",para->FloatVal[i]);
+          tb.PrintF(L"%f", para->FloatVal[i]);
           break;
         case ScriptTypeColor:
-          sVERIFY(i==0);
-          tb.PrintF(L"[%d/255.0,%d/255.0,%d/255.0,%d/255.0]",(para->ColorVal>>16)&255,(para->ColorVal>>8)&255,(para->ColorVal>>0)&255,(para->ColorVal>>24)&255);
+          sVERIFY(i == 0);
+          tb.PrintF(L"[%d/255.0,%d/255.0,%d/255.0,%d/255.0]", (para->ColorVal >> 16) & 255, (para->ColorVal >> 8) & 255, (para->ColorVal >> 0) & 255, (para->ColorVal >> 24) & 255);
           break;
         case ScriptTypeString:
-          sVERIFY(i==0);
-          tb.PrintF(L"%q",para->StringVal);
+          sVERIFY(i == 0);
+          tb.PrintF(L"%q", para->StringVal);
           break;
         default:
           sVERIFYFALSE;
         }
       }
-      if(para->Count>1)
+
+      if(para->Count > 1)
         tb.Print(L" ]");
+
       tb.Print(L";\n");
     }
   }
@@ -1753,15 +1889,15 @@ void wOp::MakeSource(sTextBuffer &tb)
   // insert imports
 
   if(Class->Bind3Para)
-    (*Class->Bind3Para)(this,tb);
+    (*Class->Bind3Para)(this, tb);
 
   // add code
 
-  tb.PrintF(L"#line %d \"%s\"\n",ScriptSourceLine,opname);
-  tb.Print(ScriptSource.Get()+ScriptSourceOffset);
+  tb.PrintF(L"#line %d \"%s\"\n", ScriptSourceLine, opname);
+  tb.Print(ScriptSource.Get() + ScriptSourceOffset);
 }
 
-ScriptContext *wOp::GetScript()
+ScriptContext* wOp::GetScript()
 {
   if(!Script)
   {
@@ -1772,26 +1908,29 @@ ScriptContext *wOp::GetScript()
     MakeSource(tb);
     Script->Compile(tb.Get());
   }
+
   return Script;
 }
 
-
-wOp *wOp::FirstInputOrLink() 
+wOp* wOp::FirstInputOrLink()
 {
   if(Class->Flags & (wCF_CALL))
   {
-    if(Links.IsIndexValid(0) && Links[0].Link) 
-      return Links[0].Link; 
+    if(Links.IsIndexValid(0) && Links[0].Link)
+      return Links[0].Link;
+
     if(Inputs.IsIndexValid(0) && Inputs[0])
-      return Inputs[0]; 
+      return Inputs[0];
   }
   else
   {
     if(Inputs.IsIndexValid(0) && Inputs[0])
-      return Inputs[0]; 
-    if(Links.IsIndexValid(0) && Links[0].Link) 
-      return Links[0].Link; 
+      return Inputs[0];
+
+    if(Links.IsIndexValid(0) && Links[0].Link)
+      return Links[0].Link;
   }
+
   return 0;
 }
 
@@ -1799,38 +1938,44 @@ sBool wOp::CheckShellSwitch()
 {
   if(!(Class->Flags & wCF_SHELLSWITCH))   // not a shell switch, always good
     return 1;
-  
+
   sInt f = EditU()[0];
 
-  sInt bit = Doc->ShellSwitches & (1<<(f&31)) ? 1 : 0;
-  if(f&0x100)                             // negative flag check
+  sInt bit = Doc->ShellSwitches & (1 << (f & 31)) ? 1 : 0;
+
+  if(f & 0x100)                             // negative flag check
     bit = !bit;
+
   return bit;
 }
 
 /****************************************************************************/
 
-template <class streamer> void wOp::Serialize_(streamer &s)
+template<class streamer>
+void wOp::Serialize_(streamer& s)
 {
-  sInt version = s.Header(sSerId::Werkkzeug4Op,12);
-  sInt dummy=0;
+  sInt version = s.Header(sSerId::Werkkzeug4Op, 12);
+  sInt dummy = 0;
 
   if(version)
   {
-    wDocName classname,typenam,opname;
+    wDocName classname, typenam, opname;
+
     if(s.IsReading())
     {
       s | opname;
       s | classname;
       s | typenam;
-      wClass *cl = Doc->FindClass(classname,typenam);
+      wClass* cl = Doc->FindClass(classname, typenam);
+
       if(!cl)
       {
-        sDPrintF(L"try to load unknown classname <%s> type <%s>\n",classname,typenam);
-        cl = Doc->FindClass(L"UnknownOp",L"AnyType");
+        sDPrintF(L"try to load unknown classname <%s> type <%s>\n", classname, typenam);
+        cl = Doc->FindClass(L"UnknownOp", L"AnyType");
         Doc->UnknownOps++;
         sVERIFY(cl);
       }
+
       Init(cl);
       Name = opname;
     }
@@ -1843,65 +1988,77 @@ template <class streamer> void wOp::Serialize_(streamer &s)
       s | typenam;
     }
 
-    if(version>=12)
+    if(version >= 12)
       s | dummy;
 
     sInt words = Class->ParaWords;
     s | words;
 
-    s.ArrayU32(EditU(),sMin(words,Class->ParaWords));
-    if(words>Class->ParaWords)
-      s.Skip((words-Class->ParaWords)*4);
+    s.ArrayU32(EditU(), sMin(words, Class->ParaWords));
+
+    if(words > Class->ParaWords)
+      s.Skip((words - Class->ParaWords) * 4);
 
     sInt strings = Class->ParaStrings;
     s | strings;
+
     if(s.IsWriting())
     {
-      sVERIFY(strings<=Class->ParaStrings);
-      for(sInt i=0;i<strings;i++)
+      sVERIFY(strings <= Class->ParaStrings);
+
+      for(sInt i = 0; i < strings; i++)
         s | EditString[i];
     }
     else
     {
-      sInt iend = sMin(Class->ParaStrings,strings);
-      for(sInt i=0;i<iend;i++)
+      sInt iend = sMin(Class->ParaStrings, strings);
+
+      for(sInt i = 0; i < iend; i++)
         s | EditString[i];
+
       // skip unused string
       sTextBuffer discard;
-      for(sInt i=iend;i<strings;i++)
+
+      for(sInt i = iend; i < strings; i++)
         s | &discard;
     }
 
-    if(version>=3)
+    if(version >= 3)
     {
       sInt count = Links.GetCount();
       s | count;
-      for(sInt i=0;i<count;i++)
+
+      for(sInt i = 0; i < count; i++)
       {
         wOpInputInfo in;
+
         if(s.IsReading())
         {
           s | in.LinkName | in.Select;
-          if(i<Links.GetCount())      // ist das nicht immer TRUE?
+
+          if(i < Links.GetCount())      // ist das nicht immer TRUE?
           {
             Links[i].LinkName = in.LinkName;
             sInt method = Class->Inputs[i].Flags & wCIF_METHODMASK;
-            if(method==wCIF_METHODBOTH || method==wCIF_METHODCHOOSE)
+
+            if(method == wCIF_METHODBOTH || method == wCIF_METHODCHOOSE)
               Links[i].Select = in.Select;
           }
-          if(version>=4)
+
+          if(version >= 4)
           {
-            sInt test=0;
+            sInt test = 0;
             s | test;
+
             if(test)
             {
-              if(i<Links.GetCount() && Links[i].Default)        // normal case
+              if(i < Links.GetCount() && Links[i].Default)        // normal case
               {
                 s | Links[i].Default;
               }
               else                        // unknown ops
               {
-                wOp *def = new wOp;
+                wOp* def = new wOp;
                 s | def;
               }
             }
@@ -1910,9 +2067,11 @@ template <class streamer> void wOp::Serialize_(streamer &s)
         else
         {
           s | Links[i].LinkName | Links[i].Select;
-          if(version>=4)
+
+          if(version >= 4)
           {
             sInt test;
+
             if(Links[i].Default)
             {
               test = 1;
@@ -1927,7 +2086,8 @@ template <class streamer> void wOp::Serialize_(streamer &s)
         }
       }
     }
-    if(version>=5)
+
+    if(version >= 5)
     {
       if(s.IsReading())                               // delete default data before reading
         sDeleteAll(ArrayData);
@@ -1935,73 +2095,89 @@ template <class streamer> void wOp::Serialize_(streamer &s)
       sInt words = Class->ArrayCount;                 // words per array entry
       s | words;
       sInt skips = words - Class->ArrayCount;
-      words = sMin(words,Class->ArrayCount);
+      words = sMin(words, Class->ArrayCount);
 
       s.Array(ArrayData);                             // number of array entries
 
       if(s.IsReading())                               // when reading, allocate and clear the array entries
       {
-        for(sInt i=0;i<ArrayData.GetCount();i++)
+        for(sInt i = 0; i < ArrayData.GetCount(); i++)
         {
           ArrayData[i] = new sU32[Class->ArrayCount];
-          sSetMem(ArrayData[i],0,Class->ArrayCount*sizeof(sU32));
+          sSetMem(ArrayData[i], 0, Class->ArrayCount * sizeof(sU32));
         }
       }
 
-      for(sInt i=0;i<ArrayData.GetCount();i++)        // entry data
+      for(sInt i = 0; i < ArrayData.GetCount(); i++)        // entry data
       {
-        s.ArrayU32((sU32 *)ArrayData[i],words);
-        if(s.IsReading() && skips>0)
-          s.Skip(skips*4);
+        s.ArrayU32((sU32*)ArrayData[i], words);
+
+        if(s.IsReading() && skips > 0)
+          s.Skip(skips * 4);
       }
     }
 
-    if(version==6) 
+    if(version == 6)
     {
-      sInt animcount=0;
-      sU32 id=0;
+      sInt animcount = 0;
+      sU32 id = 0;
       s | animcount;
+
       if(animcount)
       {
         if(s.IsReading())
         {
-          for(sInt i=0;i<animcount;i++)
+          for(sInt i = 0; i < animcount; i++)
           {
             s | id;
-            sVERIFY(id==0);
+            sVERIFY(id == 0);
           }
         }
       }
     }
-    if(version>=8)
+
+    if(version >= 8)
     {
       s | ScriptShow;
       ScriptSource.Serialize(s);
       UpdateScript();
     }
-    if(version>=9)
+
+    if(version >= 9)
     {
-      wScriptParaInfo *sv;
+      wScriptParaInfo* sv;
+
       if(s.IsReading())
         ScriptParas.Clear();
+
       s.Array(ScriptParas);
-      sFORALL(ScriptParas,sv)
-        for(sInt i=0;i<4;i++)
-          s | sv->IntVal[i];
+      sFORALL(ScriptParas, sv)
+
+      for(sInt i = 0; i < 4; i++)
+        s | sv->IntVal[i];
     }
-    if(version>=10)
+
+    if(version >= 10)
     {
-      wScriptParaInfo *sv;
-      sFORALL(ScriptParas,sv)
-        s | sv->StringVal;
+      wScriptParaInfo* sv;
+      sFORALL(ScriptParas, sv)
+      s | sv->StringVal;
     }
   }
 
-  if(version>=11)
+  if(version >= 11)
     s.Footer();
 }
-void wOp::Serialize(sWriter &stream) { Serialize_(stream); }
-void wOp::Serialize(sReader &stream) { Serialize_(stream); }
+
+void wOp::Serialize(sWriter& stream)
+{
+  Serialize_(stream);
+}
+
+void wOp::Serialize(sReader& stream)
+{
+  Serialize_(stream);
+}
 
 /****************************************************************************/
 /****************************************************************************/
@@ -2017,9 +2193,11 @@ void wTreeOp::Tag()
   TreeInfo.Need();
 }
 
-template <class streamer> void wTreeOp::Serialize_(streamer &s)
+template<class streamer>
+void wTreeOp::Serialize_(streamer& s)
 {
-  sInt version = s.Header(sSerId::wTreeOp,1);
+  sInt version = s.Header(sSerId::wTreeOp, 1);
+
   if(version)
   {
     wOp::Serialize(s);
@@ -2029,8 +2207,15 @@ template <class streamer> void wTreeOp::Serialize_(streamer &s)
   }
 }
 
-void wTreeOp::Serialize(sWriter &s) { Serialize_(s); }
-void wTreeOp::Serialize(sReader &s) { Serialize_(s); }
+void wTreeOp::Serialize(sWriter& s)
+{
+  Serialize_(s);
+}
+
+void wTreeOp::Serialize(sReader& s)
+{
+  Serialize_(s);
+}
 
 /****************************************************************************/
 
@@ -2051,15 +2236,17 @@ void wStackOp::Tag()
   Page->Need();
 }
 
-void wStackOp::CopyFrom(wStackOp *src)
+void wStackOp::CopyFrom(wStackOp* src)
 {
   wOp::CopyFrom(src);
   Hide = src->Hide;
 }
 
-template <class streamer> void wStackOp::Serialize_(streamer &s)
+template<class streamer>
+void wStackOp::Serialize_(streamer& s)
 {
-  sInt version = s.Header(sSerId::wStackOp,1);
+  sInt version = s.Header(sSerId::wStackOp, 1);
+
   if(version)
   {
     wOp::Serialize(s);
@@ -2068,8 +2255,15 @@ template <class streamer> void wStackOp::Serialize_(streamer &s)
   }
 }
 
-void wStackOp::Serialize(sWriter &s) { Serialize_(s); }
-void wStackOp::Serialize(sReader &s) { Serialize_(s); }
+void wStackOp::Serialize(sWriter& s)
+{
+  Serialize_(s);
+}
+
+void wStackOp::Serialize(sReader& s)
+{
+  Serialize_(s);
+}
 
 /****************************************************************************/
 
@@ -2078,14 +2272,16 @@ wOpData::wOpData()
   Valid = 0;
   ElementBytes = 0;
 }
+
 wOpData::~wOpData()
 {
   Clear();
 }
 
-void wOpData::CopyFrom(wOp *op)
+void wOpData::CopyFrom(wOp* op)
 {
   Clear();
+
   if(op)
   {
     Data.Resize(op->Class->ParaWords);
@@ -2093,26 +2289,26 @@ void wOpData::CopyFrom(wOp *op)
     sInt links = op->Links.GetCount();
     LinkNames.Resize(links);
     LinkFlags.Resize(links);
-    ElementBytes = op->Class->ArrayCount*4;
+    ElementBytes = op->Class->ArrayCount * 4;
     ArrayData.Resize(op->ArrayData.GetCount());
 
-    for(sInt i=0;i<op->Class->ParaWords;i++)
+    for(sInt i = 0; i < op->Class->ParaWords; i++)
       Data[i] = op->EditU()[i];
 
-    for(sInt i=0;i<op->Class->ParaStrings;i++)
+    for(sInt i = 0; i < op->Class->ParaStrings; i++)
       if(op->EditString[i])
         Strings[i] = op->EditString[i]->Get();
 
-    for(sInt i=0;i<links;i++)
+    for(sInt i = 0; i < links; i++)
     {
       LinkNames[i] = op->Links[i].LinkName;
       LinkFlags[i] = op->Links[i].Select;
     }
 
-    for(sInt i=0;i<op->ArrayData.GetCount();i++)
+    for(sInt i = 0; i < op->ArrayData.GetCount(); i++)
     {
       ArrayData[i] = new sU8[ElementBytes];
-      sCopyMem(ArrayData[i],op->ArrayData[i],ElementBytes);
+      sCopyMem(ArrayData[i], op->ArrayData[i], ElementBytes);
     }
   }
 
@@ -2129,90 +2325,123 @@ void wOpData::Clear()
   Data.Clear();
 }
 
-void wOpData::CopyTo(wOp *op)
+void wOpData::CopyTo(wOp* op)
 {
   if(IsValid(op))
   {
-    sCopyMem(op->EditData,Data.GetData(),sizeof(sU32)*op->Class->ParaWords);
-    for(sInt i=0;i<Strings.GetCount();i++)
+    sCopyMem(op->EditData, Data.GetData(), sizeof(sU32) * op->Class->ParaWords);
+
+    for(sInt i = 0; i < Strings.GetCount(); i++)
     {
       sVERIFY(op->EditString[i]);
       op->EditString[i]->Clear();
       op->EditString[i]->Print(Strings[i]);
     }
-    for(sInt i=0;i<LinkNames.GetCount();i++)
+
+    for(sInt i = 0; i < LinkNames.GetCount(); i++)
     {
       op->Links[i].LinkName = LinkNames[i];
       op->Links[i].Select = LinkFlags[i];
     }
+
     sDeleteAll(op->ArrayData);
-    for(sInt i=0;i<ArrayData.GetCount();i++)
+
+    for(sInt i = 0; i < ArrayData.GetCount(); i++)
     {
       op->AddArray(op->GetArrayCount());
-      sCopyMem(op->ArrayData[i],ArrayData[i],ElementBytes);
+      sCopyMem(op->ArrayData[i], ArrayData[i], ElementBytes);
     }
   }
 }
 
-sBool wOpData::IsSame(wOp *op)
+sBool wOpData::IsSame(wOp* op)
 {
-  if(!IsValid(op)) return 0;
-  if(sCmpMem(Data.GetData(),op->EditData,sizeof(sU32)*op->Class->ParaWords)!=0) return 0;
-  for(sInt i=0;i<op->Class->ParaStrings;i++)
+  if(!IsValid(op))
+    return 0;
+
+  if(sCmpMem(Data.GetData(), op->EditData, sizeof(sU32) * op->Class->ParaWords) != 0)
+    return 0;
+
+  for(sInt i = 0; i < op->Class->ParaStrings; i++)
   {
     if(Strings[i].IsEmpty())
     {
-      if(op->EditString[i]!=0)
-        if(op->EditString[i]->GetCount()!=0)
+      if(op->EditString[i] != 0)
+        if(op->EditString[i]->GetCount() != 0)
           return 0;
     }
     else
     {
-      if(op->EditString[i]==0) return 0;
-      if(sCmpString(op->EditString[i]->Get(),Strings[i])!=0) return 0;
+      if(op->EditString[i] == 0)
+        return 0;
+
+      if(sCmpString(op->EditString[i]->Get(), Strings[i]) != 0)
+        return 0;
     }
   }
-  for(sInt i=0;i<LinkNames.GetCount();i++)
+
+  for(sInt i = 0; i < LinkNames.GetCount(); i++)
   {
-    if(LinkNames[i]!=op->Links[i].LinkName) return 0;
-    if(LinkFlags[i]!=op->Links[i].Select) return 0;
+    if(LinkNames[i] != op->Links[i].LinkName)
+      return 0;
+
+    if(LinkFlags[i] != op->Links[i].Select)
+      return 0;
   }
-  if(op->ArrayData.GetCount()!=ArrayData.GetCount()) return 0;
-  if(op->Class->ArrayCount*4!=ElementBytes) return 0;
-  for(sInt i=0;i<op->ArrayData.GetCount();i++)
+
+  if(op->ArrayData.GetCount() != ArrayData.GetCount())
+    return 0;
+
+  if(op->Class->ArrayCount * 4 != ElementBytes)
+    return 0;
+
+  for(sInt i = 0; i < op->ArrayData.GetCount(); i++)
   {
-    if(sCmpMem(op->ArrayData[i],ArrayData[i],ElementBytes)!=0) return 0;
+    if(sCmpMem(op->ArrayData[i], ArrayData[i], ElementBytes) != 0)
+      return 0;
   }
 
   return 1;
 }
 
-sBool wOpData::IsValid(wOp *op)
+sBool wOpData::IsValid(wOp* op)
 {
-  if(!Valid) return 0;
-  if(Valid!=op) return 0;
-  if(Data.GetCount()!=op->Class->ParaWords) return 0;
-  if(Strings.GetCount()!=op->Class->ParaStrings) return 0;
-  if(LinkNames.GetCount()!=op->Links.GetCount()) return 0;
-  if(ElementBytes != op->Class->ArrayCount*4) return 0;
+  if(!Valid)
+    return 0;
+
+  if(Valid != op)
+    return 0;
+
+  if(Data.GetCount() != op->Class->ParaWords)
+    return 0;
+
+  if(Strings.GetCount() != op->Class->ParaStrings)
+    return 0;
+
+  if(LinkNames.GetCount() != op->Links.GetCount())
+    return 0;
+
+  if(ElementBytes != op->Class->ArrayCount * 4)
+    return 0;
+
   return 1;
 }
 
 /****************************************************************************/
 /*
-wImportOp::wImportOp()
-{
-}
+   wImportOp::wImportOp()
+   {
+   }
 
-wImportOp::~wImportOp()
-{
-}
+   wImportOp::~wImportOp()
+   {
+   }
 
-void wImportOp::Tag()
-{
-  wOp::Tag();
-}
-*/
+   void wImportOp::Tag()
+   {
+   wOp::Tag();
+   }
+ */
 /****************************************************************************/
 /***                                                                      ***/
 /***   options                                                            ***/
@@ -2242,50 +2471,92 @@ void wEditOptions::Init()
   DefaultCamSpeed = 0;
 }
 
-template <class streamer> void wEditOptions::Serialize_(streamer &s)
+template<class streamer>
+void wEditOptions::Serialize_(streamer& s)
 {
   sPoolString dummy;
-  sInt version = s.Header(sSerId::Wz4EditOptions,18);
+  sInt version = s.Header(sSerId::Wz4EditOptions, 18);
   sInt dummyi = 32;
 
   if(version)
   {
     s | File | dummy | Screen | BackColor;
-    if(version>=2)  s | GridColor;
-    if(version>=3)  s | SplineMode;
-    if(version>=4)  s | Flags;
-    if(version>=5)  s | AmbientColor;
-    if(version>=6)  s | Volume;
-    if(version>=7)  s | ClipNear | ClipFar | MoveSpeed;
-    if(version>=8)  s | AutosavePeriod;
-    if(version>=9)  s | MultiSample;
-    if(version>=10 && version<11) s | dummyi;
-    if(version>=12) s | ZoomFont;
-    if(version>=13) s | MemLimit;
-    if(version>=14) s | ExpensiveIPPQuality;
-    if(version>=15) s | Theme | &CustomTheme;
-    if(version>=16) s | DefaultCamSpeed;
-    if(version==17) s | dummy;
+
+    if(version >= 2)
+      s | GridColor;
+
+    if(version >= 3)
+      s | SplineMode;
+
+    if(version >= 4)
+      s | Flags;
+
+    if(version >= 5)
+      s | AmbientColor;
+
+    if(version >= 6)
+      s | Volume;
+
+    if(version >= 7)
+      s | ClipNear | ClipFar | MoveSpeed;
+
+    if(version >= 8)
+      s | AutosavePeriod;
+
+    if(version >= 9)
+      s | MultiSample;
+
+    if(version >= 10 && version < 11)
+      s | dummyi;
+
+    if(version >= 12)
+      s | ZoomFont;
+
+    if(version >= 13)
+      s | MemLimit;
+
+    if(version >= 14)
+      s | ExpensiveIPPQuality;
+
+    if(version >= 15)
+      s | Theme | &CustomTheme;
+
+    if(version >= 16)
+      s | DefaultCamSpeed;
+
+    if(version == 17)
+      s | dummy;
+
     s.Footer();
   }
 }
 
-void wEditOptions::Serialize(sWriter &stream) { Serialize_(stream); }
-void wEditOptions::Serialize(sReader &stream) { Serialize_(stream); }
+void wEditOptions::Serialize(sWriter& stream)
+{
+  Serialize_(stream);
+}
+
+void wEditOptions::Serialize(sReader& stream)
+{
+  Serialize_(stream);
+}
 
 void wEditOptions::ApplyTheme()
 {
-  const sGuiTheme *gt=0;
-  switch (Theme)
+  const sGuiTheme* gt = 0;
+  switch(Theme)
   {
-  case TH_DEFAULT: gt=&sGuiThemeDefault; break;
-  case TH_DARKER: gt=&sGuiThemeDarker; break;
-  case TH_CUSTOM: gt=&CustomTheme; break;
+  case TH_DEFAULT: gt = &sGuiThemeDefault;
+    break;
+  case TH_DARKER: gt = &sGuiThemeDarker;
+    break;
+  case TH_CUSTOM: gt = &CustomTheme;
+    break;
   }
+
   sVERIFY(gt);
   sGui->SetTheme(*gt);
 }
-
 
 /****************************************************************************/
 
@@ -2315,35 +2586,58 @@ void wDocOptions::Init()
 
 void wDocOptions::UpdateTiming()
 {
-  BpmSegment *s;
-  sFORALL(BpmSegments,s)
+  BpmSegment* s;
+  sFORALL(BpmSegments, s)
   {
-    s->Bps = sInt(s->Bpm/60*0x10000);
-    s->Milliseconds = sMulDiv(s->Beats*0x10000,1000,s->Bps);
-    s->Samples = sMulDiv(s->Beats*0x10000,SampleRate,s->Bps);
+    s->Bps = sInt(s->Bpm / 60 * 0x10000);
+    s->Milliseconds = sMulDiv(s->Beats * 0x10000, 1000, s->Bps);
+    s->Samples = sMulDiv(s->Beats * 0x10000, SampleRate, s->Bps);
   }
 }
 
-template <class streamer> void wDocOptions::Serialize_(streamer &s)
+template<class streamer>
+void wDocOptions::Serialize_(streamer& s)
 {
-  sInt version = s.Header(sSerId::Wz4DocOptions,16);
-  sVERIFY(sCOUNTOF(sColorPickerWindow::PaletteColors)==32);
+  sInt version = s.Header(sSerId::Wz4DocOptions, 16);
+  sVERIFY(sCOUNTOF(sColorPickerWindow::PaletteColors) == 32);
+
   if(version)
   {
     s | ProjectPath;
-    if(version>=2)  s | ProjectName;
-    if(version>=11) s | ProjectId | SiteId;
-    if(version>=3)  s | TextureQuality;
-    if(version>=4)  s | LevelOfDetail;
-    if(version>=5)  s | BeatsPerSecond | MusicFile;
-    if(version>=10) s | BeatStart;
-    if(version>=9)  s | Beats;
-    if(version>=6)  s | ScreenX | ScreenY;
-    if(version>=7)  s | PageName;
-    if(version>=8)  s | Packfiles;
-    if(version>=12)
+
+    if(version >= 2)
+      s | ProjectName;
+
+    if(version >= 11)
+      s | ProjectId | SiteId;
+
+    if(version >= 3)
+      s | TextureQuality;
+
+    if(version >= 4)
+      s | LevelOfDetail;
+
+    if(version >= 5)
+      s | BeatsPerSecond | MusicFile;
+
+    if(version >= 10)
+      s | BeatStart;
+
+    if(version >= 9)
+      s | Beats;
+
+    if(version >= 6)
+      s | ScreenX | ScreenY;
+
+    if(version >= 7)
+      s | PageName;
+
+    if(version >= 8)
+      s | Packfiles;
+
+    if(version >= 12)
     {
-      for(sInt i=0;i<32;i++)
+      for(sInt i = 0; i < 32; i++)
       {
         s | sColorPickerWindow::PaletteColors[i][0];
         s | sColorPickerWindow::PaletteColors[i][1];
@@ -2352,29 +2646,33 @@ template <class streamer> void wDocOptions::Serialize_(streamer &s)
       }
     }
 
-    if(version>=13)
+    if(version >= 13)
     {
       if(s.IsReading())
         BpmSegments.Clear();
+
       s | SampleRate | VariableBpm;
       s.Array(BpmSegments);
-      BpmSegment *e;
-      sFORALL(BpmSegments,e)
-        s | e->Beats | e->Bpm;
+      BpmSegment* e;
+      sFORALL(BpmSegments, e)
+      s | e->Beats | e->Bpm;
     }
-    if(version>=14)
+
+    if(version >= 14)
       s | DialogFlags;
 
-    if(version>=15)
+    if(version >= 15)
     {
       if(s.IsReading())
         HiddenParts.Clear();
+
       s.Array(HiddenParts);
-      HiddenPart *hp;
-      sFORALL(HiddenParts,hp)
+      HiddenPart* hp;
+      sFORALL(HiddenParts, hp)
       {
         s | hp->Code | hp->Store | hp->Bpm | hp->LastBeat | hp->Flags;
-        if(version>=16)
+
+        if(version >= 16)
           s | hp->Song;
       }
     }
@@ -2385,8 +2683,15 @@ template <class streamer> void wDocOptions::Serialize_(streamer &s)
   UpdateTiming();
 }
 
-void wDocOptions::Serialize(sWriter &stream) { Serialize_(stream); }
-void wDocOptions::Serialize(sReader &stream) { Serialize_(stream); }
+void wDocOptions::Serialize(sWriter& stream)
+{
+  Serialize_(stream);
+}
+
+void wDocOptions::Serialize(sReader& stream)
+{
+  Serialize_(stream);
+}
 
 /****************************************************************************/
 
@@ -2407,7 +2712,7 @@ void RegisterWZ4Classes();
 
 wDocument::wDocument()
 {
-  wClass *cl;
+  wClass* cl;
 
   Doc = this;
   ViewLog = 0;
@@ -2424,27 +2729,29 @@ wDocument::wDocument()
   BlockedChanges = 0;
 
   ShellSwitches = 0;
-  for(sInt i=0;i<wSWITCHES;i++)
-    ShellSwitchOptions[i].PrintF(L"%d",i);
+
+  for(sInt i = 0; i < wSWITCHES; i++)
+    ShellSwitchOptions[i].PrintF(L"%d", i);
 
   sSetRunlevel(0x120);
   RegisterWZ4Classes();
 
-  sSortUp(Types,&wType::Order);
+  sSortUp(Types, &wType::Order);
 
-  sFORALL(Classes,cl)
+  sFORALL(Classes, cl)
   {
     if(cl->Flags & wCF_CONVERSION)
     {
-      sVERIFY(cl->Inputs.GetCount()==1);
+      sVERIFY(cl->Inputs.GetCount() == 1);
       sVERIFY(cl->Inputs[0].Type);
       Conversions.AddTail(cl);
     }
+
     if(!cl->Extract.IsEmpty())
     {
-      sVERIFY(cl->Inputs.GetCount()==1);
+      sVERIFY(cl->Inputs.GetCount() == 1);
       sVERIFY(cl->Inputs[0].Type);
-      sVERIFY(cl->ParaStrings==1);
+      sVERIFY(cl->ParaStrings == 1);
       Extractions.AddTail(cl);
     }
   }
@@ -2452,7 +2759,7 @@ wDocument::wDocument()
   Exe = new wExecutive;
   Builder = new wBuilder;
 
-  sSortUp(Classes,&wClass::Label);
+  sSortUp(Classes, &wClass::Label);
 
   DefaultDoc();
 
@@ -2476,15 +2783,15 @@ void wDocument::Tag()
   sNeed(Pages);
   sNeed(Classes);
   sNeed(Types);
-  sNeed(Conversions);  
-  sNeed(Extractions);  
+  sNeed(Conversions);
+  sNeed(Extractions);
   sNeed(DirtyWeakOps);
   sNeed(AllOps);
   sNeed(Includes);
 
-  wHandleSelectTag *tag;
-  sFORALL(Doc->SelectedHandleTags,tag)
-    tag->Op->Need();
+  wHandleSelectTag* tag;
+  sFORALL(Doc->SelectedHandleTags, tag)
+  tag->Op->Need();
   CurrentPage->Need();
 }
 
@@ -2497,27 +2804,31 @@ void wDocument::New()
   DocChanged = sFALSE;
 }
 
-sBool wDocument::Load(const sChar *filename)
+sBool wDocument::Load(const sChar* filename)
 {
-  wDocInclude *inc;
+  wDocInclude* inc;
 
-  sBool ok = sLoadObject(filename,this);
+  sBool ok = sLoadObject(filename, this);
+
   if(ok)
     Filename = filename;
-  sFORALL(Includes,inc)
-    if(ok)
-      if(!inc->Load())
-        ok = 0;
+
+  sFORALL(Includes, inc)
+
+  if(ok)
+    if(!inc->Load())
+      ok = 0;
 
   // sort pages for includes
 
-  sPoolString *str;
-  sArray<wPage *> oldpages;
+  sPoolString* str;
+  sArray<wPage*> oldpages;
   oldpages = Pages;
   Pages.Clear();
-  sFORALL(PageNames,str)
+  sFORALL(PageNames, str)
   {
-    wPage *page = sFind(oldpages,&wPage::Name,*str);
+    wPage* page = sFind(oldpages, &wPage::Name, *str);
+
     if(page)
     {
       oldpages.Rem(page);
@@ -2534,105 +2845,119 @@ sBool wDocument::Load(const sChar *filename)
   return ok;
 }
 
-sBool wDocument::Save(const sChar *filename)
+sBool wDocument::Save(const sChar* filename)
 {
-  wDocInclude *inc;
+  wDocInclude* inc;
 
-  sBool ok = sSaveObject(filename,this);
-  sFORALL(Includes,inc)
-    if(ok)
-      if(!inc->Save())
-        ok = 0;
+  sBool ok = sSaveObject(filename, this);
+  sFORALL(Includes, inc)
+
+  if(ok)
+    if(!inc->Save())
+      ok = 0;
 
   if(ok)
     Filename = filename;
+
   return ok;
 }
 
 void wDocument::DefaultDoc()
 {
-  wPage *page;
-  Pages.AddTail(page = new wPage); page->DefaultName();
+  wPage* page;
+  Pages.AddTail(page = new wPage);
+  page->DefaultName();
   Connect();
 }
 
-void wDocument::RemoveType(wType *type)
+void wDocument::RemoveType(wType* type)
 {
-  sRemEqual(Classes,&wClass::OutputType,type);
+  sRemEqual(Classes, &wClass::OutputType, type);
   Types.RemOrder(type);
 }
 
-void wDocument::ConnectError(wOp *op,const sChar *text)
+void wDocument::ConnectError(wOp* op, const sChar* text)
 {
   if(!op->ConnectErrorString)
     op->ConnectErrorString = text;
 }
 
-static sBool isname(const sChar *s)
+static sBool isname(const sChar* s)
 {
   for(;;)
   {
-    if(*s!='-' && !sIsLetter(*s++)) return 0;
-    while(*s=='-' || sIsLetter(*s) || sIsDigit(*s)) s++;
-    if(*s==0) return 1;
-    if(*s!=':' && *s!='.') return 0;
+    if(*s != '-' && !sIsLetter(*s++))
+      return 0;
+
+    while(*s == '-' || sIsLetter(*s) || sIsDigit(*s))
+      s++;
+
+    if(*s == 0)
+      return 1;
+
+    if(*s != ':' && *s != '.')
+      return 0;
+
     s++;
   }
 }
 
-static void RootConnectR(wOp *op)
+static void RootConnectR(wOp* op)
 {
   if(op && !op->ConnectedToRoot)
   {
-    wOp *c;
-    wOpInputInfo *l;
+    wOp* c;
+    wOpInputInfo* l;
     op->ConnectedToRoot = 1;
-    sFORALL(op->Inputs,c)
-      RootConnectR(c);
-    sFORALL(op->Links,l)
-      RootConnectR(l->Link);
+    sFORALL(op->Inputs, c)
+    RootConnectR(c);
+    sFORALL(op->Links, l)
+    RootConnectR(l->Link);
   }
 }
 
 void wDocument::Connect()
 {
-  wPage *page;
-  wOp *op,*in;
-  wOpInputInfo *link;
+  wPage* page;
+  wOp* op, * in;
+  wOpInputInfo* link;
 
-//  if(!ReconnectFlag)
-//    return;
+// if(!ReconnectFlag)
+// return;
 
   AllOps.Clear();
   Stores.Clear();
 
   // make list of ALL ops
 
-  sFORALL(Pages,page)
+  sFORALL(Pages, page)
   {
-    sFORALL(page->Ops,op)
-      op->Page = page;
-    sFORALL(page->Tree,op)
-      op->Page = page;
+    sFORALL(page->Ops, op)
+    op->Page = page;
+    sFORALL(page->Tree, op)
+    op->Page = page;
+
     if(page->IsTree)
     {
-      AllOps.Add((sArray<wOp *>&)page->Tree);
+      AllOps.Add((sArray<wOp*> &)page->Tree);
       sVERIFY(page->Ops.IsEmpty());
     }
     else
     {
-      AllOps.Add((sArray<wOp *>&)page->Ops);
+      AllOps.Add((sArray<wOp*> &)page->Ops);
       sVERIFY(page->Tree.IsEmpty());
     }
   }
 
   sInt max = AllOps.GetCount();
-  for(sInt i=0;i<max;i++)
+
+  for(sInt i = 0; i < max; i++)
   {
     op = AllOps[i];
-    sFORALL(op->Links,link)
+    sFORALL(op->Links, link)
     {
       link->DefaultUsed = 0;
+
       if(link->Default)
         AllOps.AddTail(link->Default);
     }
@@ -2642,7 +2967,7 @@ void wDocument::Connect()
 
   // clear all ops, find stores
 
-  sFORALL(AllOps,op)
+  sFORALL(AllOps, op)
   {
     op->BuilderNode = 0;
     op->ConnectErrorString = 0;
@@ -2655,7 +2980,8 @@ void wDocument::Connect()
     op->Inputs.Clear();
     op->Outputs.Clear();
     op->WeakOutputs.Clear();
-    if(op->Name[0] && op->Name[0]!=';' && !(op->Class->Flags & wCF_COMMENT))
+
+    if(op->Name[0] && op->Name[0] != ';' && !(op->Class->Flags & wCF_COMMENT))
     {
       if(isname(op->Name))
       {
@@ -2663,7 +2989,7 @@ void wDocument::Connect()
       }
       else
       {
-        ConnectError(op,L"store name must be c-style name. '-' is allowed as a character. names starting with ';' are ignored");
+        ConnectError(op, L"store name must be c-style name. '-' is allowed as a character. names starting with ';' are ignored");
         op->ConnectError = 1;
       }
     }
@@ -2671,21 +2997,22 @@ void wDocument::Connect()
 
   // sort stores, find doubles
 
-  sHeapSortUp(Stores,&wOp::Name);
-  for(sInt i=0;i<Stores.GetCount()-1;i++)
+  sHeapSortUp(Stores, &wOp::Name);
+
+  for(sInt i = 0; i < Stores.GetCount() - 1; i++)
   {
-    if(sCmpString(Stores[i]->Name,Stores[i+1]->Name)==0)
+    if(sCmpString(Stores[i]->Name, Stores[i + 1]->Name) == 0)
     {
-      ConnectError(Stores[i],L"store name used twice");
+      ConnectError(Stores[i], L"store name used twice");
       Stores[i]->ConnectError = 1;
-      ConnectError(Stores[i+1],L"store name used twice");
-      Stores[i+1]->ConnectError = 1;
+      ConnectError(Stores[i + 1], L"store name used twice");
+      Stores[i + 1]->ConnectError = 1;
     }
   }
 
-  // reconnect 
+  // reconnect
 
-  sFORALL(Pages,page)
+  sFORALL(Pages, page)
   {
     if(page->IsTree)
       ConnectTree(page->Tree);
@@ -2695,21 +3022,21 @@ void wDocument::Connect()
 
   // check connection & links
 
-  sFORALL(AllOps,op)
+  sFORALL(AllOps, op)
   {
-
     // find links
 
-    sFORALL(op->Links,link)
+    sFORALL(op->Links, link)
     {
       link->Link = 0;
-      if(link->LinkName[0] && link->Select==1)
+
+      if(link->LinkName[0] && link->Select == 1)
       {
         link->Link = FindStore(link->LinkName);
 
         if(!link->Link)
         {
-          ConnectError(op,L"link/load name not found");
+          ConnectError(op, L"link/load name not found");
           op->ConnectError = 1;
         }
       }
@@ -2719,47 +3046,51 @@ void wDocument::Connect()
   // link all outputs.
   // this must be done before realizing connection changes
 
-  sFORALL(AllOps,op)
+  sFORALL(AllOps, op)
   {
-    sFORALL(op->Inputs,in)
-      if(in)
-        in->Outputs.AddTail(op);
-    sFORALL(op->Links,link)
-      if(link->Link)
-        link->Link->Outputs.AddTail(op);
+    sFORALL(op->Inputs, in)
+
+    if(in)
+      in->Outputs.AddTail(op);
+
+    sFORALL(op->Links, link)
+
+    if(link->Link)
+      link->Link->Outputs.AddTail(op);
   }
 
   // do checking using the builder. this also identifies weak outputs
 
-  sFORALL(AllOps,op)
+  sFORALL(AllOps, op)
   {
-    if(op->Outputs.GetCount()==0 && !op->CheckedByBuild)
+    if(op->Outputs.GetCount() == 0 && !op->CheckedByBuild)
       Builder->Check(op);
   }
 
   // finalize
 
-  sFORALL(AllOps,op)
-    op->Temp = 1;
+  sFORALL(AllOps, op)
+  op->Temp = 1;
 
-
-  sFORALL(AllOps,op)
+  sFORALL(AllOps, op)
   {
     // check if connection has changed
 
     sBool differ = 0;
-    if(op->Inputs.GetCount()!=op->OldInputs.GetCount())
+
+    if(op->Inputs.GetCount() != op->OldInputs.GetCount())
     {
       differ = 1;
     }
     else
     {
-      for(sInt i=0;i<op->Inputs.GetCount();i++)
-        if(op->Inputs[i]!=op->OldInputs[i])
+      for(sInt i = 0; i < op->Inputs.GetCount(); i++)
+        if(op->Inputs[i] != op->OldInputs[i])
           differ = 1;
     }
+
     if(differ)
-      ChangeR(op,0,0,0);
+      ChangeR(op, 0, 0, 0);
 
     // clear temporary arrays.
 
@@ -2781,32 +3112,32 @@ void wDocument::Connect()
   if(0)
   {
     sInt n = 0;
-    sFORALL(AllOps,op)
-      n += op->Conversions.GetCount();
+    sFORALL(AllOps, op)
+    n += op->Conversions.GetCount();
 
-    sDPrintF(L"conversions %d - ",n);
-    sDPrintF(L"ops total %d\n",OpsTotal);
+    sDPrintF(L"conversions %d - ", n);
+    sDPrintF(L"ops total %d\n", OpsTotal);
   }
 }
 
-void wDocument::ConnectTree(sArray<wTreeOp *> &tree)
+void wDocument::ConnectTree(sArray<wTreeOp*>& tree)
 {
-  wTreeOp *obj;
-  wTreeOp *parents[sLW_MAXTREENEST];
-  wTreeOp *last;
+  wTreeOp* obj;
+  wTreeOp* parents[sLW_MAXTREENEST];
+  wTreeOp* last;
   sInt parentlevel;
 
   sClear(parents);
 
-//  sInt max = Tree.GetCount();
+// sInt max = Tree.GetCount();
 
   last = 0;
   parentlevel = 0;
   parents[0] = last;
-    
-  sFORALL(tree,obj)
+
+  sFORALL(tree, obj)
   {
-    sInt level = sClamp(obj->TreeInfo.Level,0,sLW_MAXTREENEST-1);
+    sInt level = sClamp(obj->TreeInfo.Level, 0, sLW_MAXTREENEST - 1);
 
     if(level > parentlevel)
     {
@@ -2816,24 +3147,27 @@ void wDocument::ConnectTree(sArray<wTreeOp *> &tree)
         parents[parentlevel] = last;
       }
     }
+
     if(parents[level] && obj->CheckShellSwitch())
     {
       parents[level]->Inputs.AddTail(obj);
     }
+
     parentlevel = level;
     last = obj;
   }
 }
 
-void wDocument::ConnectStack(wPage *page)
+void wDocument::ConnectStack(wPage* page)
 {
-  wStackOp *op0,*op1;
+  wStackOp* op0, * op1;
 
   // copy ops and remove comments and disabled shellswitch operators
 
-  sArray<wStackOp *> ops = page->Ops;
+  sArray<wStackOp*> ops = page->Ops;
   sInt max = ops.GetCount();
-  for(sInt i=0;i<max;)
+
+  for(sInt i = 0; i < max;)
   {
     if(ops[i]->Class->Flags & wCF_COMMENT)
       ops[i] = ops[--max];
@@ -2842,22 +3176,26 @@ void wDocument::ConnectStack(wPage *page)
     else
       i++;
   }
+
   ops.Resize(max);
 
-  sSortUp(ops,&wStackOp::PosY);
+  sSortUp(ops, &wStackOp::PosY);
 
   // connection
 
   max = ops.GetCount();
-  sFORALL(ops,op0)
+  sFORALL(ops, op0)
   {
-    sInt j = _i+1;
-    while(j<max && ops[j]->PosY <  op0->PosY+op0->SizeY) j++;
-    while(j<max && ops[j]->PosY == op0->PosY+op0->SizeY)
+    sInt j = _i + 1;
+
+    while(j < max && ops[j]->PosY < op0->PosY + op0->SizeY)
+      j++;
+
+    while(j < max && ops[j]->PosY == op0->PosY + op0->SizeY)
     {
       op1 = ops[j];
 
-      if(op0->PosX < op1->PosX+op1->SizeX && op1->PosX < op0->PosX+op0->SizeX)
+      if(op0->PosX < op1->PosX + op1->SizeX && op1->PosX < op0->PosX + op0->SizeX)
       {
         op1->Inputs.AddTail(op0);
       }
@@ -2868,12 +3206,14 @@ void wDocument::ConnectStack(wPage *page)
 
   // hide
 
-  sFORALL(ops,op0)
+  sFORALL(ops, op0)
   {
     sInt max = op0->Inputs.GetCount();
-    for(sInt i=0;i<max;)
+
+    for(sInt i = 0; i < max;)
     {
-      op1 = (wStackOp *) op0->Inputs[i];
+      op1 = (wStackOp*)op0->Inputs[i];
+
       if(op1->Hide)
       {
         op0->Inputs.RemAt(i);
@@ -2888,36 +3228,40 @@ void wDocument::ConnectStack(wPage *page)
 
   // sort left<->right
 
-  sFORALL(ops,op0)
+  sFORALL(ops, op0)
   {
     sInt max = op0->Inputs.GetCount();
-    for(sInt i=0;i<max-1;i++)
+
+    for(sInt i = 0; i < max - 1; i++)
     {
-      for(sInt j=i+1;j<max;j++)
+      for(sInt j = i + 1; j < max; j++)
       {
-        wStackOp *a = (wStackOp *)op0->Inputs[i];
-        wStackOp *b = (wStackOp *)op0->Inputs[j];
+        wStackOp* a = (wStackOp*)op0->Inputs[i];
+        wStackOp* b = (wStackOp*)op0->Inputs[j];
+
         if(a->PosX > b->PosX)
-          op0->Inputs.Swap(i,j);
+          op0->Inputs.Swap(i, j);
       }
     }
   }
 
   // bypass
 
-  sFORALL(ops,op0)
+  sFORALL(ops, op0)
   {
     sInt max = op0->Inputs.GetCount();
-    for(sInt i=0;i<max;i++)
+
+    for(sInt i = 0; i < max; i++)
     {
-      op1 = (wStackOp *) op0->Inputs[i];
+      op1 = (wStackOp*)op0->Inputs[i];
+
       if(op1->Bypass)
       {
-        if(op1->Inputs.GetCount()>=1)
+        if(op1->Inputs.GetCount() >= 1)
         {
           op0->Inputs[i] = op1->Inputs[0];
         }
-        else if(op1->Inputs.GetCount()==0)
+        else if(op1->Inputs.GetCount() == 0)
         {
           op0->Inputs.RemAtOrder(i);
           i--;
@@ -2930,28 +3274,27 @@ void wDocument::ConnectStack(wPage *page)
       }
     }
   }
-
 }
 
-void wDocument::ChangeDefaults(wOp *op)
+void wDocument::ChangeDefaults(wOp* op)
 {
-  wOpInputInfo *link;
-  sFORALL(op->Links,link)
+  wOpInputInfo* link;
+  sFORALL(op->Links, link)
   {
     if(link->Default && link->Default->Cache)
       sRelease(link->Default->Cache);
   }
 }
 
-void wDocument::Change(wOp *op,sBool ignoreweak,sBool dontnotify)
+void wDocument::Change(wOp* op, sBool ignoreweak, sBool dontnotify)
 {
-  wOp *clr;
-  sFORALL(AllOps,clr)
-    clr->Temp = 1;
-  ChangeR(op,ignoreweak,dontnotify,0);
+  wOp* clr;
+  sFORALL(AllOps, clr)
+  clr->Temp = 1;
+  ChangeR(op, ignoreweak, dontnotify, 0);
 }
 
-void wDocument::ChangeR(wOp *op,sBool ignoreweak,sBool dontnotify,wOp *from)
+void wDocument::ChangeR(wOp* op, sBool ignoreweak, sBool dontnotify, wOp* from)
 {
   if(op->Temp)
   {
@@ -2961,20 +3304,22 @@ void wDocument::ChangeR(wOp *op,sBool ignoreweak,sBool dontnotify,wOp *from)
       BlockedChanges = 1;
       return;
     }
+
     if(sGui && !dontnotify)
       sGui->Notify(*op);
+
     op->CycleCheck++;
 
     op->Temp = 0;
-    wOp *out;
-    sFORALL(op->Outputs,out)
+    wOp* out;
+    sFORALL(op->Outputs, out)
     {
-      if(out->CycleCheck==0)
+      if(out->CycleCheck == 0)
       {
-        if(!ignoreweak && sFindPtr(op->WeakOutputs,out))    // weak linked ops do not propagate changes, but are entered into a list so they can be calculated when needed.
+        if(!ignoreweak && sFindPtr(op->WeakOutputs, out))    // weak linked ops do not propagate changes, but are entered into a list so they can be calculated when needed.
           DirtyWeakOps.AddTail(op);
         else
-          ChangeR(out,0,sTRUE,op);
+          ChangeR(out, 0, sTRUE, op);
       }
     }
     op->Conversions.Clear();
@@ -2982,19 +3327,19 @@ void wDocument::ChangeR(wOp *op,sBool ignoreweak,sBool dontnotify,wOp *from)
     sDelete(op->Script);
     sRelease(op->Cache);
 
- //   if(!((op->Class->Flags & wCF_CALL) && (op->Links.GetCount()>=1) && op->Links[0].Link==from))
-      op->BuilderNodeCallerId = 0;
- 
+    // if(!((op->Class->Flags & wCF_CALL) && (op->Links.GetCount()>=1) && op->Links[0].Link==from))
+    op->BuilderNodeCallerId = 0;
+
     op->CycleCheck--;
   }
 }
 
 void wDocument::FlushCaches()
 {
-  wOp *op;
+  wOp* op;
   Connect();
 
-  sFORALL(AllOps,op)
+  sFORALL(AllOps, op)
   {
     op->Conversions.Clear();
     op->Extractions.Clear();
@@ -3014,37 +3359,38 @@ void wDocument::FlushCaches()
 
 void wDocument::ChargeCaches()
 {
-  wOp *rootop = FindStore(L"root");
+  wOp* rootop = FindStore(L"root");
 
   if(rootop)
   {
-    wObject *root = CalcOp(rootop);
-    
+    wObject* root = CalcOp(rootop);
+
     if(root)
     {
       wPaintInfo pi;
       sViewport view;
       sRender3DBegin();
-      sTexture2D *tex = new sTexture2D(256,256,sTEX_2D|sTEX_ARGB8888|sTEX_NOMIPMAPS|sTEX_RENDERTARGET);
-      sEnlargeRTDepthBuffer(256,256);
-      sTargetSpec spec(tex,sGetRTDepthBuffer());
-      sSetTarget(sTargetPara(sST_CLEARALL,0,spec));
+      sTexture2D* tex = new sTexture2D(256, 256, sTEX_2D | sTEX_ARGB8888 | sTEX_NOMIPMAPS | sTEX_RENDERTARGET);
+      sEnlargeRTDepthBuffer(256, 256);
+      sTargetSpec spec(tex, sGetRTDepthBuffer());
+      sSetTarget(sTargetPara(sST_CLEARALL, 0, spec));
 
-      for(sInt i=0;i<DocOptions.Beats;i+=16)
+      for(sInt i = 0; i < DocOptions.Beats; i += 16)
       {
-        ProgressPaintFunc(i,DocOptions.Beats);
-        pi.TimeBeat = i<<16;
-        pi.TimeMS = sMulDiv(i<<16,1000,DocOptions.BeatsPerSecond);
+        ProgressPaintFunc(i, DocOptions.Beats);
+        pi.TimeBeat = i << 16;
+        pi.TimeMS = sMulDiv(i << 16, 1000, DocOptions.BeatsPerSecond);
 
         view.SetTargetCurrent();
         view.Prepare();
-        pi.View=&view;
+        pi.View = &view;
 
-        root->Type->BeforeShow(root,pi);
+        root->Type->BeforeShow(root, pi);
         LastView = *pi.View;
         pi.SetCam = 0;
-        Show(root,pi);
+        Show(root, pi);
       }
+
       delete tex;
       sRender3DEnd(0);
     }
@@ -3055,8 +3401,8 @@ void wDocument::ChargeCaches()
 
 void wDocument::UnblockChange()
 {
-  wOp *op;
-  sFORALL(AllOps,op)
+  wOp* op;
+  sFORALL(AllOps, op)
   {
     if(op->BlockedChange)
     {
@@ -3067,27 +3413,30 @@ void wDocument::UnblockChange()
   BlockedChanges = 0;
 }
 
-wType *wDocument::FindType(const sChar *name)
+wType* wDocument::FindType(const sChar* name)
 {
-  wType *type;
-  sFORALL(Types,type)
-    if(sCmpString(type->Symbol,name)==0)
-      return type;
+  wType* type;
+  sFORALL(Types, type)
+
+  if(sCmpString(type->Symbol, name) == 0)
+    return type;
+
   return 0;
 }
 
-wOp *wDocument::FindStore(const sChar *name)
+wOp* wDocument::FindStore(const sChar* name)
 {
-  wOp *op;
+  wOp* op;
   wDocName cutname;
 
-  const sChar *filter = 0;
-  sInt pos = sFindFirstChar(name,':');
-  if(pos>=0)
+  const sChar* filter = 0;
+  sInt pos = sFindFirstChar(name, ':');
+
+  if(pos >= 0)
   {
     cutname = name;
     cutname[pos] = 0;
-    filter = name+pos+1;
+    filter = name + pos + 1;
     name = cutname;
   }
 
@@ -3099,60 +3448,72 @@ wOp *wDocument::FindStore(const sChar *name)
   return op;
 }
 
-wOp *wDocument::FindStoreNoExtr(const sChar *name)
+wOp* wDocument::FindStoreNoExtr(const sChar* name)
 {
   sInt min = 0;
-  sInt max = Stores.GetCount()-1;
-  if(max==-1)
+  sInt max = Stores.GetCount() - 1;
+
+  if(max == -1)
     return 0;
 
-  while(max-min>1)
+  while(max - min > 1)
   {
-    sInt mid = min + (max-min)/2;
-    sInt cmd = sCmpString(name,Stores[mid]->Name);
-    if(cmd==0)
+    sInt mid = min + (max - min) / 2;
+    sInt cmd = sCmpString(name, Stores[mid]->Name);
+
+    if(cmd == 0)
       return Stores[mid];
-    if(cmd<0)
-      max=mid-1;
-    if(cmd>0)
-      min=mid+1;
+
+    if(cmd < 0)
+      max = mid - 1;
+
+    if(cmd > 0)
+      min = mid + 1;
   }
-  if(sCmpString(Stores[min]->Name,name)==0)
+
+  if(sCmpString(Stores[min]->Name, name) == 0)
     return Stores[min];
-  if(min!=max && sCmpString(Stores[max]->Name,name)==0)
+
+  if(min != max && sCmpString(Stores[max]->Name, name) == 0)
     return Stores[max];
+
   return 0;
 }
 
-wClass *wDocument::FindClass(const sChar *name,const sChar *tname)
+wClass* wDocument::FindClass(const sChar* name, const sChar* tname)
 {
-  wType *type = 0;
-  wClass *cl;
+  wType* type = 0;
+  wClass* cl;
 
   if(tname)
   {
     type = FindType(tname);
-    if(type==0)
+
+    if(type == 0)
       return 0;
   }
 
-  sFORALL(Classes,cl)
-    if((type==0 || type==cl->OutputType || type==cl->OutputType->EquivalentType) && sCmpString(cl->Name,name)==0)
-      return cl;
+  sFORALL(Classes, cl)
+
+  if((type == 0 || type == cl->OutputType || type == cl->OutputType->EquivalentType) && sCmpString(cl->Name, name) == 0)
+    return cl;
+
   return 0;
 }
 
-sBool wDocument::IsOp(wOp *op)
+sBool wDocument::IsOp(wOp* op)
 {
-  if(!op) return 0;
-  return sFindPtr(AllOps,op);
+  if(!op)
+    return 0;
+
+  return sFindPtr(AllOps, op);
 }
 
-
-void wDocument::SerializeOptions(sReader &s,wDocOptions &options)
+void wDocument::SerializeOptions(sReader& s, wDocOptions& options)
 {
-  sInt version = s.Header(sSerId::Werkkzeug4Doc,VERSION);
-  if (version<12)
+  sInt version = s.Header(sSerId::Werkkzeug4Doc, VERSION);
+
+  if(version < 12)
   {
     s.Fail();
     return;
@@ -3161,18 +3522,18 @@ void wDocument::SerializeOptions(sReader &s,wDocOptions &options)
   s | &options;
 }
 
-
-template <class streamer> void wDocument::Serialize_(streamer &s)
+template<class streamer>
+void wDocument::Serialize_(streamer& s)
 {
-  sInt version = s.Header(sSerId::Werkkzeug4Doc,VERSION);
-  wPage *page;
-  sArray<wPage *> mypages;
-  wStackOp *po;
-  wTreeOp *to;
-  sArray<wTreeOp *> dummytree;
+  sInt version = s.Header(sSerId::Werkkzeug4Doc, VERSION);
+  wPage* page;
+  sArray<wPage*> mypages;
+  wStackOp* po;
+  wTreeOp* to;
+  sArray<wTreeOp*> dummytree;
 
   // NOTE: doc options first so we can fake-load them without setting up the whole document
-  if(version>=12)
+  if(version >= 12)
     s | &DocOptions;
 
   if(version)
@@ -3181,92 +3542,104 @@ template <class streamer> void wDocument::Serialize_(streamer &s)
 
     if(s.IsWriting())
     {
-      sFORALL(Pages,page)
-        if(page->Include==0)
-          mypages.AddTail(page);
-    }    
+      sFORALL(Pages, page)
+
+      if(page->Include == 0)
+        mypages.AddTail(page);
+    }
 
     Doc->UnknownOps = 0;
     s.ArrayNew(mypages);
-    sFORALL(mypages,page)
+    sFORALL(mypages, page)
     {
       s.ArrayNew(page->Ops);
-      sFORALL(page->Ops,po)
-        s.RegisterPtr(po);
-      if(version>=6)
+      sFORALL(page->Ops, po)
+      s.RegisterPtr(po);
+
+      if(version >= 6)
       {
         s.ArrayNew(page->Tree);
-        sFORALL(page->Tree,to)
-          s.RegisterPtr(to);
+        sFORALL(page->Tree, to)
+        s.RegisterPtr(to);
       }
-      if(version>=8)
+
+      if(version >= 8)
         s | page->TreeInfo.Level | page->TreeInfo.Flags;
-      if(version>=10)
+
+      if(version >= 10)
         s | page->ManualWriteProtect;
     }
-    if(version<6)
+
+    if(version < 6)
     {
       s.ArrayNew(dummytree);
-      sFORALL(dummytree,to)
-        s.RegisterPtr(to);
+      sFORALL(dummytree, to)
+      s.RegisterPtr(to);
     }
 
-    sInt importcount=0;   // obsolete
+    sInt importcount = 0;   // obsolete
     s | importcount;
-    
+
     // doc options
 
-    if(version>=4 && version<12)
+    if(version >= 4 && version < 12)
       s | &DocOptions;
 
     // pages
 
-    sFORALL(mypages,page)
+    sFORALL(mypages, page)
     {
       s | page->Name;
-      if(version>=6)
+
+      if(version >= 6)
         s | page->IsTree;
-      if(version>=7)
+
+      if(version >= 7)
         s | page->ScrollX | page->ScrollY;
-      sFORALL(page->Ops,po)
+
+      sFORALL(page->Ops, po)
       {
         s | po->PosX | po->PosY | po->SizeX | po->SizeY;
-        if(version>=5)
+
+        if(version >= 5)
           s | po->Bypass | po->Hide;
-        s | (wOp *)po;
+
+        s | (wOp*)po;
       }
-      sFORALL(page->Tree,to)
+      sFORALL(page->Tree, to)
       {
         s | to->TreeInfo.Level;
         s | to->TreeInfo.Flags;
-        s | (wOp *)to;
+        s | (wOp*)to;
       }
     }
 
     // tree
 
-    if(version<6)
+    if(version < 6)
     {
-      sFORALL(dummytree,to)
+      sFORALL(dummytree, to)
       {
         s | to->TreeInfo.Level;
         s | to->TreeInfo.Flags;
-        s | (wOp *)to;
+        s | (wOp*)to;
       }
       dummytree.Clear();
     }
 
     // imports
 
-    if(version>=2)
+    if(version >= 2)
     {
       sString<256> str;
-      sInt ena=0;
-      for(sInt i=0;i<importcount;i++)
+      sInt ena = 0;
+
+      for(sInt i = 0; i < importcount; i++)
       {
         s | str;
         s | str;
-        if(version>=3)
+
+        if(version >= 3)
           s | ena;
       }
     }
@@ -3278,11 +3651,11 @@ template <class streamer> void wDocument::Serialize_(streamer &s)
 
     // includes
 
-    if(version>=9)
+    if(version >= 9)
     {
       s.ArrayNew(Includes);
-      wDocInclude *inc;
-      sFORALL(Includes,inc)
+      wDocInclude* inc;
+      sFORALL(Includes, inc)
       {
         s | inc->Filename;
       }
@@ -3290,40 +3663,57 @@ template <class streamer> void wDocument::Serialize_(streamer &s)
 
     // page order for sorting includes
 
-    if(version>=11)
+    if(version >= 11)
     {
-      sPoolString *str;
+      sPoolString* str;
       PageNames.Clear();
+
       if(s.IsWriting())
       {
-        sFORALL(Pages,page)
-          PageNames.AddTail((const sChar *)page->Name);
+        sFORALL(Pages, page)
+        PageNames.AddTail((const sChar*)page->Name);
       }
+
       s.Array(PageNames);
-      sFORALL(PageNames,str)
-        s | *str;
+      sFORALL(PageNames, str)
+      s | *str;
     }
   }
 
   DocChanged = 0;
+
   if(s.IsReading() && !Doc->IsPlayer && !Doc->DocOptions.ProjectPath.IsEmpty())
     sChangeDir(Doc->DocOptions.ProjectPath);
-  if(s.IsReading() && PostLoadAction)
-   (*PostLoadAction)();
-}
-void wDocument::Serialize(sWriter &stream) { Connect(); Serialize_(stream); }
-void wDocument::Serialize(sReader &stream) { Pages.Clear(); Includes.Clear(); Serialize_(stream); Connect(); }
 
-wObject *wDocument::CalcOp(wOp *op,sBool honorslow)
+  if(s.IsReading() && PostLoadAction)
+    (*PostLoadAction)();
+}
+
+void wDocument::Serialize(sWriter& stream)
 {
-  sArray<wOp *> failed;
-  wOp *weak;
+  Connect();
+  Serialize_(stream);
+}
+
+void wDocument::Serialize(sReader& stream)
+{
+  Pages.Clear();
+  Includes.Clear();
+  Serialize_(stream);
+  Connect();
+}
+
+wObject* wDocument::CalcOp(wOp* op, sBool honorslow)
+{
+  sArray<wOp*> failed;
+  wOp* weak;
 
   // first calc all weak linked ops.
 
-  sFORALL(DirtyWeakOps,weak)
+  sFORALL(DirtyWeakOps, weak)
   {
-    wObject *obj = Builder->Execute(*Exe,weak,honorslow,1);
+    wObject* obj = Builder->Execute(*Exe, weak, honorslow, 1);
+
     if(!obj)
       failed.AddTail(weak);
     else
@@ -3333,15 +3723,16 @@ wObject *wDocument::CalcOp(wOp *op,sBool honorslow)
 
   // if some weak linked op failed, ignore the whole weak linking system
 
-  if(failed.GetCount()>0)
+  if(failed.GetCount() > 0)
   {
-    sFORALL(failed,weak)
-      Change(weak,1);
+    sFORALL(failed, weak)
+    Change(weak, 1);
   }
 
   // now try to calc the real op.
 
-  wObject *res = Builder->Execute(*Exe,op,honorslow,1);
+  wObject* res = Builder->Execute(*Exe, op, honorslow, 1);
+
   if(!res)
   {
     PropagateCalcError(op);
@@ -3350,26 +3741,29 @@ wObject *wDocument::CalcOp(wOp *op,sBool honorslow)
   return res;
 }
 
-void wDocument::PropagateCalcError(wOp *op)
+void wDocument::PropagateCalcError(wOp* op)
 {
-  wOp *o2;
-  wOpInputInfo *link;
+  wOp* o2;
+  wOpInputInfo* link;
+
   if(!op->CycleCheck)
   {
     op->CycleCheck++;
 
     sBool error = 0;
-    sFORALL(op->Inputs,o2)
+    sFORALL(op->Inputs, o2)
     {
       PropagateCalcError(o2);
+
       if(o2->CalcErrorString)
         error = 1;
     }
-    sFORALL(op->Links,link)
+    sFORALL(op->Links, link)
     {
       if(link->Link)
       {
         PropagateCalcError(link->Link);
+
         if(link->Link->CalcErrorString)
           error = 1;
       }
@@ -3382,35 +3776,37 @@ void wDocument::PropagateCalcError(wOp *op)
   }
 }
 
-const sChar *wDocument::CreateRandomString()
+const sChar* wDocument::CreateRandomString()
 {
-  const sInt size=8;
-  static sChar buffer[size+1];
-  for(sInt i=0;i<size;i++)
-    buffer[i] = Rnd.Int('z'-'a'+1)+'a';
-  buffer[size]=0;
+  const sInt size = 8;
+  static sChar buffer[size + 1];
+
+  for(sInt i = 0; i < size; i++)
+    buffer[i] = Rnd.Int('z' - 'a' + 1) + 'a';
+
+  buffer[size] = 0;
   return buffer;
 }
 
 void wDocument::ClearSlowFlags()
 {
-  wOp *op;
-  sFORALL(AllOps,op)
-    op->SlowSkipFlag = 0;
+  wOp* op;
+  sFORALL(AllOps, op)
+  op->SlowSkipFlag = 0;
 }
 
-void wDocument::Show(wObject *obj,wPaintInfo &pi)
+void wDocument::Show(wObject* obj, wPaintInfo& pi)
 {
   pi.DeleteHandlesList.Clear();
 
-  wType *type;
+  wType* type;
   Spec = pi.Spec;
   ViewLog = pi.ViewLog;
-  sFORALL(Types,type)
-    type->BeginShow(pi);
-  obj->Type->Show(obj,pi);
-  sFORALL(Types,type)
-    type->EndShow(pi);
+  sFORALL(Types, type)
+  type->BeginShow(pi);
+  obj->Type->Show(obj, pi);
+  sFORALL(Types, type)
+  type->EndShow(pi);
   ViewLog = 0;
 
   if(!pi.DontPaintHandles)
@@ -3418,10 +3814,10 @@ void wDocument::Show(wObject *obj,wPaintInfo &pi)
     if(pi.DeleteSelectedHandles)
       pi.ClearHandleSelection();
 
-    if(pi.DeleteHandlesList.GetCount()>0)
+    if(pi.DeleteHandlesList.GetCount() > 0)
     {
-      wOp *op;
-      sFORALL(pi.DeleteHandlesList,op)
+      wOp* op;
+      sFORALL(pi.DeleteHandlesList, op)
       {
         Change(op);
         op->Page->Rem(op);
@@ -3435,23 +3831,23 @@ sInt wDocument::SecondsToBeats(sF32 t)
 {
   if(!Doc->DocOptions.VariableBpm)
   {
-    return sInt(t * DocOptions.BeatsPerSecond)+DocOptions.BeatStart;
+    return sInt(t * DocOptions.BeatsPerSecond) + DocOptions.BeatStart;
   }
   else
   {
-    wDocOptions::BpmSegment *s;
+    wDocOptions::BpmSegment* s;
     sInt b = DocOptions.BeatStart;
-    sFORALL(DocOptions.BpmSegments,s)
+    sFORALL(DocOptions.BpmSegments, s)
     {
-      if(t<s->Milliseconds*0.001f)
+      if(t < s->Milliseconds * 0.001f)
       {
-        b += sMulDiv(t,s->Bps,1000);
+        b += sMulDiv(t, s->Bps, 1000);
         return b;
       }
       else
       {
-        t -= s->Milliseconds*0.001f;
-        b += s->Beats*0x10000;
+        t -= s->Milliseconds * 0.001f;
+        b += s->Beats * 0x10000;
       }
     }
     return b;
@@ -3462,31 +3858,31 @@ sInt wDocument::MilliSecondsToBeats(sInt t)
 {
   if(!Doc->DocOptions.VariableBpm)
   {
-    return sMulDiv(t,DocOptions.BeatsPerSecond,1000)+DocOptions.BeatStart;
+    return sMulDiv(t, DocOptions.BeatsPerSecond, 1000) + DocOptions.BeatStart;
   }
   else
   {
-    wDocOptions::BpmSegment *s;
+    wDocOptions::BpmSegment* s;
     sInt b = DocOptions.BeatStart;
-    sFORALL(DocOptions.BpmSegments,s)
+    sFORALL(DocOptions.BpmSegments, s)
     {
-      if(t<s->Milliseconds)
+      if(t < s->Milliseconds)
       {
-        b += sMulDiv(t,s->Bps,1000);
+        b += sMulDiv(t, s->Bps, 1000);
         return b;
       }
       else
       {
         t -= s->Milliseconds;
-        b += s->Beats*0x10000;
-      }    
+        b += s->Beats * 0x10000;
+      }
     }
-  
+
     // extrapolate last segment after the end
-    if (t>0)
+    if(t > 0)
     {
-      sInt bps = DocOptions.BpmSegments.IsEmpty()?(2<<16):DocOptions.BpmSegments.GetTail().Bps;
-      b += sMulDiv(t,bps,1000);
+      sInt bps = DocOptions.BpmSegments.IsEmpty() ? (2 << 16) : DocOptions.BpmSegments.GetTail().Bps;
+      b += sMulDiv(t, bps, 1000);
     }
 
     return b;
@@ -3497,53 +3893,54 @@ sInt wDocument::SampleToBeats(sInt t)
 {
   if(!Doc->DocOptions.VariableBpm)
   {
-    return sMulDiv(t,Doc->DocOptions.BeatsPerSecond,DocOptions.SampleRate)+Doc->DocOptions.BeatStart;
+    return sMulDiv(t, Doc->DocOptions.BeatsPerSecond, DocOptions.SampleRate) + Doc->DocOptions.BeatStart;
   }
   else
   {
-    wDocOptions::BpmSegment *s;
+    wDocOptions::BpmSegment* s;
     sInt b = DocOptions.BeatStart;
-    sFORALL(DocOptions.BpmSegments,s)
+    sFORALL(DocOptions.BpmSegments, s)
     {
-      if(t<s->Samples)
+      if(t < s->Samples)
       {
-        b += sMulDiv(t,s->Bps,DocOptions.SampleRate);
+        b += sMulDiv(t, s->Bps, DocOptions.SampleRate);
         return b;
       }
       else
       {
         t -= s->Samples;
-        b += s->Beats*0x10000;
+        b += s->Beats * 0x10000;
       }
     }
     return b;
   }
 }
 
-
 sInt wDocument::BeatsToMilliseconds(sInt b)
 {
   if(!Doc->DocOptions.VariableBpm)
   {
-    return sMulDiv(b-DocOptions.BeatStart,1000,DocOptions.BeatsPerSecond);
+    return sMulDiv(b - DocOptions.BeatStart, 1000, DocOptions.BeatsPerSecond);
   }
   else
   {
-    wDocOptions::BpmSegment *s;
+    wDocOptions::BpmSegment* s;
     b -= DocOptions.BeatStart;
-    if(b<=0)
+
+    if(b <= 0)
       return 0;
+
     sInt t = 0;
-    sFORALL(DocOptions.BpmSegments,s)
+    sFORALL(DocOptions.BpmSegments, s)
     {
-      if(b<s->Beats*0x10000)
+      if(b < s->Beats * 0x10000)
       {
-        t += sMulDiv(b,1000,s->Bps);
+        t += sMulDiv(b, 1000, s->Bps);
         return t;
       }
       else
       {
-        b -= s->Beats*0x10000;
+        b -= s->Beats * 0x10000;
         t += s->Milliseconds;
       }
     }
@@ -3555,25 +3952,27 @@ sInt wDocument::BeatsToSample(sInt b)
 {
   if(!Doc->DocOptions.VariableBpm)
   {
-    return sMax(0,sMulDiv(b-DocOptions.BeatStart,DocOptions.SampleRate,DocOptions.BeatsPerSecond));
+    return sMax(0, sMulDiv(b - DocOptions.BeatStart, DocOptions.SampleRate, DocOptions.BeatsPerSecond));
   }
   else
   {
-    wDocOptions::BpmSegment *s;
+    wDocOptions::BpmSegment* s;
     b -= DocOptions.BeatStart;
-    if(b<=0)
+
+    if(b <= 0)
       return 0;
+
     sInt t = 0;
-    sFORALL(DocOptions.BpmSegments,s)
+    sFORALL(DocOptions.BpmSegments, s)
     {
-      if(b<s->Beats*0x10000)
+      if(b < s->Beats * 0x10000)
       {
-        t += sMulDiv(b,DocOptions.SampleRate,s->Bps);
+        t += sMulDiv(b, DocOptions.SampleRate, s->Bps);
         return t;
       }
       else
       {
-        b -= s->Beats*0x10000;
+        b -= s->Beats * 0x10000;
         t += s->Samples;
       }
     }
@@ -3581,24 +3980,25 @@ sInt wDocument::BeatsToSample(sInt b)
   }
 }
 
-
-sBool wDocument::RenameAllOps(const sChar *from,const sChar *to)
+sBool wDocument::RenameAllOps(const sChar* from, const sChar* to)
 {
   Connect();
-  wOp *op;
-  wOpInputInfo *info;
-  sFORALL(AllOps,op)
+  wOp* op;
+  wOpInputInfo* info;
+  sFORALL(AllOps, op)
   {
-    if(sCmpString(op->Name,to)==0)
+    if(sCmpString(op->Name, to) == 0)
       return 0;
   }
-  sFORALL(AllOps,op)
+  sFORALL(AllOps, op)
   {
-    if(sCmpString(op->Name,from)==0)
+    if(sCmpString(op->Name, from) == 0)
       op->Name = to;
-    sFORALL(op->Links,info)
-      if(sCmpString(info->LinkName,from)==0)
-        info->LinkName = to;
+
+    sFORALL(op->Links, info)
+
+    if(sCmpString(info->LinkName, from) == 0)
+      info->LinkName = to;
   }
   Connect();
   return 1;
@@ -3606,22 +4006,23 @@ sBool wDocument::RenameAllOps(const sChar *from,const sChar *to)
 
 sBool wDocument::UnCacheLRU()
 {
-  wOp *best0 = 0;
-  wOp *best1 = 0;
+  wOp* best0 = 0;
+  wOp* best1 = 0;
   sU32 lru0 = CacheLRU;
   sU32 lru1 = CacheLRU;
-  wOp *op;
+  wOp* op;
 
-  sFORALL(AllOps,op)
+  sFORALL(AllOps, op)
   {
     if(op->Cache && (op->Cache->Type->Flags & wTF_UNCACHE))
     {
-      if(op->CacheLRU<lru0)
+      if(op->CacheLRU < lru0)
       {
         best0 = op;
         lru0 = op->CacheLRU;
       }
-      if(op->CacheLRU<lru1 && op->Cache->RefCount==1)
+
+      if(op->CacheLRU < lru1 && op->Cache->RefCount == 1)
       {
         best1 = op;
         lru1 = op->CacheLRU;
@@ -3632,86 +4033,105 @@ sBool wDocument::UnCacheLRU()
   if(best1)                       // best op with only one ref left
   {
     sRelease(best1->Cache);
+
     if(LOGIT)
       sDPrintF(L" *");
+
     return 1;
   }
+
   if(best0)                       // best op with more than one ref left
   {
     sRelease(best0->Cache);
+
     if(LOGIT)
       sDPrintF(L" *");
+
     return 1;
   }
+
   return 0;
 }
 
 /****************************************************************************/
 
-void wDocument::GlobalAction(const sChar *name)
+void wDocument::GlobalAction(const sChar* name)
 {
-  wOp *op;
-  wClass *cl;
-  wClassActionInfo *ac;
+  wOp* op;
+  wClass* cl;
+  wClassActionInfo* ac;
   Connect();
 
-  sFORALL(Classes,cl)
+  sFORALL(Classes, cl)
   {
     cl->Temp = -1;
-    sFORALL(cl->ActionIds,ac)
-      if(sCmpStringI(ac->Name,name)==0)
-        cl->Temp = ac->Id;
+    sFORALL(cl->ActionIds, ac)
+
+    if(sCmpStringI(ac->Name, name) == 0)
+      cl->Temp = ac->Id;
   }
 
-  sFORALL(AllOps,op)
+  sFORALL(AllOps, op)
   {
-    if(op->Class->Temp>=0)
+    if(op->Class->Temp >= 0)
     {
-      (*op->Class->Actions)(op,op->Class->Temp,0);
+      (*op->Class->Actions)(op, op->Class->Temp, 0);
     }
   }
-} 
-
+}
 
 void wDocument::CheckShellSwitches()
 {
-  ShellSwitchChoice[0]=0;
-  for(sInt i=0;i<wSWITCHES;i++)
+  ShellSwitchChoice[0] = 0;
+
+  for(sInt i = 0; i < wSWITCHES; i++)
   {
-    if(i>0)
+    if(i > 0)
       ShellSwitchChoice.Add(L"|");
+
     ShellSwitchChoice.Add(L" ");
     ShellSwitchChoice.Add(ShellSwitchOptions[i]);
   }
-  for(sInt i=0;;i++)
+
+  for(sInt i = 0;; i++)
   {
-    const sChar *o = sGetShellParameter(L"s",i);
-    if(o==0)
+    const sChar* o = sGetShellParameter(L"s", i);
+
+    if(o == 0)
       break;
+
     sBool found = 0;
-    for(sInt j=0;j<wSWITCHES && !found;j++)
+
+    for(sInt j = 0; j < wSWITCHES && !found; j++)
     {
-      if(sCmpStringI(o,ShellSwitchOptions[j])==0)
+      if(sCmpStringI(o, ShellSwitchOptions[j]) == 0)
       {
         found = 1;
-        Doc->ShellSwitches |= 1<<j;
+        Doc->ShellSwitches |= 1 << j;
       }
     }
+
     if(!found)
-      sDPrintF(L"unknown switch option \"-s %s\".\n",o);
+      sDPrintF(L"unknown switch option \"-s %s\".\n", o);
   }
 
   // define script string
-  for(sInt j=1;j<4;j++)
+  for(sInt j = 1; j < 4; j++)
   {
-    static const sChar *optname[] = { 0,L"ds",L"dd",L"df" };
-    for(sInt i=0;;i++)
+    static const sChar* optname[] =
+    {
+      0, L"ds", L"dd", L"df"
+    };
+
+    for(sInt i = 0;; i++)
     {
       sBool ok = 1;
-      const sChar *d = sGetShellParameter(optname[j],i);
-      if(d==0)
+      const sChar* d = sGetShellParameter(optname[j], i);
+
+      if(d == 0)
         break;
-      const sChar *ptr = d;
+
+      const sChar* ptr = d;
 
       wScriptDefine sd;
       sd.Mode = j;
@@ -3719,36 +4139,37 @@ void wDocument::CheckShellSwitches()
       sd.FloatValue = 0;
       sd.StringValue = L"";
 
-      while(*ptr!=0 && *ptr!='=')
+      while(*ptr != 0 && *ptr != '=')
         ptr++;
-      if(*ptr!='=')
+
+      if(*ptr != '=')
       {
         ok = 0;
       }
+
       sString<sMAXPATH> buffer;
-      buffer.Init(d,ptr-d);
+      buffer.Init(d, ptr - d);
       sMakeLower(buffer);
       sd.Name = buffer;
 
       ptr++;
-
       switch(j)
       {
       case 1:
         sd.StringValue = ptr;
         break;
       case 2:
-        ok = sScanInt(ptr,sd.IntValue);
+        ok = sScanInt(ptr, sd.IntValue);
         break;
       case 3:
-        ok = sScanFloat(ptr,sd.FloatValue);
+        ok = sScanFloat(ptr, sd.FloatValue);
         break;
       }
 
       if(ok)
         *ScriptDefines.AddMany(1) = sd;
       else
-        sPrintF(L"error in option -%s %s\n",optname[j],d);
+        sPrintF(L"error in option -%s %s\n", optname[j], d);
     }
   }
 }
@@ -3761,7 +4182,7 @@ void wDocument::CheckShellSwitches()
 
 wDocInclude::wDocInclude()
 {
-  Active = 0; 
+  Active = 0;
   Protected = 0;
   Filename = L"new.wz4i";
 }
@@ -3770,17 +4191,17 @@ wDocInclude::~wDocInclude()
 {
 }
 
-void wDocInclude::Tag() 
+void wDocInclude::Tag()
 {
   sObject::Tag();
 }
 
 void wDocInclude::Clear()
 {
-  wPage *page;
-  sFORALL(Doc->Pages,page)
-    page->Temp = page->Include==this;
-  sRemTrue(Doc->Pages,&wPage::Temp);
+  wPage* page;
+  sFORALL(Doc->Pages, page)
+  page->Temp = page->Include == this;
+  sRemTrue(Doc->Pages, &wPage::Temp);
   Active = 0;
   Protected = 1;
 }
@@ -3788,8 +4209,8 @@ void wDocInclude::Clear()
 void wDocInclude::New()
 {
   Clear();
-  
-  wPage *page = new wPage;
+
+  wPage* page = new wPage;
   page->DefaultName();
   page->Include = this;
   Doc->Pages.AddTail(page);
@@ -3797,7 +4218,8 @@ void wDocInclude::New()
   Active = 1;
   Protected = 0;
   sBool prot = 0;
-  if(sGetFileWriteProtect(Filename,prot))
+
+  if(sGetFileWriteProtect(Filename, prot))
     Protected = prot;
 }
 
@@ -3805,17 +4227,20 @@ sBool wDocInclude::Load()
 {
   sBool ok = 0;
   Clear();
+
   if(!Active)
   {
-    ok = sLoadObject(Filename,this);
+    ok = sLoadObject(Filename, this);
+
     if(ok)
     {
       Active = 1;
       sBool prot = 1;
-      sGetFileWriteProtect(Filename,prot);
+      sGetFileWriteProtect(Filename, prot);
       Protected = prot;
     }
   }
+
   return ok;
 }
 
@@ -3823,87 +4248,101 @@ sBool wDocInclude::Save()
 {
   if(Protected)
     return 1;
+
   if(!Active)
     return 1;
-  return sSaveObject(Filename,this);
+
+  return sSaveObject(Filename, this);
 }
 
 /****************************************************************************/
 
-template <class streamer> void wDocInclude::Serialize_(streamer &s)
+template<class streamer>
+void wDocInclude::Serialize_(streamer& s)
 {
-  sArray<wPage *> mypages;
-  wPage *page;
-  wStackOp *po;
-  wTreeOp *to;
+  sArray<wPage*> mypages;
+  wPage* page;
+  wStackOp* po;
+  wTreeOp* to;
 
-  sInt version = s.Header(sSerId::Werkkzeug4DocInclude,3);
+  sInt version = s.Header(sSerId::Werkkzeug4DocInclude, 3);
+
   if(version)
   {
     if(s.IsWriting())
     {
-      sFORALL(Doc->Pages,page)
-        if(page->Include == this)
-          mypages.AddTail(page);
+      sFORALL(Doc->Pages, page)
+
+      if(page->Include == this)
+        mypages.AddTail(page);
     }
 
     s.ArrayNew(mypages);
-    sFORALL(mypages,page)
+    sFORALL(mypages, page)
     {
       s.ArrayNew(page->Ops);
-      sFORALL(page->Ops,po)
-        s.RegisterPtr(po);
+      sFORALL(page->Ops, po)
+      s.RegisterPtr(po);
       s.ArrayNew(page->Tree);
-      sFORALL(page->Tree,to)
-        s.RegisterPtr(to);
+      sFORALL(page->Tree, to)
+      s.RegisterPtr(to);
       s | page->TreeInfo.Level | page->TreeInfo.Flags;
-      if(version>=2)
+
+      if(version >= 2)
         s | page->ManualWriteProtect;
     }
 
-    sFORALL(mypages,page)
+    sFORALL(mypages, page)
     {
       s | page->Name;
       s | page->IsTree;
       s | page->ScrollX | page->ScrollY;
-      sFORALL(page->Ops,po)
+      sFORALL(page->Ops, po)
       {
-        if(version<3)
+        if(version < 3)
         {
           s | po->PosX | po->PosY | po->SizeX | po->SizeY;
           s | po->Bypass | po->Hide;
           s | po;
-          //s | (wOp *)po;    // use this line instead to load files saved before wStackOp got own serialize and wOp::Serialize was used
+          // s | (wOp *)po;    // use this line instead to load files saved before wStackOp got own serialize and wOp::Serialize was used
         }
-        if(version>=3)
+
+        if(version >= 3)
           s | po;
       }
-      sFORALL(page->Tree,to)
+      sFORALL(page->Tree, to)
       {
-        if(version<3)
+        if(version < 3)
         {
           s | to->TreeInfo.Level;
           s | to->TreeInfo.Flags;
           s | to;
-          //s | (wOp *)to;    // use this line instead to load files saved before wStackOp got own serialize and wOp::Serialize was used
+          // s | (wOp *)to;    // use this line instead to load files saved before wStackOp got own serialize and wOp::Serialize was used
         }
-        if(version>=3)
-          s | to;
 
+        if(version >= 3)
+          s | to;
       }
     }
 
     if(s.IsReading())
     {
-      sFORALL(mypages,page)
-        page->Include = this;
+      sFORALL(mypages, page)
+      page->Include = this;
       Doc->Pages.Add(mypages);
     }
   }
 }
 
-void wDocInclude::Serialize(sWriter &s) { Serialize_(s); }
-void wDocInclude::Serialize(sReader &s) { Serialize_(s); }
+void wDocInclude::Serialize(sWriter& s)
+{
+  Serialize_(s);
+}
+
+void wDocInclude::Serialize(sReader& s)
+{
+  Serialize_(s);
+}
 
 /****************************************************************************/
 /***                                                                      ***/
@@ -3934,79 +4373,84 @@ wExecutive::~wExecutive()
   delete MemPool;
 }
 
-
-void ProgressPaint(sInt count,sInt max)
+void ProgressPaint(sInt count, sInt max)
 {
   static sInt lasttick = 0;
   sInt tick = sGetTime();
-  if(tick<lasttick+500)
-    return;
-  lasttick = tick;
-  sRect r,ro,ri;
-  sInt sx,sy;
 
-  sGetWindowSize(sx,sy);
+  if(tick < lasttick + 500)
+    return;
+
+  lasttick = tick;
+  sRect r, ro, ri;
+  sInt sx, sy;
+
+  sGetWindowSize(sx, sy);
 
   r.x0 = 20;
-  r.x1 = sx-20;
-  r.y0 = sy/2-15;
-  r.y1 = sy/2+15;
+  r.x1 = sx - 20;
+  r.y0 = sy / 2 - 15;
+  r.y1 = sy / 2 + 15;
 
-  count = sClamp(count,0,max);
+  count = sClamp(count, 0, max);
 
   sRender2DBegin();
 
   ro = r;
   r.Extend(-2);
   ri = r;
-  sRectHole2D(ro,ri,sGC_WHITE);
+  sRectHole2D(ro, ri, sGC_WHITE);
 
   ro = r;
   r.Extend(-2);
   ri = r;
-  sRectHole2D(ro,ri,sGC_BLACK);
+  sRectHole2D(ro, ri, sGC_BLACK);
 
   ro = ri = r;
-  ri.x1 = ro.x0 = r.x0+sMulDiv(count,r.SizeX(),max);
-  sRect2D(ro,sGC_BLACK);
-  sRect2D(ri,sGC_WHITE);
+  ri.x1 = ro.x0 = r.x0 + sMulDiv(count, r.SizeX(), max);
+  sRect2D(ro, sGC_BLACK);
+  sRect2D(ri, sGC_WHITE);
 
   sRender2DEnd();
 }
 
-void (*ProgressPaintFunc)(sInt count, sInt max) = ProgressPaint;
+void (* ProgressPaintFunc)(sInt count, sInt max) = ProgressPaint;
 
-wObject *wExecutive::Execute(sBool progress,sBool depend)
+wObject* wExecutive::Execute(sBool progress, sBool depend)
 {
-  wCommand *cmd;
+  wCommand* cmd;
   sBool allok = 1;
   sBool logging = 0;
-  wObject *result = 0;
+  wObject* result = 0;
   sBool ok;
   sInt cmdcount = Commands.GetCount();
-  sInt ProgressTimer = sGetTime()+500;
+  sInt ProgressTimer = sGetTime() + 500;
   sInt ProgressEnable = 0;
-  sBool Fail=0;
+  sBool Fail = 0;
 
   Doc->CacheWarmupBeat.Clear();
   sCheckBreakKey();   // throw away any break key in queue
-  sPtr memlimit = sPtr(Doc->EditOptions.MemLimit)*1024*1024;
+  sPtr memlimit = sPtr(Doc->EditOptions.MemLimit) * 1024 * 1024;
 
-  if(cmdcount>0)
+  if(cmdcount > 0)
   {
-    sFORALL(Commands,cmd)
-      if(cmd->Op)
-        cmd->Op->CalcErrorString = 0;
+    sFORALL(Commands, cmd)
+
+    if(cmd->Op)
+      cmd->Op->CalcErrorString = 0;
+
     if(LOGIT)
       sDPrintF(L"Calc:");
 
-    sFORALL(Commands,cmd)
+    sFORALL(Commands, cmd)
     {
       if(!Fail && sCheckBreakKey())
         Fail = 1;
+
       if(LOGIT)
         if(cmd->Op)
-          sDPrintF(L" %s",cmd->Op->Class->Name);
+          sDPrintF(L" %s", cmd->Op->Class->Name);
+
       if(cmd->Op && (cmd->Op->Class->Flags & wCF_LOGGING))
       {
         if(!logging)
@@ -4016,14 +4460,19 @@ wObject *wExecutive::Execute(sBool progress,sBool depend)
           ProgressTimer = 0;
         }
       }
-      if(progress && !ProgressEnable && sGetTime()>ProgressTimer)
+
+      if(progress && !ProgressEnable && sGetTime() > ProgressTimer)
         ProgressEnable = 1;
+
       if(ProgressEnable && ProgressPaintFunc)
-        ProgressPaintFunc(_i+1,Commands.GetCount());
+        ProgressPaintFunc(_i + 1, Commands.GetCount());
+
       ok = 1;
+
       if(allok)
       {
-        sVERIFY(cmd->Output==0);
+        sVERIFY(cmd->Output == 0);
+
         if(cmd->Op && cmd->Op->WeakCache)
         {
           cmd->Output = cmd->Op->WeakCache;
@@ -4031,66 +4480,72 @@ wObject *wExecutive::Execute(sBool progress,sBool depend)
           cmd->Output->AddRef();
         }
 
-        if(cmd->PassInput>=0)
+        if(cmd->PassInput >= 0)
         {
-          wObject *in = cmd->GetInput<wObject *>(cmd->PassInput);
-          if(in && in->RefCount==1)
+          wObject* in = cmd->GetInput<wObject*>(cmd->PassInput);
+
+          if(in && in->RefCount == 1)
           {
             cmd->Output = in;
-            cmd->Inputs[cmd->PassInput]->Output=0;
+            cmd->Inputs[cmd->PassInput]->Output = 0;
           }
         }
 
         // script
 
         sBool vars_from_context = 0;
+
         if(cmd->Script)
         {
           vars_from_context = 1;
           cmd->Script->PushGlobal();
           cmd->Script->ClearImports();
 
-          for(sInt i=0;i<cmd->FakeInputCount;i++)
+          for(sInt i = 0; i < cmd->FakeInputCount; i++)
           {
             if(cmd->Inputs[i])
             {
-              for(sInt j=0;j<cmd->Inputs[i]->OutputVarCount;j++)
+              for(sInt j = 0; j < cmd->Inputs[i]->OutputVarCount; j++)
               {
-                wScriptVar *var = cmd->Inputs[i]->OutputVars+j;
-                cmd->Script->AddImport(var->Name,var->Type,var->Count,var->IntVal);
+                wScriptVar* var = cmd->Inputs[i]->OutputVars + j;
+                cmd->Script->AddImport(var->Name, var->Type, var->Count, var->IntVal);
               }
             }
           }
+
           if(!cmd->LoopName.IsEmpty())
           {
-            ScriptValue *val = cmd->Script->MakeFloat(1);
+            ScriptValue* val = cmd->Script->MakeFloat(1);
             val->FloatPtr[0] = cmd->LoopValue;
-            cmd->Script->BindGlobal(cmd->Script->AddSymbol(cmd->LoopName),val);
+            cmd->Script->BindGlobal(cmd->Script->AddSymbol(cmd->LoopName), val);
           }
 
           if(cmd->ScriptBind2)
-            (*cmd->ScriptBind2)(cmd,cmd->Script);
+            (*cmd->ScriptBind2)(cmd, cmd->Script);
 
           if(cmd->ScriptSource)
           {
-            cmd->Script->AddImport(L"lowquality",ScriptTypeInt,1,&Doc->LowQuality);
-            wScriptDefine *sd;
-            sFORALL(Doc->ScriptDefines,sd)
+            cmd->Script->AddImport(L"lowquality", ScriptTypeInt, 1, &Doc->LowQuality);
+            wScriptDefine* sd;
+            sFORALL(Doc->ScriptDefines, sd)
             {
-              if(sd->Mode==1)
-                cmd->Script->AddImport(sd->Name,ScriptTypeString,1,&sd->StringValue);
-              if(sd->Mode==2)
-                cmd->Script->AddImport(sd->Name,ScriptTypeInt,1,&sd->IntValue);
-              if(sd->Mode==3)
-                cmd->Script->AddImport(sd->Name,ScriptTypeFloat,1,&sd->FloatValue);
+              if(sd->Mode == 1)
+                cmd->Script->AddImport(sd->Name, ScriptTypeString, 1, &sd->StringValue);
+
+              if(sd->Mode == 2)
+                cmd->Script->AddImport(sd->Name, ScriptTypeInt, 1, &sd->IntValue);
+
+              if(sd->Mode == 3)
+                cmd->Script->AddImport(sd->Name, ScriptTypeFloat, 1, &sd->FloatValue);
             }
-            ScriptCode code(cmd->ScriptSource,0);
-            const sChar *error = cmd->Script->Run();
+            ScriptCode code(cmd->ScriptSource, 0);
+            const sChar* error = cmd->Script->Run();
+
             if(error)
             {
               ok = 0;
               cmd->SetError(sPoolString(error));
-              sDPrintF(L"\n%s\n",error);
+              sDPrintF(L"\n%s\n", error);
             }
           }
         }
@@ -4104,14 +4559,15 @@ wObject *wExecutive::Execute(sBool progress,sBool depend)
 
           if(cmd->Op)
           {
-            for(sInt i=0;i<cmd->Op->Class->ParaStrings;i++)
+            for(sInt i = 0; i < cmd->Op->Class->ParaStrings; i++)
             {
-              if((cmd->Op->Class->FileInMask & (1<<i)) && sCmpString(cmd->Strings[i],L"")!=0)
-                if(!sMatchWildcard(L"*.kd",cmd->Strings[i],0))
-                  sPrintF(L"in_execute \"%p\";\n",cmd->Strings[i]);
-              if((cmd->Op->Class->FileOutMask & (1<<i)) && sCmpString(cmd->Strings[i],L"")!=0)
-                if(!sMatchWildcard(L"*.kd",cmd->Strings[i],0))
-                  sPrintF(L"out \"%p\";\n",cmd->Strings[i]);
+              if((cmd->Op->Class->FileInMask & (1 << i)) && sCmpString(cmd->Strings[i], L"") != 0)
+                if(!sMatchWildcard(L"*.kd", cmd->Strings[i], 0))
+                  sPrintF(L"in_execute \"%p\";\n", cmd->Strings[i]);
+
+              if((cmd->Op->Class->FileOutMask & (1 << i)) && sCmpString(cmd->Strings[i], L"") != 0)
+                if(!sMatchWildcard(L"*.kd", cmd->Strings[i], 0))
+                  sPrintF(L"out \"%p\";\n", cmd->Strings[i]);
             }
           }
         }
@@ -4123,58 +4579,70 @@ wObject *wExecutive::Execute(sBool progress,sBool depend)
               sPushMemLeakDesc(cmd->Op->Class->OutputType->Symbol);
             else
               sPushMemLeakDesc(L"unknown op");
+
             if(Fail)
               ok = 0;
+
             if(ok)
-              if(!(*cmd->Code)(this,cmd))
+              if(!(*cmd->Code)(this, cmd))
                 ok = 0;
+
             if(ok && cmd->Output)
               cmd->Output->CallId = cmd->CallId;
+
             sPopMemLeakDesc();
           }
           else
           {
-            if(cmd->InputCount>0 && cmd->Inputs[0] && cmd->Inputs[0]->Output)
+            if(cmd->InputCount > 0 && cmd->Inputs[0] && cmd->Inputs[0]->Output)
             {
               cmd->Output = cmd->Inputs[0]->Output;
               cmd->Output->AddRef();
             }
-            else      // fake op, just generate variables 
+            else      // fake op, just generate variables
             {
               cmd->Output = new wObject;
             }
+
             ok = 1;
           }
 
           if(allok && !ok)
           {
             sDPrintF(L" (FAIL)");
+
             if(cmd->Op)
             {
-              sPrintF(L"operator class %q failed\n",cmd->Op->Class->Label);
-              sDPrintF(L"operator class %q failed\n",cmd->Op->Class->Label);
-              wPage *page;
-              sFORALL(Doc->Pages,page)
+              sPrintF(L"operator class %q failed\n", cmd->Op->Class->Label);
+              sDPrintF(L"operator class %q failed\n", cmd->Op->Class->Label);
+              wPage* page;
+              sFORALL(Doc->Pages, page)
               {
-                if(sFindPtr(page->Ops,cmd->Op))
+                if(sFindPtr(page->Ops, cmd->Op))
                 {
-                  wStackOp *op = (wStackOp *)cmd->Op;
-                  sPrintF(L"location page %q, x=%d, y=%d\n",page->Name,op->PosX,op->PosY);
-                  sDPrintF(L"location page %q, x=%d, y=%d\n",page->Name,op->PosX,op->PosY);
+                  wStackOp* op = (wStackOp*)cmd->Op;
+                  sPrintF(L"location page %q, x=%d, y=%d\n", page->Name, op->PosX, op->PosY);
+                  sDPrintF(L"location page %q, x=%d, y=%d\n", page->Name, op->PosX, op->PosY);
                 }
               }
-              for(sInt i=0;i<cmd->Op->EditStringCount;i++)
-                sPrintF(L"string %d:%q\n",i,cmd->Op->EditString[i]->Get());
-              wOpInputInfo *info;
-              sFORALL(cmd->Op->Links,info)
-                if(!info->LinkName.IsEmpty())
-                  sPrintF(L"link %d:%q\n",_i,info->LinkName);
+
+              for(sInt i = 0; i < cmd->Op->EditStringCount; i++)
+                sPrintF(L"string %d:%q\n", i, cmd->Op->EditString[i]->Get());
+
+              wOpInputInfo* info;
+              sFORALL(cmd->Op->Links, info)
+
+              if(!info->LinkName.IsEmpty())
+                sPrintF(L"link %d:%q\n", _i, info->LinkName);
             }
           }
+
           allok &= ok;
+
           if(cmd->Op && cmd->Op->WeakOutputs.GetCount())
           {
             cmd->Op->WeakCache->Release();
+
             if(ok)
             {
               cmd->Op->WeakCache = cmd->Output;
@@ -4189,16 +4657,19 @@ wObject *wExecutive::Execute(sBool progress,sBool depend)
         {
           cmd->OutputVarCount = 0;
           sInt count = 0;
-          for(sInt i=0;i<cmd->FakeInputCount;i++)
+
+          for(sInt i = 0; i < cmd->FakeInputCount; i++)
             if(cmd->Inputs[i])
               count += cmd->Inputs[i]->OutputVarCount;
+
           if(!cmd->LoopName.IsEmpty())
             count++;
 
           if(vars_from_context)
           {
             cmd->Script->FlushLocal();
-            ScriptValue *val = cmd->Script->GetFirstFromScope();
+            ScriptValue* val = cmd->Script->GetFirstFromScope();
+
             while(val)
             {
               val = val->ScopeLink;
@@ -4207,6 +4678,7 @@ wObject *wExecutive::Execute(sBool progress,sBool depend)
           }
 
           cmd->OutputVars = MemPool->Alloc<wScriptVar>(count);
+
           if(!cmd->LoopName.IsEmpty())
           {
             wScriptVar var;
@@ -4216,40 +4688,46 @@ wObject *wExecutive::Execute(sBool progress,sBool depend)
             var.FloatVal[0] = cmd->LoopValue;
             cmd->AddOutputVar(var);
           }
-          for(sInt i=0;i<cmd->FakeInputCount;i++)
+
+          for(sInt i = 0; i < cmd->FakeInputCount; i++)
           {
             if(cmd->Inputs[i])
             {
-              for(sInt j=0;j<cmd->Inputs[i]->OutputVarCount;j++)
+              for(sInt j = 0; j < cmd->Inputs[i]->OutputVarCount; j++)
                 cmd->AddOutputVar(cmd->Inputs[i]->OutputVars[j]);
             }
           }
 
           if(vars_from_context)
           {
-            ScriptValue *val = cmd->Script->GetFirstFromScope();
+            ScriptValue* val = cmd->Script->GetFirstFromScope();
+
             while(val)
             {
-              if(val->Symbol && val->Count<4 && (val->Type==ScriptTypeInt || val->Type==ScriptTypeFloat || val->Type==ScriptTypeString || val->Type==ScriptTypeColor))
+              if(val->Symbol && val->Count < 4 && (val->Type == ScriptTypeInt || val->Type == ScriptTypeFloat || val->Type == ScriptTypeString || val->Type == ScriptTypeColor))
               {
                 wScriptVar var;
                 var.Name = val->Symbol->Name;
                 var.Type = val->Type;
                 var.Count = val->Count;
-                if(var.Type==ScriptTypeString)
+
+                if(var.Type == ScriptTypeString)
                 {
-                  for(sInt i=0;i<var.Count;i++)
+                  for(sInt i = 0; i < var.Count; i++)
                     var.StringVal[i] = val->StringPtr[i];
                 }
                 else
                 {
-                  for(sInt i=0;i<var.Count;i++)
+                  for(sInt i = 0; i < var.Count; i++)
                     var.IntVal[i] = val->IntPtr[i];
                 }
+
                 cmd->AddOutputVar(var);
               }
+
               val = val->ScopeLink;
             }
+
             cmd->Script->PopGlobal();
           }
         }
@@ -4258,9 +4736,11 @@ wObject *wExecutive::Execute(sBool progress,sBool depend)
       if(!allok /*&& cmd->CallId==0*/)
       {
         sInt error = 0;
-        for(sInt i=0;i<cmd->FakeInputCount;i++)
+
+        for(sInt i = 0; i < cmd->FakeInputCount; i++)
           if(cmd->Inputs[i])
             error |= cmd->Inputs[i]->ErrorFlag;
+
         if(error)
           cmd->SetError(L"....");
       }
@@ -4269,17 +4749,21 @@ wObject *wExecutive::Execute(sBool progress,sBool depend)
       {
         if(!cmd->Output->Type && cmd->Op)
           sFatal(L"forgot to initialize Type field in wObject constructor of\n"
-                 L"operator %s %s(...)",cmd->Op->Class->OutputType->Label,cmd->Op->Class->Label);
-        
+                 L"operator %s %s(...)", cmd->Op->Class->OutputType->Label, cmd->Op->Class->Label);
+
         cmd->Output->RefCount += cmd->OutputRefs;
       }
+
       if(ok && cmd->Op)
         cmd->Op->Strobe = 0;
+
       if(!ok)
         cmd->SetError(L"calculation error");
-      for(sInt i=0;i<cmd->InputCount;i++)
+
+      for(sInt i = 0; i < cmd->InputCount; i++)
         if(cmd->Inputs[i])
           cmd->Inputs[i]->Output->Release();
+
       if(cmd->StoreCacheOp && allok)
       {
         if(cmd->StoreCacheOp->Cache)
@@ -4287,22 +4771,26 @@ wObject *wExecutive::Execute(sBool progress,sBool depend)
           // this should only happen in a subroutine that is evaluated multiple times!
           cmd->StoreCacheOp->Cache->Release();
         }
+
         cmd->StoreCacheOp->Cache = cmd->Output;
         cmd->StoreCacheOp->CacheLRU = Doc->CacheLRU++;
         cmd->StoreCacheOp->CacheVars.Clear();
         cmd->StoreCacheOp->CacheVars.Resize(cmd->OutputVarCount);
-        for(sInt i=0;i<cmd->OutputVarCount;i++)
+
+        for(sInt i = 0; i < cmd->OutputVarCount; i++)
           cmd->StoreCacheOp->CacheVars[i] = cmd->OutputVars[i];
+
         cmd->Output->AddRef();
       }
-      if(_i==cmdcount-1 && allok)
+
+      if(_i == cmdcount - 1 && allok)
         result = cmd->Output;
       else
         cmd->Output->Release();
 
       // memorymanagement
 
-      while(allok && memlimit>0 && sMemoryUsed>memlimit)
+      while(allok && memlimit > 0 && sMemoryUsed > memlimit)
       {
         if(!Doc->UnCacheLRU())
           break;
@@ -4312,72 +4800,74 @@ wObject *wExecutive::Execute(sBool progress,sBool depend)
     if(LOGIT)
       sDPrintF(L"\n");
   }
+
   if(logging)
     EndLogging();
 
   if(ProgressEnable && ProgressPaintFunc)
   {
-    ProgressPaintFunc(Commands.GetCount(),Commands.GetCount());
+    ProgressPaintFunc(Commands.GetCount(), Commands.GetCount());
     sUpdateWindow();
   }
 
-//  sGetMemoryLeakTracker()->DumpLeaks(L"execution",0,1);
+// sGetMemoryLeakTracker()->DumpLeaks(L"execution",0,1);
 
   return result;
 }
 
-
-void wCommand::AddOutputVar(wScriptVar &var)
+void wCommand::AddOutputVar(wScriptVar& var)
 {
-  for(sInt i=0;i<OutputVarCount;i++)
+  for(sInt i = 0; i < OutputVarCount; i++)
   {
-    if(OutputVars[i].Name==var.Name)
+    if(OutputVars[i].Name == var.Name)
     {
       OutputVars[i] = var;
       return;
     }
   }
+
   OutputVars[OutputVarCount++] = var;
 }
 
-
 static sRect LogRect;
-static sTextBuffer *LogBuffer;
-static sThreadLock *LogLock;
+static sTextBuffer* LogBuffer;
+static sThreadLock* LogLock;
 static sInt LogScroll;
 
-void OpPrint(const sChar *text)
+void OpPrint(const sChar* text)
 {
 #if !sCOMMANDLINE
+
   if(LogLock && LogLock->TryLock())
   {
     LogBuffer->Print(text);
     sRect r;
-    
+
     r = LogRect;
     sRender2DBegin();
-    sRectFrame2D(r,sGC_DRAW);
+    sRectFrame2D(r, sGC_DRAW);
     r.Extend(-1);
-    sGui->FixedFont->SetColor(sGC_TEXT,sGC_BACK);
+    sGui->FixedFont->SetColor(sGC_TEXT, sGC_BACK);
     sClipPush();
     sClipRect(r);
-    sInt y = sGui->FixedFont->Print(sF2P_MULTILINE|sF2P_LEFT|sF2P_BOTTOM|sF2P_OPAQUE,r,LogBuffer->Get(),-1,4,0,-LogScroll);
-    LogScroll = y+sGui->FixedFont->GetHeight()-r.y1 + LogScroll;
+    sInt y = sGui->FixedFont->Print(sF2P_MULTILINE | sF2P_LEFT | sF2P_BOTTOM | sF2P_OPAQUE, r, LogBuffer->Get(), -1, 4, 0, -LogScroll);
+    LogScroll = y + sGui->FixedFont->GetHeight() - r.y1 + LogScroll;
     sClipPop();
     sRender2DEnd();
     LogLock->Unlock();
   }
+
 #endif
 }
 
 void wExecutive::BeginLogging()
 {
 #if !sCOMMANDLINE
-  sInt xs,ys;
-  sGetScreenSize(xs,ys);
+  sInt xs, ys;
+  sGetScreenSize(xs, ys);
   LogBuffer = new sTextBuffer;
   LogLock = new sThreadLock;
-  LogRect.Init(xs*2/10,ys*2/10,xs*8/10,ys*8/10);
+  LogRect.Init(xs * 2 / 10, ys * 2 / 10, xs * 8 / 10, ys * 8 / 10);
 
   OpPrint(L"");
   sRedirectStdOut = OpPrint;
@@ -4394,7 +4884,7 @@ void wExecutive::EndLogging()
 #endif
 }
 
-void ViewPrint(const sChar *text)
+void ViewPrint(const sChar* text)
 {
   if(Doc && Doc->ViewLog)
     Doc->ViewLog->Print(text);
@@ -4402,48 +4892,50 @@ void ViewPrint(const sChar *text)
 
 /****************************************************************************/
 
-void NXNCheckout(const sChar *filename)
+void NXNCheckout(const sChar* filename)
 {
   sDirEntry de;
 
-  if (sGetFileInfo(filename, &de) && (de.Flags & sDEF_WRITEPROTECT))
+  if(sGetFileInfo(filename, &de) && (de.Flags & sDEF_WRITEPROTECT))
   {
-    if(sCmpStringPLen(filename,L"c:/nxn/",7)==0)
+    if(sCmpStringPLen(filename, L"c:/nxn/", 7) == 0)
     {
       const sChar* s = filename;
-      s+=7;
+      s += 7;
       sString<2048> project;
       sChar* d = project;
-      while(*s!='/' && *s!='\\' && *s!=0)
+
+      while(*s != '/' && *s != '\\' && *s != 0)
         *d++ = *s++;
+
       *d++ = 0;
 
-      if(*s=='/' || *s=='\\')
+      if(*s == '/' || *s == '\\')
       {
         sString<2048> buffer;
         sBool filecheckedout = 0;
-        sString<2048> name = s+1;
+        sString<2048> name = s + 1;
         sString<sMAXPATH> path;
         path = project;
         path.AddPath(name);
 
         sSPrintF(buffer,
-          L"alienbrainconsole command='checkout' "
-          L"namespacepath='/workspace/%s' "
-          L"username='chaos' "
-          L"password='qwer12'",
-          path);
+                 L"alienbrainconsole command='checkout' "
+                 L"namespacepath='/workspace/%s' "
+                 L"username='chaos' "
+                 L"password='qwer12'",
+                 path);
 
-        sPrintF(L"%s\n",buffer);
+        sPrintF(L"%s\n", buffer);
         sExecuteShell(buffer);
 
-        if(sGetFileInfo(filename,&de) && (de.Flags & sDEF_WRITEPROTECT))
+        if(sGetFileInfo(filename, &de) && (de.Flags & sDEF_WRITEPROTECT))
         {
           sSPrintF(buffer, L"attrib -r \"%s\"", filename);
-          sPrintF(L"%s\n",buffer);
+          sPrintF(L"%s\n", buffer);
           sExecuteShell(buffer);
 
-          if(sGetFileInfo(filename,&de) && !(de.Flags & sDEF_WRITEPROTECT))
+          if(sGetFileInfo(filename, &de) && !(de.Flags & sDEF_WRITEPROTECT))
           {
             filecheckedout = 1;
           }
@@ -4467,3 +4959,4 @@ void NXNCheckout(const sChar *filename)
 }
 
 /****************************************************************************/
+

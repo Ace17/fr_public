@@ -21,9 +21,9 @@
 
 class MyApp : public sApp
 {
-  sPainter *Painter;
-  sMaterial *Mtrl;
-  sGeometry *Geo;
+  sPainter* Painter;
+  sMaterial* Mtrl;
+  sGeometry* Geo;
 
   sViewport View;
   sMaterialEnv Env;
@@ -32,12 +32,14 @@ class MyApp : public sApp
 
   void PaintCube();
   void PrintInput();
-  void PrintInput2Device(class sInput2Device *device, sInt &y);
+  void PrintInput2Device(class sInput2Device* device, sInt& y);
+
 public:
   MyApp();
   ~MyApp();
   void OnPaint3D();
-  void OnInput(const sInput2Event &ie);
+  void OnInput(const sInput2Event& ie);
 };
 
 /****************************************************************************/
+

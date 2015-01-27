@@ -6,7 +6,6 @@
 
 #pragma once
 
-
 // base
 
 #include "base/types.hpp"
@@ -39,29 +38,29 @@
 
 /* example for a good starting point:
 
-#include "base/system.hpp"
-#include "gui/gui.hpp"
+   #include "base/system.hpp"
+   #include "gui/gui.hpp"
 
 
-class MyWindow : public sWindow
-{
-public:
-  void OnPaint2D()
-  {
+   class MyWindow : public sWindow
+   {
+   public:
+   void OnPaint2D()
+   {
     sRect2D(Client,sGC_BACK);
     sLine2D(Client.x0,Client.y0,Client.x1-1,Client.y1-1,sGC_DRAW);
     sLine2D(Client.x0,Client.y1-1,Client.x1-1,Client.y0,sGC_DRAW);
-  }
-};
+   }
+   };
 
 
-void sMain()
-{
-  sInit(sISF_2D,800,600);
-  sInitGui();
+   void sMain()
+   {
+   sInit(sISF_2D,800,600);
+   sInitGui();
 
-  sGui->AddBackWindow(new MyWindow);
-}
+   sGui->AddBackWindow(new MyWindow);
+   }
 
-*/
+ */
 

@@ -21,14 +21,13 @@
 
 /****************************************************************************/
 
-
 class MyApp : public sApp
 {
-  sPainter *Painter;
-  sTexture2D *Tex;
-  sMaterial *Mtrl;
+  sPainter* Painter;
+  sTexture2D* Tex;
+  sMaterial* Mtrl;
   sTextBuffer tb;
-  class sStsWorkload *Workload;
+  class sStsWorkload* Workload;
 
   sViewport View;
   sFreeflightCamera Cam;
@@ -39,16 +38,17 @@ class MyApp : public sApp
 
   void AddGeoBuffer();
   void EndGeoBuffer();
-  void AddSpace(sInt x,sInt y,sInt z,sInt div,sInt n);
+  void AddSpace(sInt x, sInt y, sInt z, sInt div, sInt n);
 
   void MakeSpace();
 
-  class OctNode *Root;
+  class OctNode* Root;
+
 public:
   MyApp();
   ~MyApp();
   void OnPaint3D();
-  void OnInput(const sInput2Event &ie);
+  void OnInput(const sInput2Event& ie);
 };
 
 /****************************************************************************/

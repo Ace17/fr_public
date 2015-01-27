@@ -11,7 +11,7 @@ extern "C" const sChar8 WireTXT[];
 
 /****************************************************************************/
 
-Client::Client(sInt port,const sChar *ip)
+Client::Client(sInt port, const sChar* ip)
 {
   Connected = 0;
   ServerPort = port;
@@ -37,17 +37,20 @@ void Client::CheckConnect()
 {
   if(!Socket.IsConnected())
   {
-    if(sResolveNameAndPort(IpString,ServerIP,ServerPort))
+    if(sResolveNameAndPort(IpString, ServerIP, ServerPort))
     {
       sInt delay = 250;
-      for(sInt i=0;i<10;i++)
+
+      for(sInt i = 0; i < 10; i++)
       {
-        Socket.Connect(ServerIP,ServerPort);
+        Socket.Connect(ServerIP, ServerPort);
+
         if(Socket.IsConnected())
         {
           Connected = 1;
           break;
         }
+
         sSleep(delay);
         delay *= 2;
       }
@@ -60,11 +63,12 @@ void Client::CheckConnect()
 
 /****************************************************************************/
 
-// just send a messages 
+// just send a messages
 
-sBool Client::Test(sU32 p0,sU32 p1)
+sBool Client::Test(sU32 p0, sU32 p1)
 {
   sBool ok = 0;
+
   if(Connected)
   {
     ok = 1;
@@ -74,14 +78,18 @@ sBool Client::Test(sU32 p0,sU32 p1)
     msg.Para0 = p0;
     msg.Para1 = p1;
 
-    sPrintF(L"client: send %08x %08x\n",msg.Para0,msg.Para1);
+    sPrintF(L"client: send %08x %08x\n", msg.Para0, msg.Para1);
 
     ok = Socket.WriteAll(msg);
-    if(ok) ok = Socket.ReadAll(msg);
 
-    sPrintF(L"client: got %08x %08x (%d)\n",msg.Para0,msg.Para1,ok);
+    if(ok)
+      ok = Socket.ReadAll(msg);
+
+    sPrintF(L"client: got %08x %08x (%d)\n", msg.Para0, msg.Para1, ok);
   }
+
   return ok;
 }
 
 /****************************************************************************/
+

@@ -26,7 +26,7 @@
 /****************************************************************************/
 
 // initialize resources
- 
+
 MyApp::MyApp()
 {
 }
@@ -40,13 +40,13 @@ MyApp::~MyApp()
 // paint a frame
 
 void MyApp::OnPaint3D()
-{ 
+{
   sInt time = sGetTime();
 
-  sTargetPara para(sST_CLEARALL,0);
-  para.ClearColor[0].x = sFSin(time*0.0021f)*0.5f+0.5f;  // epilepsy frendly flickering :-)
-  para.ClearColor[0].y = sFSin(time*0.0023f)*0.5f+0.5f;
-  para.ClearColor[0].z = sFSin(time*0.0027f)*0.5f+0.5f;
+  sTargetPara para(sST_CLEARALL, 0);
+  para.ClearColor[0].x = sFSin(time * 0.0021f) * 0.5f + 0.5f;  // epilepsy frendly flickering :-)
+  para.ClearColor[0].y = sFSin(time * 0.0023f) * 0.5f + 0.5f;
+  para.ClearColor[0].z = sFSin(time * 0.0027f) * 0.5f + 0.5f;
   sSetTarget(para);
 }
 
@@ -54,17 +54,18 @@ void MyApp::OnPaint3D()
 
 // abort program when escape is pressed
 
-void MyApp::OnInput(const sInput2Event &ie)
+void MyApp::OnInput(const sInput2Event& ie)
 {
-  if((ie.Key&sKEYQ_MASK)==sKEY_ESCAPE) sExit();
+  if((ie.Key & sKEYQ_MASK) == sKEY_ESCAPE)
+    sExit();
 }
 
 /****************************************************************************/
 
 // register application class
 
-#if sPLATFORM==sPLAT_WINDOWS
-sINITMEM(0,0);
+#if sPLATFORM == sPLAT_WINDOWS
+sINITMEM(0, 0);
 #endif
 
 void sMain()
@@ -74,12 +75,12 @@ void sMain()
   sScreenMode sm;
   sm.Clear();
   sm.Flags = sSM_VALID;
-//  sm.Flags |= sSM_FULLSCREEN;
-//  sm.Flags |= sSM_WARP;
+// sm.Flags |= sSM_FULLSCREEN;
+// sm.Flags |= sSM_WARP;
   sm.ScreenX = 640;
   sm.ScreenY = 480;
   sSetScreenMode(sm);
-  sInit(sISF_3D|sISF_CONTINUOUS);
+  sInit(sISF_3D | sISF_CONTINUOUS);
   sSetApp(new MyApp());
 }
 

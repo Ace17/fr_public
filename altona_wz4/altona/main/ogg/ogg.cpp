@@ -17,37 +17,39 @@
 
 /****************************************************************************/
 
-sOGGDecoder::sOGGDecoder() 
+sOGGDecoder::sOGGDecoder()
 {
   dec = 0;
 }
 
-sOGGDecoder::~sOGGDecoder() 
+sOGGDecoder::~sOGGDecoder()
 {
   if(dec)
     stb_vorbis_close(dec);
 }
 
-sBool sOGGDecoder::Init(sInt songnr) 
+sBool sOGGDecoder::Init(sInt songnr)
 {
   if(dec)
   {
     stb_vorbis_close(dec);
     dec = 0;
   }
+
   int error = 0;
-  dec = stb_vorbis_open_memory(Stream,StreamSize,&error,0);  
-  return dec!=0;
+  dec = stb_vorbis_open_memory(Stream, StreamSize, &error, 0);
+  return dec != 0;
 }
 
-sInt sOGGDecoder::Render(sS16 *stream,sInt samples) 
+sInt sOGGDecoder::Render(sS16* stream, sInt samples)
 {
-  return stb_vorbis_get_samples_short_interleaved(dec,2,stream,samples*2);
+  return stb_vorbis_get_samples_short_interleaved(dec, 2, stream, samples * 2);
 }
 
-sInt sOGGDecoder::GetTuneLength() 
+sInt sOGGDecoder::GetTuneLength()
 {
   return stb_vorbis_stream_length_in_samples(dec);
 }
 
 /****************************************************************************/
+

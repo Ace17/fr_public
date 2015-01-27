@@ -19,39 +19,39 @@ class ShaderCreator;
 enum ModMtrlEnum
 {
   // request from the pixel shader
-  MMV_WS_Pos          = 0x00000001, // worldspace
-  MMV_WS_Normal       = 0x00000002,
-  MMV_WS_Tangent      = 0x00000004,
-  MMV_WS_Bitangent    = 0x00000008,
+  MMV_WS_Pos = 0x00000001, // worldspace
+  MMV_WS_Normal = 0x00000002,
+  MMV_WS_Tangent = 0x00000004,
+  MMV_WS_Bitangent = 0x00000008,
 
-  MMV_UV0             = 0x00000010, // nospace
-  MMV_UV1             = 0x00000020,
+  MMV_UV0 = 0x00000010, // nospace
+  MMV_UV1 = 0x00000020,
 
-  MMP_Pre             = 1,          // phases for the shader
+  MMP_Pre = 1,          // phases for the shader
   MMP_Light,
   MMP_Shadow,
   MMP_Shader,
   MMP_Post,
   MMP_TexLD,                      // do this last, because the PS/VS code must be processed AFTER the Get() call
 
-  MMF_Fog             = 0x00000001, // features (shader enabled from environment)
-  MMF_GroundFog       = 0x00000002,
-  MMF_ClipPlanes      = 0x00000004,
+  MMF_Fog = 0x00000001, // features (shader enabled from environment)
+  MMF_GroundFog = 0x00000002,
+  MMF_ClipPlanes = 0x00000004,
 
-  MMFF_FogIsBlack     = 0x00000001, // feature flags
-  MMFF_ShadowCastOff  = 0x00000002,
-  MMFF_AmbientOff     = 0x00000004,
-  MMFF_SwapFog        = 0x00000008,
+  MMFF_FogIsBlack = 0x00000001, // feature flags
+  MMFF_ShadowCastOff = 0x00000002,
+  MMFF_AmbientOff = 0x00000004,
+  MMFF_SwapFog = 0x00000008,
   MMFF_EmissiveScreen = 0x00000010,
-  MMFF_EmissiveNoRim  = 0x00000040,
-  MMFF_EmissiveNoCenter=0x00000080,
-  MMFF_FogAlpha       = 0x00000100,
-  MMFF_ShadowCastToAll= 0x00000200, // cast shadows only in my own light environment, not just all of them
-  MMFF_NormalI4       = 0x00000400, // use sVF_I4 for normals instead of sVF_F3
+  MMFF_EmissiveNoRim = 0x00000040,
+  MMFF_EmissiveNoCenter = 0x00000080,
+  MMFF_FogAlpha = 0x00000100,
+  MMFF_ShadowCastToAll = 0x00000200, // cast shadows only in my own light environment, not just all of them
+  MMFF_NormalI4 = 0x00000400, // use sVF_I4 for normals instead of sVF_F3
   MMFF_DoubleSidedLight = 0x000800, // use doublesided lighting
 
-  MM_MaxLight         = 8,          // some more constants
-  MM_MaxT             = 10,
+  MM_MaxLight = 8,          // some more constants
+  MM_MaxT = 10,
 };
 
 struct ModShaderVEnv
@@ -59,16 +59,15 @@ struct ModShaderVEnv
   sVector4 para[28];
   static const sInt RegStart = 0;
   static const sInt RegCount = 28;
-  static const sInt Slot = sCBUFFER_VS|0;
+  static const sInt Slot = sCBUFFER_VS | 0;
 };
 struct ModShaderPEnv
 {
   sVector4 para[32];
   static const sInt RegStart = 0;
   static const sInt RegCount = 32;
-  static const sInt Slot = sCBUFFER_PS|0;
+  static const sInt Slot = sCBUFFER_PS | 0;
 };
-
 
 struct ModLightEnv                // light environment
 {
@@ -77,7 +76,7 @@ struct ModLightEnv                // light environment
   sCBuffer<Wz4MtrlModelPara> cbm;
 
   void Init();
-  void Calc(sViewport &view);
+  void Calc(sViewport& view);
   ModLightEnv();
 
   // parameters modified by operator
@@ -125,8 +124,8 @@ struct ModLightEnv                // light environment
     sF32 SM_BaseBiasOverClipFar;
     sF32 SM_SlopeBiasOverClipFar;
 
-    sTexture2D *ShadowMap;
-    sTextureCube *ShadowCube;
+    sTexture2D* ShadowMap;
+    sTextureCube* ShadowCube;
     sMatrix44 LightProj;
     sVector4 LightMatZ;
     sF32 LightFarR;
@@ -187,7 +186,7 @@ struct ModLightEnv                // light environment
 struct CachedModInfo
 {
   CachedModInfo();
-  CachedModInfo(sInt matmode,class ModMtrl *,sInt lightenv);
+  CachedModInfo(sInt matmode, class ModMtrl*, sInt lightenv);
   sInt Features;
   sInt FeatureFlags;
   sU8 LightEnv;
@@ -203,7 +202,7 @@ struct CachedModInfo
   sU8 SpotFalloff;
 };
 
-bool operator == (const CachedModInfo &a,const CachedModInfo &b);
+bool operator == (const CachedModInfo& a, const CachedModInfo& b);
 
 /****************************************************************************/
 /***                                                                      ***/
@@ -220,23 +219,33 @@ class ModMtrlParaAssign
     sInt Count;
   };
 
-  sInt *Alloc;                    // each float4 has a count 0=empty, 4=full
+  sInt* Alloc;                    // each float4 has a count 0=empty, 4=full
   sInt MapEnd;                    // first free index in map
   sInt MapMax;
   sInt Error;
   sArray<ModPara> CopyLoop;       // copy from ModLightPara to constant buffer
 
 public:
-
   ModMtrlParaAssign();
   ~ModMtrlParaAssign();
   void Init(sInt max);            // start working and set max float4's to handle
-  sInt Assign(sInt count,sInt index);
-  void Copy(sU32 *src,sU32 *dest);
+  sInt Assign(sInt count, sInt index);
+  void Copy(sU32* src, sU32* dest);
 
-  sInt GetSize() { return MapEnd; }
-  sInt GetError() { return Error; }
-  sInt GetAlloc(sInt r) { return Alloc[r]; }
+  sInt GetSize()
+  {
+    return MapEnd;
+  }
+
+  sInt GetError()
+  {
+    return Error;
+  }
+
+  sInt GetAlloc(sInt r)
+  {
+    return Alloc[r];
+  }
 };
 
 /****************************************************************************/
@@ -250,7 +259,7 @@ struct UpdateTexInfo
   sInt Enable;
   sInt Light;
   sInt Mode;
-  sTextureBase *Save;
+  sTextureBase* Save;
 };
 
 class CachedModShader
@@ -261,8 +270,8 @@ public:
 
   CachedModInfo Info;
   sTextBuffer Code;
-  class ModMtrl2 *Shader;
-  sVertexFormatHandle *Format;
+  class ModMtrl2* Shader;
+  sVertexFormatHandle* Format;
   ModMtrlParaAssign VSPara;
   ModMtrlParaAssign PSPara;
   UpdateTexInfo UpdateTex[sMTRL_MAXTEX];
@@ -277,36 +286,74 @@ public:
 class MtrlModule                                  // the real thing
 {
 protected:
-  virtual ~MtrlModule() {}
-  sInt RefCount;
-public:
-  MtrlModule() { RefCount = 1; Phase=0; Temp=0; Shaders=3; Name=0; }
+  virtual ~MtrlModule()
+  {
+  }
 
-  virtual void Start(ShaderCreator *sc) {}        // is called once at start. useful to prepare for being called with Get()
-  virtual void VS(ShaderCreator *sc) {}           // is called to emit VS
-  virtual void PS(ShaderCreator *sc) {}           // is called to emit PS
-  virtual void Post(ShaderCreator *sc) {}         // is called after all modules have emitted VS / PS. for Get()
-  virtual sPoolString Get(ShaderCreator *sc)      // can be called by other modules. 
-  { return sPoolString(L"float4(1,1,1,1)"); }     // you can use the post phase to add more code
-  const sChar *Name;
+  sInt RefCount;
+
+public:
+  MtrlModule()
+  {
+    RefCount = 1;
+    Phase = 0;
+    Temp = 0;
+    Shaders = 3;
+    Name = 0;
+  }
+
+  virtual void Start(ShaderCreator* sc)
+  {
+  }        // is called once at start. useful to prepare for being called with Get()
+
+  virtual void VS(ShaderCreator* sc)
+  {
+  }           // is called to emit VS
+
+  virtual void PS(ShaderCreator* sc)
+  {
+  }           // is called to emit PS
+
+  virtual void Post(ShaderCreator* sc)
+  {
+  }         // is called after all modules have emitted VS / PS. for Get()
+
+  virtual sPoolString Get(ShaderCreator* sc)      // can be called by other modules.
+  {
+    return sPoolString(L"float4(1,1,1,1)");
+  }     // you can use the post phase to add more code
+
+  const sChar* Name;
   sInt Phase;
   sInt Temp;
   sInt Shaders;                                   // bit0: VS   bit1: PS
 
-  void AddRef()    { if(this) RefCount++; }
-  void Release()   { if(this) { if(--RefCount<=0) delete this; } }
+  void AddRef()
+  {
+    if(this)
+      RefCount++;
+  }
+
+  void Release()
+  {
+    if(this)
+    {
+      if(--RefCount <= 0)
+        delete this;
+    }
+  }
 };
 
 class ModShader : public wObject  // wz wrapper
-{ 
+{
 public:
-  sArray<MtrlModule *> Modules;
+  sArray<MtrlModule*> Modules;
 
   ModShader();
   ~ModShader();
 
-  void Add(ModShader *);
-  void Add(MtrlModule *);
+  void Add(ModShader*);
+  void Add(MtrlModule*);
 };
 
 /****************************************************************************/
@@ -317,7 +364,7 @@ public:
 
 class ModMtrl : public Wz4Mtrl
 {
-  sArray<CachedModShader *>Cache;
+  sArray<CachedModShader*> Cache;
 
   sInt Flags;
   sU32 BlendColor;
@@ -325,13 +372,14 @@ class ModMtrl : public Wz4Mtrl
   sInt AlphaTest;
   sInt AlphaRef;
 
-  CachedModShader *CreateShader(const CachedModInfo &info);
-  CachedModShader *FindShader(const CachedModInfo &info);
+  CachedModShader* CreateShader(const CachedModInfo& info);
+  CachedModShader* FindShader(const CachedModInfo& info);
+
 public:
   ModMtrl();
   ~ModMtrl();
-  void SetMtrl(sInt flags=sMTRL_ZON|sMTRL_CULLON,sU32 blend=0,sU32 blenda=0);
-  void SetAlphaTest(sInt test,sInt ref);
+  void SetMtrl(sInt flags = sMTRL_ZON | sMTRL_CULLON, sU32 blend = 0, sU32 blenda = 0);
+  void SetAlphaTest(sInt test, sInt ref);
   sU8 KillLight;
 
   sU8 KillShadow;
@@ -340,16 +388,15 @@ public:
 
   // use material
 
-  void Set(sInt flags,sInt index,const sMatrix34CM *mat,sInt SkinMatCount,const sMatrix34CM *SkinMats,sInt *SkinMatMap);
+  void Set(sInt flags, sInt index, const sMatrix34CM* mat, sInt SkinMatCount, const sMatrix34CM* SkinMats, sInt* SkinMatMap);
   void Prepare();
-  void BeforeFrame(sInt lightenv,sInt boxcount,const sAABBoxC *boxes,sInt matcount,const sMatrix34CM *matrices);
+  void BeforeFrame(sInt lightenv, sInt boxcount, const sAABBoxC* boxes, sInt matcount, const sMatrix34CM* matrices);
 
+  sVertexFormatHandle* GetFormatHandle(sInt flags);
+  sBool SkipPhase(sInt flags, sInt lightenv);
 
-  sVertexFormatHandle *GetFormatHandle(sInt flags);
-  sBool SkipPhase(sInt flags,sInt lightenv);
-
-  sArray<MtrlModule *> ModulesUser;         // modules registered by user
-  sArray<MtrlModule *> ModulesTotal;        // plus some modules from system
+  sArray<MtrlModule*> ModulesUser;         // modules registered by user
+  sArray<MtrlModule*> ModulesTotal;        // plus some modules from system
 
   sBool Error;
   sTextBuffer ShaderLog;
@@ -360,5 +407,4 @@ public:
 };
 
 /****************************************************************************/
-
 

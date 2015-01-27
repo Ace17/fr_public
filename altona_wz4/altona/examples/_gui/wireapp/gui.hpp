@@ -28,9 +28,9 @@ public:
   ~MainWindow();
   void Tag();
 
-  sWindow *BlaWin;
-  WinCube *Cube1Win;
-  WinCube *Cube2Win;
+  sWindow* BlaWin;
+  WinCube* Cube1Win;
+  WinCube* Cube2Win;
   void ResetWindows();
 
   void CmdNew();
@@ -41,22 +41,24 @@ public:
   void CmdExit();
 };
 
-extern MainWindow *App;
+extern MainWindow* App;
 
 /****************************************************************************/
 
 class WinCube : public s3DWindow
 {
-  sMaterial *Mtrl;
-  sGeometry *Geo;
-  sPainter *Painter;
+  sMaterial* Mtrl;
+  sGeometry* Geo;
+  sPainter* Painter;
   sTiming Timer;
   sMaterialEnv Env;
+
 public:
   sCLASSNAME(WinCube);
   WinCube();
   ~WinCube();
-  void Paint(sViewport &view,const sTargetSpec &spec);
+  void Paint(sViewport& view, const sTargetSpec& spec);
 };
 
 /****************************************************************************/
+

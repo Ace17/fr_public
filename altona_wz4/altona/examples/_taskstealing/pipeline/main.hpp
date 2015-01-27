@@ -22,7 +22,7 @@ struct Element
   sVector30 Rot;
   sVector30 RotSpeed;
   sMatrix34 Matrix;
-  sTextureCube *CubeTex;
+  sTextureCube* CubeTex;
 };
 
 class GeoBuffer
@@ -32,10 +32,10 @@ public:
   ~GeoBuffer();
   void Begin();
   void End();
-  void Draw(sGeometry *geo);
+  void Draw(sGeometry* geo);
 
-  sGeometry *Geo;
-  sMatrix34CM *vp;
+  sGeometry* Geo;
+  sMatrix34CM* vp;
   sInt Alloc;
   sInt Used;
 
@@ -44,15 +44,15 @@ public:
 
 struct ThreadDataType
 {
-  GeoBuffer *GB;
+  GeoBuffer* GB;
 };
 
 class MyApp : public sApp
 {
-  sPainter *Painter;
-  class MaterialFlat *Mtrl;
-  sTexture2D *Tex;
-  sGeometry *Geo;
+  sPainter* Painter;
+  class MaterialFlat* Mtrl;
+  sTexture2D* Tex;
+  sGeometry* Geo;
 
   sViewport View;
   sMaterialEnv Env;
@@ -60,8 +60,8 @@ class MyApp : public sApp
   sTiming Timer;
   sCBuffer<MaterialFlatPara> MtrlPara;
   sInt ThreadCount;
-  ThreadDataType *ThreadDatas;
-  sStsSync *FrameSync;
+  ThreadDataType* ThreadDatas;
+  sStsSync* FrameSync;
 
   sInt EndGame;
   sInt Granularity;
@@ -69,28 +69,27 @@ class MyApp : public sApp
 
   sDList2<GeoBuffer> BufferFree;
   sDList2<GeoBuffer> BufferFull;
-  GeoBuffer *GetBuffer();
-  sStsWorkload *WLA;
-  sStsWorkload *WLB;
+  GeoBuffer* GetBuffer();
+  sStsWorkload* WLA;
+  sStsWorkload* WLB;
 
 public:
   MyApp();
   ~MyApp();
   void OnPaint3D();
-  void OnInput(const sInput2Event &ie);
+  void OnInput(const sInput2Event& ie);
 
-  void ThreadCode0(class sStsManager *man,class sStsThread *th,sInt start,sInt count);
-  void ThreadCode1(class sStsManager *man,class sStsThread *th,sInt start,sInt count);
+  void ThreadCode0(class sStsManager* man, class sStsThread* th, sInt start, sInt count);
+  void ThreadCode1(class sStsManager* man, class sStsThread* th, sInt start, sInt count);
 
   sArray<Element> Elements;
   sFreeflightCamera Cam;
 
-  sVertexFormatHandle *Format;
+  sVertexFormatHandle* Format;
   sThreadLock BufferLock;
 };
 
-extern MyApp *App;
+extern MyApp* App;
 
 /****************************************************************************/
-
 

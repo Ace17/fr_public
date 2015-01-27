@@ -21,7 +21,7 @@
 struct Wz3Texture
 {
   sString<64> Name;
-  Texture2D *Tex;
+  Texture2D* Tex;
 };
 
 class Wz3TexPackage : public wObject
@@ -32,8 +32,8 @@ public:
   Wz3TexPackage();
   ~Wz3TexPackage();
 
-  sBool LoadKTX(const sChar *filename,sInt sizeOffset=0);
-  Texture2D *Lookup(const sChar *name);
+  sBool LoadKTX(const sChar* filename, sInt sizeOffset = 0);
+  Texture2D* Lookup(const sChar* name);
 };
 
 /****************************************************************************/
@@ -41,13 +41,13 @@ public:
 class RNLimitTransform : public Wz4RenderNode
 {
 public:
-  Wz4RenderParaLimitTransform Para,ParaBase;
+  Wz4RenderParaLimitTransform Para, ParaBase;
   Wz4RenderAnimLimitTransform Anim;
 
   RNLimitTransform();
 
-  void Simulate(Wz4RenderContext *ctx);
-  void Transform(Wz4RenderContext *ctx,const sMatrix34 &);
+  void Simulate(Wz4RenderContext* ctx);
+  void Transform(Wz4RenderContext* ctx, const sMatrix34 &);
 };
 
 /****************************************************************************/
@@ -55,21 +55,20 @@ public:
 class RNTrembleMesh : public Wz4RenderNode
 {
   sAABBoxC Bounds;
-public:
 
-  Wz4Mesh *Mesh;
-  Wz4RenderParaTrembleMesh Para,ParaBase;
+public:
+  Wz4Mesh* Mesh;
+  Wz4RenderParaTrembleMesh Para, ParaBase;
   Wz4RenderAnimTrembleMesh Anim;
 
   RNTrembleMesh();
   ~RNTrembleMesh();
   void Init();
 
-  void Simulate(Wz4RenderContext *ctx);
-  void Prepare(Wz4RenderContext *ctx);
-  void Render(Wz4RenderContext *ctx);
+  void Simulate(Wz4RenderContext* ctx);
+  void Prepare(Wz4RenderContext* ctx);
+  void Render(Wz4RenderContext* ctx);
 };
 
 /****************************************************************************/
-
 

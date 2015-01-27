@@ -22,30 +22,29 @@
 
 #define SOURCECOUNT 100
 
-
 struct Sprite
 {
   sVector31 Pos;
-  sOccQuery *Occ;
+  sOccQuery* Occ;
 };
 
 class MyApp : public sApp
 {
-  sPainter *Painter;
-  sTexture2D *CubeTex;
-  sMaterial *CubeMtrl;
-  sGeometry *CubeGeo;
+  sPainter* Painter;
+  sTexture2D* CubeTex;
+  sMaterial* CubeMtrl;
+  sGeometry* CubeGeo;
 
-  sTexture2D *SrcTex;
-  sMaterial *SrcMtrl;
-  sGeometry *SrcGeo;
-  sTexture2D *GlareTex;
-  sMaterial *GlareMtrl;
-  sGeometry *GlareGeo;
+  sTexture2D* SrcTex;
+  sMaterial* SrcMtrl;
+  sGeometry* SrcGeo;
+  sTexture2D* GlareTex;
+  sMaterial* GlareMtrl;
+  sGeometry* GlareGeo;
 
-  sMaterial *CalibMtrl;
-  sGeometry *CalibGeo;
-  sOccQuery *CalibQuery;
+  sMaterial* CalibMtrl;
+  sGeometry* CalibGeo;
+  sOccQuery* CalibQuery;
 
   sViewport View;
   sViewport ViewOrtho;
@@ -57,7 +56,7 @@ public:
   MyApp();
   ~MyApp();
   void OnPaint3D();
-  void OnInput(const sInput2Event &ie);
+  void OnInput(const sInput2Event& ie);
 };
 
 /****************************************************************************/

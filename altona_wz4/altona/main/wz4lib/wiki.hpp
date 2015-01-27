@@ -9,10 +9,10 @@
 
 class WikiHelper : public sObject
 {
-  class sWireTextWindow *WriteWin;
-  class sLayoutWindow *ReadWin;
+  class sWireTextWindow* WriteWin;
+  class sLayoutWindow* ReadWin;
   sTextBuffer Text;
-  class Markup *Parser;
+  class Markup* Parser;
 
   sString<512> Filename;
   sBool Commit;
@@ -26,12 +26,13 @@ class WikiHelper : public sObject
 
   void UpdateIndex();
   void UpdateWindows();
-  void DragClickView(const sWindowDrag &dd);
+  void DragClickView(const sWindowDrag& dd);
+
 public:
   WikiHelper();
   ~WikiHelper();
   void Tag();
-  void InitWire(const sChar *);
+  void InitWire(const sChar*);
 
   void CmdWikiChange();
   void CmdCursorChange();
@@ -41,21 +42,23 @@ public:
   void CmdLink();
   void CmdUndo();
 
-  void SetOp(wOp *);
+  void SetOp(wOp*);
   void Close();
-  void Load(const sChar *page,const sChar *def=0);
-  void FakeScript(const sChar *code,sTextBuffer *output);
+  void Load(const sChar* page, const sChar* def = 0);
+  void FakeScript(const sChar* code, sTextBuffer* output);
 
+  void SetCommit()
+  {
+    Commit = 1;
+  }
 
-  void SetCommit() { Commit = 1; }
   void InitSvn();
-  void Execute(const sChar *format,const sChar *a=L"",const sChar *b=L"");
+  void Execute(const sChar* format, const sChar* a = L"", const sChar* b = L"");
 
-  const sChar *WikiPath;
-  const sChar *WikiCheckout;
-  wOp *Op;
+  const sChar* WikiPath;
+  const sChar* WikiCheckout;
+  wOp* Op;
 };
 
 /****************************************************************************/
-
 

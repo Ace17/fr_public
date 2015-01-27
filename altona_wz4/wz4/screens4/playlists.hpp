@@ -17,16 +17,32 @@
 class RefCountObj
 {
 public:
-  int AddRef()  { return sAtomicInc(&RefCount); }
-  int Release() { int rc=sAtomicDec(&RefCount);  if (!rc) delete this; return rc; }
+  int AddRef()
+  {
+    return sAtomicInc(&RefCount);
+  }
 
-  RefCountObj() : RefCount(1) {}
+  int Release()
+  {
+    int rc = sAtomicDec(&RefCount);
+
+    if(!rc)
+      delete this;
+
+    return rc;
+  }
+
+  RefCountObj() : RefCount(1)
+  {
+  }
 
 private:
   volatile sU32 RefCount;
 
 protected:
-  virtual ~RefCountObj() {};
+  virtual ~RefCountObj()
+  {
+  };
 };
 
 /****************************************************************************/
@@ -36,27 +52,38 @@ class AssetMetaData
 public:
   sString<128> ETag;
 
-  void Serialize(sReader &r) { Serialize_(r); }
-  void Serialize(sWriter &w) { Serialize_(w); }
+  void Serialize(sReader& r)
+  {
+    Serialize_(r);
+  }
+
+  void Serialize(sWriter& w)
+  {
+    Serialize_(w);
+  }
 
 private:
-
-  template<class Streamer> void Serialize_(Streamer &s);
-
+  template<class Streamer>
+  void Serialize_(Streamer& s);
 };
 
 class Asset : public RefCountObj
 {
 public:
   sString<256> Path;
-  
+
   AssetMetaData Meta;
 
-  enum { INVALID, NOTCACHED, CACHED, } volatile CacheStatus;
+  enum
+  {
+    INVALID, NOTCACHED, CACHED,
+  } volatile CacheStatus;
 
   sDNode RefreshNode;
 
-  Asset() : CacheStatus(INVALID) {}
+  Asset() : CacheStatus(INVALID)
+  {
+  }
 };
 
 /****************************************************************************/
@@ -80,18 +107,30 @@ public:
   sF32 BarAlpha;
   sArray<sFRect> BarPositions;
 
-  void Serialize(sReader &r) { Serialize_(r); }
-  void Serialize(sWriter &w) { Serialize_(w); }
+  void Serialize(sReader& r)
+  {
+    Serialize_(r);
+  }
 
-  Asset *MyAsset;
+  void Serialize(sWriter& w)
+  {
+    Serialize_(w);
+  }
 
-  PlaylistItem() : MyAsset(0) {}
-  ~PlaylistItem() { sRelease(MyAsset); }
+  Asset* MyAsset;
+
+  PlaylistItem() : MyAsset(0)
+  {
+  }
+
+  ~PlaylistItem()
+  {
+    sRelease(MyAsset);
+  }
 
 private:
-
-  template<class Streamer> void Serialize_(Streamer &s);
-
+  template<class Streamer>
+  void Serialize_(Streamer& s);
 };
 
 class Playlist : public RefCountObj
@@ -116,38 +155,53 @@ public:
     LastPlayedItem = 0;
   }
 
-  void Serialize(sReader &r) { Serialize_(r); }
-  void Serialize(sWriter &w) { Serialize_(w); }
+  void Serialize(sReader& r)
+  {
+    Serialize_(r);
+  }
+
+  void Serialize(sWriter& w)
+  {
+    Serialize_(w);
+  }
 
 private:
-  
   ~Playlist()
   {
     sDeleteAll(Items);
   }
 
-  template<class Streamer> void Serialize_(Streamer &s);
+  template<class Streamer>
+  void Serialize_(Streamer& s);
 };
-
 
 /****************************************************************************/
 
 class PlayPosition
 {
 public:
-
   sString<256> PlaylistId;
   sInt SlideNo;
 
   sBool Dirty;
 
-  PlayPosition() : Dirty(sFALSE), SlideNo(0) {}
+  PlayPosition() : Dirty(sFALSE), SlideNo(0)
+  {
+  }
 
-  void Serialize(sReader &r) { Serialize_(r); }
-  void Serialize(sWriter &w) { Serialize_(w); }
+  void Serialize(sReader& r)
+  {
+    Serialize_(r);
+  }
+
+  void Serialize(sWriter& w)
+  {
+    Serialize_(w);
+  }
 
 private:
-  template<class Streamer> void Serialize_(Streamer &s);
+  template<class Streamer>
+  void Serialize_(Streamer& s);
 };
 
 /****************************************************************************/
@@ -173,109 +227,112 @@ public:
 class NewSlideData
 {
 public:
-
   SlideType Type;
   sInt TransitionId;
   sF32 TransitionTime;
   sInt MidiNote;
 
-  sImageData *ImgData;
+  sImageData* ImgData;
   sBool ImgOpaque;
-  sImage *OrgImage;
+  sImage* OrgImage;
 
-  SiegmeisterData *SiegData;
-  sMoviePlayer *Movie;
+  SiegmeisterData* SiegData;
+  sMoviePlayer* Movie;
 
-  const sChar *Id;
+  const sChar* Id;
   sBool Error;
 
-  const sChar *RenderType;
+  const sChar* RenderType;
 
-  NewSlideData() : ImgData(0), SiegData(0), Movie(0), Id(0), OrgImage(0), RenderType(0) {}
-  ~NewSlideData() { delete ImgData; delete OrgImage; delete SiegData; sRelease(Movie); }
+  NewSlideData() : ImgData(0), SiegData(0), Movie(0), Id(0), OrgImage(0), RenderType(0)
+  {
+  }
+
+  ~NewSlideData()
+  {
+    delete ImgData;
+    delete OrgImage;
+    delete SiegData;
+    sRelease(Movie);
+  }
 };
 
 class PlaylistMgr
 {
 public:
-
   PlaylistMgr();
   ~PlaylistMgr();
 
   // Adds new play list to pool (takes ownership of pl)
-  void AddPlaylist(Playlist *pl);
+  void AddPlaylist(Playlist* pl);
 
   // retrieve list of cached playlists
   // (call GetBegin first, then GetNext until either returns null)
-  Playlist *GetBegin();
-  Playlist *GetNext(Playlist *pl);
+  Playlist* GetBegin();
+  Playlist* GetNext(Playlist* pl);
 
   // retrieve currently playing list and slide
-  void GetCurrentPos(const sStringDesc &pl, const sStringDesc &slide);
+  void GetCurrentPos(const sStringDesc& pl, const sStringDesc& slide);
 
   // commands
-  void Seek(const sChar *plId, const sChar *slideId, sBool hard);
+  void Seek(const sChar* plId, const sChar* slideId, sBool hard);
   void Next(sBool hard, sBool force);
   void Previous(sBool hard);
 
-  NewSlideData* OnFrame(sF32 delta, const sChar *doneId, sBool doneHard);
-  sBool OnInput(const sInput2Event &ev);
+  NewSlideData* OnFrame(sF32 delta, const sChar* doneId, sBool doneHard);
+  sBool OnInput(const sInput2Event& ev);
 
 private:
+  const sChar* CacheDir;
+  const sChar* PlaylistDir;
+  const sChar* AssetDir;
 
-  const sChar *CacheDir;
-  const sChar *PlaylistDir;
-  const sChar *AssetDir;
-
-  sDList<Playlist,&Playlist::Node> Playlists;
+  sDList<Playlist, & Playlist::Node> Playlists;
 
   sThreadLock Lock;
   sThreadEvent PlCacheEvent, AssetEvent, PrepareEvent;
-  sThread *PlCacheThread, *AssetThread, *PrepareThread;
+  sThread* PlCacheThread, * AssetThread, * PrepareThread;
 
   sArray<Asset*> Assets;
-  sDList<Asset, &Asset::RefreshNode> RefreshList;
+  sDList<Asset, & Asset::RefreshNode> RefreshList;
   volatile Asset* CurRefreshing;
 
   sF64 Time;
   PlayPosition CurrentPos, LastLoopPos;
-  Playlist *CurrentPl;
+  Playlist* CurrentPl;
   sInt CurrentPlTime;
   sF64 CurrentDuration, CurrentSwitchTime, CurrentSlideTime;
   sBool SwitchHard;
-  NewSlideData * volatile PreparedSlide;
+  NewSlideData* volatile PreparedSlide;
 
-  Playlist *GetPlaylist(const sChar *id);
-  sInt GetItem(Playlist *pl, const sChar *id);
+  Playlist* GetPlaylist(const sChar* id);
+  sInt GetItem(Playlist* pl, const sChar* id);
 
-  void RefreshAssets(Playlist *pl);
-  Asset *GetAsset(const sChar *path);
+  void RefreshAssets(Playlist* pl);
+  Asset* GetAsset(const sChar* path);
 
-  void RawSeek(Playlist *pl, sInt slide, sBool hard);
+  void RawSeek(Playlist* pl, sInt slide, sBool hard);
   void PrepareNextSlide();
 
-  static void PlCacheThreadProxy(sThread *t, void *obj)
+  static void PlCacheThreadProxy(sThread* t, void* obj)
   {
     ((PlaylistMgr*)obj)->PlCacheThreadFunc(t);
   }
 
-  static void AssetThreadProxy(sThread *t, void *obj)
+  static void AssetThreadProxy(sThread* t, void* obj)
   {
     ((PlaylistMgr*)obj)->AssetThreadFunc(t);
   }
 
-  static void PrepareThreadProxy(sThread *t, void *obj)
+  static void PrepareThreadProxy(sThread* t, void* obj)
   {
     ((PlaylistMgr*)obj)->PrepareThreadFunc(t);
   }
 
-  void PlCacheThreadFunc(sThread *t);
-  void AssetThreadFunc(sThread *t);
-  void PrepareThreadFunc(sThread *t); 
+  void PlCacheThreadFunc(sThread* t);
+  void AssetThreadFunc(sThread* t);
+  void PrepareThreadFunc(sThread* t);
 
-  static void MakeFilename(const sStringDesc& buffer, const sChar *id, const sChar *path, const sChar *ext=L"");
-
+  static void MakeFilename(const sStringDesc& buffer, const sChar* id, const sChar* path, const sChar* ext = L"");
 };
-
-
 

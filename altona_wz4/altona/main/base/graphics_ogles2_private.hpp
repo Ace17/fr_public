@@ -11,7 +11,6 @@
 
 /****************************************************************************/
 
-
 #include "base/types.hpp"
 
 /****************************************************************************/
@@ -25,7 +24,7 @@ enum
 
 /****************************************************************************/
 
-class sGeometryPrivate 
+class sGeometryPrivate
 {
 protected:
   sGeometryPrivate();
@@ -33,11 +32,11 @@ protected:
   sInt VAlloc;
   sInt VUsed;
   sInt VUsedElements;
-  sU8 *VPtr;
+  sU8* VPtr;
   sInt IAlloc;
   sInt IUsed;
   sInt IUsedElements;
-  sU8 *IPtr;
+  sU8* IPtr;
 };
 
 /****************************************************************************/
@@ -57,20 +56,21 @@ struct sVertexFormatHandlePrivate
     sInt Normalized;
     sInt Type;
     sInt Size;
-    const char *Name;
+    const char* Name;
   } Attr[sVF_MAXATTRIB];
   sInt AttrCount;
 };
 
 /****************************************************************************/
 
-class sTextureBasePrivate 
+class sTextureBasePrivate
 {
   friend class sMaterial;
+
 protected:
   sTextureBasePrivate();
   ~sTextureBasePrivate();
-  sU8 *LoadBuffer;
+  sU8* LoadBuffer;
   sInt GLName;
   sInt GLIFormat;
   sInt GLFormat;
@@ -80,44 +80,44 @@ protected:
 
 /****************************************************************************/
 
-class sShaderPrivate 
+class sShaderPrivate
 {
 };
 
 /****************************************************************************/
 
-class sMaterialPrivate 
+class sMaterialPrivate
 {
 protected:
   sMaterialPrivate();
   ~sMaterialPrivate();
-  
+
   sInt GLName;
   sInt VSSlot[4];
-  
+
   sInt GLTexMin[sMTRL_MAXTEX];
   sInt GLTexMax[sMTRL_MAXTEX];
   sInt GLTexS[sMTRL_MAXTEX];
   sInt GLTexT[sMTRL_MAXTEX];
-  
-  sInt GLBCSrc,GLBCDst,GLBCFunc;
-  sInt GLBASrc,GLBADst,GLBAFunc;
+
+  sInt GLBCSrc, GLBCDst, GLBCFunc;
+  sInt GLBASrc, GLBADst, GLBAFunc;
   sVector4 GLBlendFactor;
 };
 
 /****************************************************************************/
 
-class sOccQueryPrivate 
+class sOccQueryPrivate
 {
 };
 
 /****************************************************************************/
 
-class sCBufferBasePrivate 
+class sCBufferBasePrivate
 {
 public:
-  void *DataPersist;
-  void **DataPtr;
+  void* DataPersist;
+  void** DataPtr;
   sU64 Mask;
 };
 
@@ -134,5 +134,4 @@ class sGpuToCpuPrivate
 };
 
 /****************************************************************************/
-
 

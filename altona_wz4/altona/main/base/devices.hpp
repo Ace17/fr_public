@@ -11,8 +11,7 @@
 
 /****************************************************************************/
 
-void sAddMidi(sBool logging=0, sBool onlyPhysical=0);
-
+void sAddMidi(sBool logging = 0, sBool onlyPhysical = 0);
 
 struct sMidiEvent
 {
@@ -23,23 +22,27 @@ struct sMidiEvent
   sU32 TimeStamp;
 };
 
-
 class sMidiHandler_
 {
 public:
-  virtual ~sMidiHandler_() {}
-  virtual sBool HasInput()=0;
-  virtual sBool GetInput(sMidiEvent &e)=0;
-  virtual void Output(sU8 dev,sU8 stat,sU8 val1,sU8 val2)=0;
-  virtual const sChar *GetDeviceName(sBool out,sInt dev)=0;
+  virtual ~sMidiHandler_()
+  {
+  }
 
-  void Output(sMidiEvent &e) { Output(e.Device,e.Status,e.Value1,e.Value2); }
+  virtual sBool HasInput() = 0;
+  virtual sBool GetInput(sMidiEvent& e) = 0;
+  virtual void Output(sU8 dev, sU8 stat, sU8 val1, sU8 val2) = 0;
+  virtual const sChar* GetDeviceName(sBool out, sInt dev) = 0;
+
+  void Output(sMidiEvent& e)
+  {
+    Output(e.Device, e.Status, e.Value1, e.Value2);
+  }
+
   sMessage InputMsg;
 };
 
-extern sMidiHandler_ *sMidiHandler;
-
+extern sMidiHandler_* sMidiHandler;
 
 /****************************************************************************/
-
 

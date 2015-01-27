@@ -18,34 +18,44 @@ void sMoviePlayer::RenderToScreen(sBool zoom)
   // free to override this function
 
   sFRect uv;
-  sMaterial *mtrl;
+  sMaterial* mtrl;
   mtrl = GetFrame(uv);
 
-  if (mtrl)
+  if(mtrl)
   {
     sGeometry geo;
 
     // make destination rect according to movie and screen aspect
     sMovieInfo info = GetInfo();
-    sF32 arr=info.Aspect/sGetRendertargetAspect();
-    sF32 w=1, h=1;
+    sF32 arr = info.Aspect / sGetRendertargetAspect();
+    sF32 w = 1, h = 1;
+
     // reverted change; the line below WORKS. if you want to switch behaviour, why not invert
     // the zoom parameter - that's what it is for.
-    if ((arr>1.0f)^zoom) h/=arr; else w*=arr; 
-    sFRect dest((1-w)/2,(1-h)/2,(1+w)/2,(1+h)/2);
+    if((arr > 1.0f) ^ zoom)
+      h /= arr;
+    else
+      w *= arr;
 
-    sU16 *ip;
-    sVertexSingle *vp=0L;
-    geo.BeginLoad(sVertexFormatSingle,sGF_INDEX16|sGF_TRILIST,sGD_STREAM,4,6,&vp,&ip);
-    vp[0].Init(dest.x0,dest.y0,0.01f,0xffffffff,uv.x0,uv.y0);
-    vp[1].Init(dest.x1,dest.y0,0.01f,0xffffffff,uv.x1,uv.y0);
-    vp[2].Init(dest.x0,dest.y1,0.01f,0xffffffff,uv.x0,uv.y1);
-    vp[3].Init(dest.x1,dest.y1,0.01f,0xffffffff,uv.x1,uv.y1);
-    *ip++=0; *ip++=1; *ip++=2; *ip++=3; *ip++=2; *ip++=1;
+    sFRect dest((1 - w) / 2, (1 - h) / 2, (1 + w) / 2, (1 + h) / 2);
+
+    sU16* ip;
+    sVertexSingle* vp = 0L;
+    geo.BeginLoad(sVertexFormatSingle, sGF_INDEX16 | sGF_TRILIST, sGD_STREAM, 4, 6, &vp, &ip);
+    vp[0].Init(dest.x0, dest.y0, 0.01f, 0xffffffff, uv.x0, uv.y0);
+    vp[1].Init(dest.x1, dest.y0, 0.01f, 0xffffffff, uv.x1, uv.y0);
+    vp[2].Init(dest.x0, dest.y1, 0.01f, 0xffffffff, uv.x0, uv.y1);
+    vp[3].Init(dest.x1, dest.y1, 0.01f, 0xffffffff, uv.x1, uv.y1);
+    *ip++ = 0;
+    *ip++ = 1;
+    *ip++ = 2;
+    *ip++ = 3;
+    *ip++ = 2;
+    *ip++ = 1;
     geo.EndLoad();
 
     sViewport view;
-    view.Orthogonal=sVO_SCREEN;
+    view.Orthogonal = sVO_SCREEN;
     view.SetTargetCurrent();
     view.Prepare();
 

@@ -13,13 +13,11 @@
 
 #pragma once
 
-
-
 #include "base/types.hpp"
 
-void sPrintShader(const sU32 *shader,sInt flags=0);
-void sPrintShader(class sTextBuffer& tb, const sU32 *shader,sInt flags=0);
-void sPrintShader(class sTextBuffer& tb, struct sShaderBlob *blob, sInt flags=0);
+void sPrintShader(const sU32* shader, sInt flags = 0);
+void sPrintShader(class sTextBuffer& tb, const sU32* shader, sInt flags = 0);
+void sPrintShader(class sTextBuffer& tb, struct sShaderBlob* blob, sInt flags = 0);
 
 enum sPrintShaderFlags
 {
@@ -30,3 +28,4 @@ enum sPrintShaderFlags
 /****************************************************************************/
 
 // HEADER_ALTONA_UTIL_SHADERDIS
+

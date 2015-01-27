@@ -13,8 +13,7 @@ class ChaosMesh;
 
 /****************************************************************************/
 
-void ChaosMeshFX_SliceAndDice(ChaosMesh *mesh); // modifies the mesh!
+void ChaosMeshFX_SliceAndDice(ChaosMesh* mesh); // modifies the mesh!
 
 /****************************************************************************/
-
 

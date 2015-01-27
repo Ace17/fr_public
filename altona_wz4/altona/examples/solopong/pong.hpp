@@ -25,16 +25,16 @@ class SoloPong
   sInt Lives;
   sInt DeathTimer;
   sInt Score;
+
 public:
   SoloPong();
   ~SoloPong();
   void Reset();
   void OnTick();
   void OnPaint();
-  
+
   sString<256> ScoreString;
 };
 
 /****************************************************************************/
-
 

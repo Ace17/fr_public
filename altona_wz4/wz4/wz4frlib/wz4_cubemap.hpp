@@ -24,11 +24,11 @@ public:
   Wz4Cubemap();
   ~Wz4Cubemap();
   void Init(sInt sizexy);
-  void CopyFrom(const Wz4Cubemap *);
-  void CopyTo(sImage **cubefaces);
-  void MakeCube(sInt pixel,sVector30 &n) const;
-  void MakeCube(sInt face,sF32 fx,sF32 fy,sVector30 &n) const;
-  void Sample(const sVector30 &n,Pixel &) const;
+  void CopyFrom(const Wz4Cubemap*);
+  void CopyTo(sImage** cubefaces);
+  void MakeCube(sInt pixel, sVector30& n) const;
+  void MakeCube(sInt face, sF32 fx, sF32 fy, sVector30& n) const;
+  void Sample(const sVector30& n, Pixel &) const;
 
   sInt Size;                      // must be power of two
   sInt SquareSize;              // Size*Size
@@ -37,7 +37,7 @@ public:
   sInt Mask;
   sF32 RSize;
   sF32 HSize;
-  Pixel *Data;
+  Pixel* Data;
 
   enum TernaryOp
   {
@@ -64,23 +64,20 @@ public:
   };
 
   // Actual generator functions
-  void Flat(const Pixel &col);
-  void Noise(const GenTexture *grad,sInt freq,sInt oct,sF32 fadeoff,sInt seed,sInt mode);
-  void Glow(const Wz4Cubemap *background,const GenTexture *grad,const sVector30 &dir,sF32 radius);
+  void Flat(const Pixel& col);
+  void Noise(const GenTexture* grad, sInt freq, sInt oct, sF32 fadeoff, sInt seed, sInt mode);
+  void Glow(const Wz4Cubemap* background, const GenTexture* grad, const sVector30& dir, sF32 radius);
 
   // Filters
-  void ColorMatrixTransform(const Wz4Cubemap *in,const Matrix45 &matrix,sBool clampPremult);
-  void CoordMatrixTransform(const Wz4Cubemap *in,const sMatrix34 &matrix);
-  void ColorRemap(const Wz4Cubemap *in,const GenTexture *mapR,const GenTexture *mapG,const GenTexture *mapB);
-//  void CoordRemap(const Wz4Cubemap *in,const GenTexture *remap,sF32 strengthU,sF32 strengthV,sInt filterMode);
+  void ColorMatrixTransform(const Wz4Cubemap* in, const Matrix45& matrix, sBool clampPremult);
+  void CoordMatrixTransform(const Wz4Cubemap* in, const sMatrix34& matrix);
+  void ColorRemap(const Wz4Cubemap* in, const GenTexture* mapR, const GenTexture* mapG, const GenTexture* mapB);
+// void CoordRemap(const Wz4Cubemap *in,const GenTexture *remap,sF32 strengthU,sF32 strengthV,sInt filterMode);
 
   // Combiners
-  void Ternary(const Wz4Cubemap *in1,const Wz4Cubemap *in2,const Wz4Cubemap *in3,TernaryOp op);
-  void Binary(const Wz4Cubemap *in1,const Wz4Cubemap *in2,CombineOp op);
+  void Ternary(const Wz4Cubemap* in1, const Wz4Cubemap* in2, const Wz4Cubemap* in3, TernaryOp op);
+  void Binary(const Wz4Cubemap* in1, const Wz4Cubemap* in2, CombineOp op);
 };
 
-
-
 /****************************************************************************/
-
 

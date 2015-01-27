@@ -27,11 +27,11 @@ struct ChaosMeshVertexPosition
   sInt Select;
 
   void Init();
-  void AddWeight(sInt index,sF32 value);
+  void AddWeight(sInt index, sF32 value);
   void ClearWeights();
 };
 
-sBool Equals(const ChaosMeshVertexPosition &a,const ChaosMeshVertexPosition &b);
+sBool Equals(const ChaosMeshVertexPosition& a, const ChaosMeshVertexPosition& b);
 
 struct ChaosMeshVertexNormal
 {
@@ -39,7 +39,6 @@ struct ChaosMeshVertexNormal
 
   void Init();
 };
-
 
 struct ChaosMeshVertexTangent
 {
@@ -52,7 +51,7 @@ struct ChaosMeshVertexTangent
 struct ChaosMeshVertexProperty
 {
   sU32 C[2];
-  sF32 U[4],V[4];
+  sF32 U[4], V[4];
 
   void Init();
 };
@@ -85,16 +84,20 @@ struct ChaosMeshVertexFat
   sF32 BiSign;
 
   sU32 C[sMVF_COLORS];
-  sF32 U[sMVF_UVS],V[sMVF_UVS];
+  sF32 U[sMVF_UVS], V[sMVF_UVS];
 
   sInt Index;                                 // index must be last, it is ignored on comparision
 
+  bool operator < (const ChaosMeshVertexFat& b)
+  {
+    return sCmpMem(this, &b, sizeof(ChaosMeshVertexFat) - sizeof(sInt)) < 0;
+  }
 
-  bool operator< (const ChaosMeshVertexFat &b) { return sCmpMem(this,&b,sizeof(ChaosMeshVertexFat)-sizeof(sInt))< 0; }
-  bool operator==(const ChaosMeshVertexFat &b) { return sCmpMem(this,&b,sizeof(ChaosMeshVertexFat)-sizeof(sInt))==0; }
+  bool operator == (const ChaosMeshVertexFat& b)
+  {
+    return sCmpMem(this, &b, sizeof(ChaosMeshVertexFat) - sizeof(sInt)) == 0;
+  }
 };
-
-
 
 /****************************************************************************/
 
@@ -104,17 +107,17 @@ public:
   ChaosMeshCluster();
   ~ChaosMeshCluster();
 
-  Wz4Material *Material;                    // material for this cluster, as indexed by the face
+  Wz4Material* Material;                    // material for this cluster, as indexed by the face
 
   sArray<ChaosMeshVertexFat> Vertices;      // during the building, "fat" vertices are build
   sArray<sInt> Indices;                     // during the building, faces are transformed to index buffers
   sArray<sInt> Matrices;                    // during the building, SkeletonMatrixIndex = Matrices[ClusterMatrixIndex]
-  sGeometry *Geo;                           // finally, fat vertices are thinned out and a real geometry is build
-  sGeometry *WireGeo;                       // special geometry for wireframe more, build on demand
+  sGeometry* Geo;                           // finally, fat vertices are thinned out and a real geometry is build
+  sGeometry* WireGeo;                       // special geometry for wireframe more, build on demand
   sAABBox Bounds;                           // BoundingBox
-//  sInt JointId;                             // the whole object is bound to a joint. This is only used when no weights are given!
-  
-  void CopyFrom(const ChaosMeshCluster *cl);
+// sInt JointId;                             // the whole object is bound to a joint. This is only used when no weights are given!
+
+  void CopyFrom(const ChaosMeshCluster* cl);
   void Charge();                            // perform the final step of uploading the geometry
   void ChargeWire();                        // .. for wireframe. does not eliminate double edges
 };
@@ -123,14 +126,14 @@ class ChaosMeshModel              // models are used to specify subsets of dotxs
 {
 public:
   wDocName Name;
-  sInt StartCluster,EndCluster;
-  sInt StartPos,EndPos;
-  sInt StartNorm,EndNorm;
-  sInt StartTang,EndTang;
-  sInt StartProp,EndProp;
+  sInt StartCluster, EndCluster;
+  sInt StartPos, EndPos;
+  sInt StartNorm, EndNorm;
+  sInt StartTang, EndTang;
+  sInt StartProp, EndProp;
   sInt JointId;                             // the whole object is bound to a joint.
-  class ChaosMesh *BackLink;      // used only during import
-  void CopyFrom(const ChaosMeshModel *s);
+  class ChaosMesh* BackLink;      // used only during import
+  void CopyFrom(const ChaosMeshModel* s);
 };
 
 enum ChaosMeshCopyFlags
@@ -140,7 +143,6 @@ enum ChaosMeshCopyFlags
   SEPARATE_MATERIAL = 4,          // create copies of materail
   SEPARATE_SKELETON = 8,          // create copies of skeleton
 };
-
 
 struct ChaosMeshAnimClip
 {
@@ -166,13 +168,14 @@ public:
   ChaosMesh();
   ~ChaosMesh();
   sString<64> Name;
-  template <class streamer> void Serialize_(streamer &s,sTexture2D *shadow=0);
-  void Serialize(sWriter &,sTexture2D *shadow=0);
-  void Serialize(sReader &,sTexture2D *shadow=0);
-  
+  template<class streamer>
+  void Serialize_(streamer& s, sTexture2D* shadow = 0);
+  void Serialize(sWriter &, sTexture2D* shadow = 0);
+  void Serialize(sReader &, sTexture2D* shadow = 0);
+
   // animation
 
-  Wz4Skeleton *Skeleton;
+  Wz4Skeleton* Skeleton;
   sArray<ChaosMeshAnimClip> AnimClips;
 
   // geometry
@@ -182,21 +185,21 @@ public:
   sArray<ChaosMeshVertexTangent> Tangents;
   sArray<ChaosMeshVertexProperty> Properties;
   sArray<ChaosMeshFace> Faces;
-  sArray<ChaosMeshCluster *> Clusters;
-  sArray<ChaosMeshModel *> Models;
+  sArray<ChaosMeshCluster*> Clusters;
+  sArray<ChaosMeshModel*> Models;
 
   // tools for building geometry
 
   void Clear();
-  sInt AddCluster(Wz4Material *mtrl);
-  void AddGrid(const sMatrix34 &mat,sInt tx,sInt ty,sBool doublesided);
-  void AddCube(const sMatrix34 &mat0,sInt tx,sInt ty,sInt tz,sBool wrapuv=0,sF32 sx=1,sF32 sy=1,sF32 sz=1);
-  void AddTorus(const sMatrix34 &mat,sInt tx,sInt ty,sF32 ri,sF32 ro,sF32 phase=0,sF32 arclen=1);
-  void AddSphere(const sMatrix34 &mat,sInt tx,sInt ty);
-  void AddCylinder(const sMatrix34 &mat,sInt tx,sInt ty,sInt toprings);
-  void CopyFrom(const ChaosMesh *,sInt seg = SEPARATE_VERTEX|SEPARATE_FACE);
-  void CopyFrom(const ChaosMeshModel *);
-  void Add(const ChaosMesh *);
+  sInt AddCluster(Wz4Material* mtrl);
+  void AddGrid(const sMatrix34& mat, sInt tx, sInt ty, sBool doublesided);
+  void AddCube(const sMatrix34& mat0, sInt tx, sInt ty, sInt tz, sBool wrapuv = 0, sF32 sx = 1, sF32 sy = 1, sF32 sz = 1);
+  void AddTorus(const sMatrix34& mat, sInt tx, sInt ty, sF32 ri, sF32 ro, sF32 phase = 0, sF32 arclen = 1);
+  void AddSphere(const sMatrix34& mat, sInt tx, sInt ty);
+  void AddCylinder(const sMatrix34& mat, sInt tx, sInt ty, sInt toprings);
+  void CopyFrom(const ChaosMesh*, sInt seg = SEPARATE_VERTEX | SEPARATE_FACE);
+  void CopyFrom(const ChaosMeshModel*);
+  void Add(const ChaosMesh*);
   void Triangulate();
   void CalcNormals();
   void CalcTangents();
@@ -204,29 +207,28 @@ public:
   void MergeNormals();
   void Cleanup();                 // remove unused positions,normals,properties
   void SplitForMatrices();
-  void InsertClusterAfter(ChaosMeshCluster *cl,sInt pos);
-  void ListTextures(sArray<Texture2D *> &ar);
-  void ListTextures(sArray<TextureCube *> &ar);
+  void InsertClusterAfter(ChaosMeshCluster* cl, sInt pos);
+  void ListTextures(sArray<Texture2D*>& ar);
+  void ListTextures(sArray<TextureCube*>& ar);
 
   // special ops
 
-  void ExportXSI(const sChar *);
-  sBool MergeShape(ChaosMesh *ref,ChaosMesh *shape,sF32 phase,ChaosMesh *weight);
+  void ExportXSI(const sChar*);
+  sBool MergeShape(ChaosMesh* ref, ChaosMesh* shape, sF32 phase, ChaosMesh* weight);
 
   // tools for building clusters
 
-  void UpdateBuffers(sBool preTransformOpt=sFALSE); // build stage 2 geometry, if not already there
+  void UpdateBuffers(sBool preTransformOpt = sFALSE); // build stage 2 geometry, if not already there
   void FlushBuffers();            // free stage 2 geometry and hardware geometry, so it has to be rebuild
   void Charge();                  // transfer to hardware (textures, materials, geometries)};
-  void SetShadowMap(sTexture2D *shadowmap);
-  void SetMaterialVariants(sInt count,ChaosMtrlVariant *);
-  void Paint(const sViewport *view,const SceneInstance *inst,sInt variant=0);
-  void Paint(const Wz4ShaderEnv *env,sF32 time,sInt variant=0);    // no bound check
-  void PaintMtrl(const Wz4ShaderEnv *env,Wz4Material *mtrl);
-  void PaintWire(sGeometry *geo,sF32 time);
-  void PaintSelection(sGeometry *geo,sGeometry *quads,sF32 zoom,sF32 time,const sViewport *View);
+  void SetShadowMap(sTexture2D* shadowmap);
+  void SetMaterialVariants(sInt count, ChaosMtrlVariant*);
+  void Paint(const sViewport* view, const SceneInstance* inst, sInt variant = 0);
+  void Paint(const Wz4ShaderEnv* env, sF32 time, sInt variant = 0);    // no bound check
+  void PaintMtrl(const Wz4ShaderEnv* env, Wz4Material* mtrl);
+  void PaintWire(sGeometry* geo, sF32 time);
+  void PaintSelection(sGeometry* geo, sGeometry* quads, sF32 zoom, sF32 time, const sViewport* View);
 };
 
 /****************************************************************************/
-
 

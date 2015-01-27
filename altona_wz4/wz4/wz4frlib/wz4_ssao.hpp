@@ -18,33 +18,32 @@
 
 /****************************************************************************/
 
-
 class Wz4SsaoCamera : public Wz4Viewport
 {
 public:
   Wz4SsaoCamera();
   ~Wz4SsaoCamera();
-  sBool Paint(const sRect *window,sInt time,const sViewport *);
+  sBool Paint(const sRect* window, sInt time, const sViewport*);
 
-  Scene *Node;                    // link to scene
-  Wz4Variable *AnimTarget;
-  Wz4Variable *AnimPosition;
-  Wz4Function *Clip;
+  Scene* Node;                    // link to scene
+  Wz4Variable* AnimTarget;
+  Wz4Variable* AnimPosition;
+  Wz4Function* Clip;
 
-  Wz4SSAODepthShader *DepthMaterial;
-  Wz4SSAONormalShader *NormalMaterial;
-  Wz4SSAOShader *SSAOMaterial;
-  Wz4SSAOBlurShader *SSAOBlurMaterial;
+  Wz4SSAODepthShader* DepthMaterial;
+  Wz4SSAONormalShader* NormalMaterial;
+  Wz4SSAOShader* SSAOMaterial;
+  Wz4SSAOBlurShader* SSAOBlurMaterial;
 
   sCBuffer<Wz4SSAOShaderRandom> RandomCB;
 
-  sVertexFormatHandle *FmtXYZW;
-  sGeometry *QuadGeo;
-  sTexture2D *RTDepth;
-  sTexture2D *RTNormal;
-  sTexture2D *RTSSAO;
+  sVertexFormatHandle* FmtXYZW;
+  sGeometry* QuadGeo;
+  sTexture2D* RTDepth;
+  sTexture2D* RTNormal;
+  sTexture2D* RTSSAO;
 
-  sTexture2D *RandomTex;
+  sTexture2D* RandomTex;
 
   sVector31 Target;
   sVector31 Position;
@@ -58,5 +57,4 @@ public:
 };
 
 /****************************************************************************/
-
 

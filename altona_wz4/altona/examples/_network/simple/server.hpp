@@ -31,14 +31,14 @@ struct Message
 class ServerCon
 {
 public:
-  sTCPSocket *Socket;
-  sTCPHostSocket *HostSocket;
-  sThread *Thread;
+  sTCPSocket* Socket;
+  sTCPHostSocket* HostSocket;
+  sThread* Thread;
   sBool Done;
 
-  ServerCon(sTCPSocket *,sTCPHostSocket *host);
+  ServerCon(sTCPSocket*, sTCPHostSocket* host);
   ~ServerCon();
-  static void Start(sThread *t,void *);
+  static void Start(sThread* t, void*);
   void Mainloop();
 };
 
@@ -48,16 +48,16 @@ public:
 
 class Server
 {
-  sArray<ServerCon *> Cons;
-  sThread *Thread;
+  sArray<ServerCon*> Cons;
+  sThread* Thread;
   sTCPHostSocket HostSocket;
+
 public:
   Server(sInt port);
   ~Server();
-  static void Start(sThread *t,void *);
+  static void Start(sThread* t, void*);
   void Mainloop();
 };
 
 /****************************************************************************/
-
 

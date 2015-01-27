@@ -22,28 +22,29 @@
 
 class MyApp : public sApp
 {
-  sPainter *Painter;
-  sTexture2D *Tex;
-  sTexture2D *TexRT;
-  sTexture2D *TexRTZ;
-  sMaterial *Mtrl;
-  sMaterial *MtrlRT;
-  sGeometry *Geo;
+  sPainter* Painter;
+  sTexture2D* Tex;
+  sTexture2D* TexRT;
+  sTexture2D* TexRTZ;
+  sMaterial* Mtrl;
+  sMaterial* MtrlRT;
+  sGeometry* Geo;
 
   sViewport View;
   sMaterialEnv Env;
 
-  sTexture2D *DummyTex;
+  sTexture2D* DummyTex;
 
   sTiming Timer;
+
 public:
   MyApp();
   ~MyApp();
   void OnPaint3D();
-  void OnInput(const sInput2Event &ie);
+  void OnInput(const sInput2Event& ie);
 
-  void RenderCube(sMaterial *mtrl);
-  void Blit(sTexture2D *d,sTexture2D *s,sMaterial *mtrl);
+  void RenderCube(sMaterial* mtrl);
+  void Blit(sTexture2D* d, sTexture2D* s, sMaterial* mtrl);
 };
 
 /****************************************************************************/

@@ -14,10 +14,9 @@
 
 /****************************************************************************/
 
-
 void sMain()
 {
-  sInit(sISF_2D|sISF_3D,1024,768);
+  sInit(sISF_2D | sISF_3D, 1024, 768);
   sInitGui();
   sGui->AddBackWindow(new MainWindow);
   sSetWindowName(L"werkkzeug4");

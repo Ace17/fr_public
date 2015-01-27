@@ -23,7 +23,7 @@
 
 void sMain()
 {
-  sInit(sISF_2D|sISF_3D,800,600);
+  sInit(sISF_2D | sISF_3D, 800, 600);
   sInitGui();
   sGui->AddBackWindow(new MainWindow);
 }

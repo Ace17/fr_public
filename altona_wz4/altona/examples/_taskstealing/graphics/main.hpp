@@ -21,21 +21,21 @@ struct Element
   sVector30 Rot;
   sVector30 RotSpeed;
   sMatrix34 Matrix;
-  sTextureCube *CubeTex;
+  sTextureCube* CubeTex;
 };
 
 struct ThreadDataType
 {
-  sGfxThreadContext *Ctx;
+  sGfxThreadContext* Ctx;
 };
 
 class MyApp : public sApp
 {
-  sPainter *Painter;
-  class MaterialFlat *Mtrl;
-  sVertexFormatHandle *Format;
-  sTexture2D *Tex;
-  sGeometry *Geo;
+  sPainter* Painter;
+  class MaterialFlat* Mtrl;
+  sVertexFormatHandle* Format;
+  sTexture2D* Tex;
+  sGeometry* Geo;
 
   sViewport View;
   sMaterialEnv Env;
@@ -43,7 +43,7 @@ class MyApp : public sApp
   sTiming Timer;
   sCBuffer<MaterialFlatPara> MtrlPara;
   sInt ThreadCount;
-  ThreadDataType *ThreadDatas;
+  ThreadDataType* ThreadDatas;
 
   sInt Mode;
   sInt Granularity;
@@ -53,14 +53,13 @@ public:
   MyApp();
   ~MyApp();
   void OnPaint3D();
-  void OnInput(const sInput2Event &ie);
+  void OnInput(const sInput2Event& ie);
 
-  void ThreadCode(class sStsManager *man,class sStsThread *th,sInt start,sInt count);
+  void ThreadCode(class sStsManager* man, class sStsThread* th, sInt start, sInt count);
 
   sArray<Element> Elements;
   sFreeflightCamera Cam;
 };
 
 /****************************************************************************/
-
 

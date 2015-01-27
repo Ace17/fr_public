@@ -11,7 +11,7 @@
 // this could be as well in gui/manager.hpp
 // but i wanted to have at least something in this file..
 
-sGui_ *sGui;      
+sGui_* sGui;
 
 /****************************************************************************/
 

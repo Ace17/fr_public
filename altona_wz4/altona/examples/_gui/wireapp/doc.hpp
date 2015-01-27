@@ -24,18 +24,19 @@ public:
   Document();
   ~Document();
   void Tag();
-   
+
   sString<sMAXPATH> Filename;
   void New();
   sBool Load();
   sBool Save();
 
-  template <class streamer> void Serialize_(streamer &);
-  void Serialize(sReader &stream);
-  void Serialize(sWriter &stream);
+  template<class streamer>
+  void Serialize_(streamer &);
+  void Serialize(sReader& stream);
+  void Serialize(sWriter& stream);
 };
 
-extern Document *Doc;
+extern Document* Doc;
 
 /****************************************************************************/
 

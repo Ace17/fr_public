@@ -17,16 +17,15 @@ void sMain()
 {
   sGetMemHandler(sAMF_HEAP)->MakeThreadSafe();
 
-  Server *server = new Server(6006);
-  Client *client = new Client(6006,L"127.0.0.1");
+  Server* server = new Server(6006);
+  Client* client = new Client(6006, L"127.0.0.1");
 
-  client->Test(0x12345678,0xabcdabcd);
-  client->Test(12,21);
+  client->Test(0x12345678, 0xabcdabcd);
+  client->Test(12, 21);
 
   delete client;
   delete server;
 }
-
 
 /****************************************************************************/
 

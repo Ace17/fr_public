@@ -25,13 +25,13 @@ struct RNMarchingCubesTemplate
   static const sInt Color = 0;
   struct SimdType
   {
-    __m128 x,y,z;
-    static __m128 cr,cg,cb;
+    __m128 x, y, z;
+    static __m128 cr, cg, cb;
   };
 
   struct PartType
   {
-    sF32 x,y,z;
+    sF32 x, y, z;
     static sU32 c;
   };
 
@@ -47,13 +47,13 @@ struct RNMarchingCubesColorTemplate
   static const sInt Color = 1;
   struct SimdType
   {
-    __m128 x,y,z;
-    __m128 cr,cg,cb;
+    __m128 x, y, z;
+    __m128 cr, cg, cb;
   };
 
   struct PartType
   {
-    sF32 x,y,z;
+    sF32 x, y, z;
     sU32 c;
   };
 
@@ -71,11 +71,10 @@ public:
   enum RNMarchingCubesConsts
   {
     ContainerSize = 64,
-  //  CellSize = 8,
-    HashSize = (1<<10),
-    HashMask = (HashSize-1),
+    // CellSize = 8,
+    HashSize = (1 << 10),
+    HashMask = (HashSize - 1),
   };
-
 
   struct funcinfo
   {
@@ -83,17 +82,17 @@ public:
     __m128 treshf4;
     __m128 one;
     __m128 epsilon;
-    typename T::SimdType *parts4;
+    typename T::SimdType * parts4;
     sInt pn4;
 
     sF32 iso;
     sF32 tresh;
     sF32 treshf;
-    typename T::PartType *parts;
+    typename T::PartType * parts;
     sInt pn;
   };
-private:
 
+private:
   // particle system interface
 
   Wz4PartInfo PInfo;
@@ -102,73 +101,75 @@ private:
 
   sInt MaxThread;
 
-  typename T::FieldType **PotData;
+  typename T::FieldType * *PotData;
   sInt PotSize;
 
-  typename T::SimdType **SimdParts;
+  typename T::SimdType * *SimdParts;
   sInt SimdCount;
 
-  sStsWorkload *Workload;
+  sStsWorkload* Workload;
 
   // hashing
 
   struct PartContainer
   {
-    PartContainer *Next;
+    PartContainer* Next;
     sInt Count;
     typename T::PartType Parts[ContainerSize];
   };
   struct HashContainer
   {
-    HashContainer *Next;
-    PartContainer *FirstPart;
-    sInt IX,IY,IZ;
+    HashContainer* Next;
+    PartContainer* FirstPart;
+    sInt IX, IY, IZ;
   };
 
-  sArray<HashContainer *> FreeHashConts;  // currently free containers
-  sArray<HashContainer *> NodeHashConts;  // for each gridcube, the first container in list
-  sArray<HashContainer *> ThreadHashConts;// for each gridcube, the first container in list
+  sArray<HashContainer*> FreeHashConts;  // currently free containers
+  sArray<HashContainer*> NodeHashConts;  // for each gridcube, the first container in list
+  sArray<HashContainer*> ThreadHashConts;// for each gridcube, the first container in list
 
-  sArray<PartContainer *> AllPartContBlocks;  // i allocate the containers in blocks of 1024, because i need so many of them
+  sArray<PartContainer*> AllPartContBlocks;  // i allocate the containers in blocks of 1024, because i need so many of them
 
-  sArray<PartContainer *> FreePartConts;  // currently free containers
-  sArray<PartContainer *> NodePartConts;  // particle containers in NodeConts list
-  sArray<PartContainer *> ThreadPartConts;//
+  sArray<PartContainer*> FreePartConts;  // currently free containers
+  sArray<PartContainer*> NodePartConts;  // particle containers in NodeConts list
+  sArray<PartContainer*> ThreadPartConts;//
 
-  HashContainer *HashTable[HashSize];
+  HashContainer* HashTable[HashSize];
 
   // GeoBuffers
 
   GeoBufferHelper Geos;
-  GeoBufferHelper::GeoBuffer *CurrentGeo;
+  GeoBufferHelper::GeoBuffer* CurrentGeo;
 
   // functions
 
-  HashContainer *GetHashContainer();
-  PartContainer *GetPartContainer();
+  HashContainer* GetHashContainer();
+  PartContainer* GetPartContainer();
 
-  static void func(const sVector31 &v,typename T::FieldType &pot,const funcinfo &fi);
+  static void func(const sVector31& v, typename T::FieldType& pot, const funcinfo& fi);
   void Spatial();
+
 public:
-  template <int base,int subdiv> void RenderT(sInt start,sInt count,sInt thread);
+  template<int base, int subdiv>
+  void RenderT(sInt start, sInt count, sInt thread);
+
 private:
   void Render();
-  
 
 public:
   RNMarchingCubesBase();
   ~RNMarchingCubesBase();
   void Init();
-  
-  typename T::OpParaType Para,ParaBase;
+
+  typename T::OpParaType Para, ParaBase;
   typename T::OpAnimType Anim;
 
-  Wz4ParticleNode *Source;
-  Wz4Mtrl *Mtrl;
+  Wz4ParticleNode* Source;
+  Wz4Mtrl* Mtrl;
 
-  void Simulate(Wz4RenderContext *ctx);
-  void Prepare(Wz4RenderContext *ctx);
-  void Render(Wz4RenderContext *ctx);
+  void Simulate(Wz4RenderContext* ctx);
+  void Prepare(Wz4RenderContext* ctx);
+  void Render(Wz4RenderContext* ctx);
 };
 
 /****************************************************************************/
@@ -177,5 +178,4 @@ typedef RNMarchingCubesBase<RNMarchingCubesTemplate> RNMarchingCubes;
 typedef RNMarchingCubesBase<RNMarchingCubesColorTemplate> RNMarchingCubesColor;
 
 /****************************************************************************/
-
 

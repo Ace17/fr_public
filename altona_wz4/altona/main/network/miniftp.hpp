@@ -27,7 +27,7 @@ enum sMiniFTPCommand
   sMFC_PUT = 2,       // write a file to the server
   sMFC_LIST = 3,      // return a directory listing
   sMFC_DELETE = 4,    // delete a file on the server
-  
+
   sMFC_LAST = sMFC_DELETE, // not a command!
 };
 
@@ -55,43 +55,43 @@ public:
   };
 
   sMiniFTPClient();
-  sMiniFTPClient(const sChar *host,sIPPort port);
+  sMiniFTPClient(const sChar* host, sIPPort port);
   ~sMiniFTPClient();
 
-  typedef sBool (*ProgressCallback)(const sChar *file,sSize current,sSize total,void *user);
+  typedef sBool (* ProgressCallback)(const sChar* file, sSize current, sSize total, void* user);
 
-  sBool Connect(const sChar *host,sIPPort port); // URL support? maybe later.
+  sBool Connect(const sChar* host, sIPPort port); // URL support? maybe later.
   void Disconnect();
 
-  void SetRetryPolicy(sInt count,sInt initialDelay,sInt reconnectDelay,sBool continueUploads=sTRUE);
+  void SetRetryPolicy(sInt count, sInt initialDelay, sInt reconnectDelay, sBool continueUploads = sTRUE);
 
-  void SetProgressCallback(ProgressCallback progress,void *user=0);
-  
-  sBool FileExists(const sChar *filename);
+  void SetProgressCallback(ProgressCallback progress, void* user = 0);
+
+  sBool FileExists(const sChar* filename);
   // also returns sFALSE on error. GetLastError() if you want to be sure.
 
-  sBool GetFile(const sChar *filename,sFile *writeTo);
+  sBool GetFile(const sChar* filename, sFile* writeTo);
   // may have written part of the file even if sFALSE is returned.
 
-  sBool PutFile(const sChar *filename,sFile *readFrom);
+  sBool PutFile(const sChar* filename, sFile* readFrom);
   // may have read part of the file even if sFALSE is returned.
 
-  sBool ListFiles(const sChar *basepath,sArray<sChar> &listing);
+  sBool ListFiles(const sChar* basepath, sArray<sChar>& listing);
   // Returns "name1\0name2\0[..]nameN\0\0"
 
-  sBool DeleteFile(const sChar *filename);
+  sBool DeleteFile(const sChar* filename);
 
   ConnStatus GetCurrentState() const;
   sMiniFTPError GetLastError() const;
-  const sChar *GetLastErrorMessage() const;
+  const sChar* GetLastErrorMessage() const;
 
 protected:
-  sBool SendCommand(sInt command,const sChar *filename,sSize extra);
-  sBool TryReconnect(sInt attempts,sInt startDelay=-1);
+  sBool SendCommand(sInt command, const sChar* filename, sSize extra);
+  sBool TryReconnect(sInt attempts, sInt startDelay = -1);
   sBool MaybeNextTime();
 
-  sBool ReadAll(sU8 *buffer,sInt size);
-  sBool WriteAll(const sU8 *buffer,sInt size);
+  sBool ReadAll(sU8* buffer, sInt size);
+  sBool WriteAll(const sU8* buffer, sInt size);
 
   sTCPClientSocket Socket;
   sInt RetryCount;
@@ -106,7 +106,7 @@ protected:
   sIPAddress TargetAddress;
   sIPPort TargetPort;
   ProgressCallback Progress;
-  void *ProgressUser;
+  void* ProgressUser;
 };
 
 /****************************************************************************/
@@ -125,18 +125,18 @@ public:
   {
     // input
     sMiniFTPCommand Command;
-    const sChar *Filename;
+    const sChar* Filename;
 
     // output
-    sFile *File;
+    sFile* File;
     sArray<sChar> DirListing;
   };
-  
-  typedef sBool (*RequestHandler)(RequestInfo &info);
+
+  typedef sBool (* RequestHandler)(RequestInfo& info);
 
   void SetRequestHandler(RequestHandler handler);
   void SetOnlyFullFiles(sBool enable);
-  sBool Run(sThread *t);
+  sBool Run(sThread* t);
 
 private:
   static const sInt MAXCONN = 128;
@@ -144,23 +144,22 @@ private:
 
   struct Connection
   {
-    sTCPSocket *Socket;
-    sThread *Thread;
+    sTCPSocket* Socket;
+    sThread* Thread;
     RequestHandler Handler;
     sDNode Link;
     sBool OnlyFullFiles;
   };
 
-  static void ClientThreadFunc(sThread *t,void *user);
+  static void ClientThreadFunc(sThread* t, void* user);
 
   sTCPHostSocket HostSocket;
   RequestHandler Handler;
   sBool OnlyFullFiles;
   Connection ConnStore[MAXCONN];
-  sDList<Connection,&Connection::Link> ConnList;
-  sDList<Connection,&Connection::Link> FreeList;
+  sDList<Connection, & Connection::Link> ConnList;
+  sDList<Connection, & Connection::Link> FreeList;
 };
 
 /****************************************************************************/
-
 

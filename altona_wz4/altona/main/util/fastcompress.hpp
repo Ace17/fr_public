@@ -25,27 +25,27 @@
 // is) on a Core2 2.83GHz for both compression and decompression.
 class sFastLzpCompressor
 {
-  sU8 *ChunkBuffer;
-  sU8 *OutBuffer;
-  sU32 *HashTable;
+  sU8* ChunkBuffer;
+  sU8* OutBuffer;
+  sU32* HashTable;
   sU32 CurrentPos;
 
-  sU8 *RawPos;
-  sU8 *BitPos1,*BitPos2;
+  sU8* RawPos;
+  sU8* BitPos1, * BitPos2;
   sU32 BitBuffer;
   sInt BitShift;
 
   sU32 PWritePos;
   sBool PFirstBlock;
 
-  void StartWrite(sU8 *ptr);
+  void StartWrite(sU8* ptr);
   void EndWrite();
 
   void Shift();
 
   // The BitPos1/BitPos2 stuff looks strange, I know. But it's all too make the
   // depacker very simple+fast.
-  sINLINE void PutBits(sU32 value,sInt nBits) // nBits must be <=16!!
+  sINLINE void PutBits(sU32 value, sInt nBits) // nBits must be <=16!!
   {
     BitShift -= nBits;
     BitBuffer |= value << BitShift;
@@ -54,21 +54,25 @@ class sFastLzpCompressor
       Shift();
   }
 
-  sINLINE void PutBitsLong(sU32 value,sInt nBits) // nBits may be up to 32
+  sINLINE void PutBitsLong(sU32 value, sInt nBits) // nBits may be up to 32
   {
     if(nBits <= 16)
-      PutBits(value,nBits);
+      PutBits(value, nBits);
     else
     {
-      PutBits(value>>16,nBits-16);
-      PutBits(value&0xffff,16);
+      PutBits(value >> 16, nBits - 16);
+      PutBits(value & 0xffff, 16);
     }
   }
 
-  sINLINE void PutByte(sU8 value) { *RawPos++ = value; }
+  sINLINE void PutByte(sU8 value)
+  {
+    *RawPos++ = value;
+  }
+
   void PutExpGolomb(sU32 value);
 
-  sInt CompressChunk(sU32 nBytes,sBool isLast);
+  sInt CompressChunk(sU32 nBytes, sBool isLast);
   void Reset();
 
 public:
@@ -76,31 +80,31 @@ public:
   ~sFastLzpCompressor();
 
   // EITHER: Everything at once
-  sBool Compress(sFile *dest,sFile *src);
+  sBool Compress(sFile* dest, sFile* src);
 
   // OR: Piecewise I/O (normal write operations)
   void StartPiecewise();
-  sBool WritePiecewise(sFile *dest,const void *buffer,sDInt size);
-  sBool EndPiecewise(sFile *dest);
+  sBool WritePiecewise(sFile* dest, const void* buffer, sDInt size);
+  sBool EndPiecewise(sFile* dest);
 };
 
 // The corresponding decompressor.
 class sFastLzpDecompressor
 {
-  sU8 *ChunkBuffer;
-  sU8 *InBuffer;
-  sU32 *HashTable;
+  sU8* ChunkBuffer;
+  sU8* InBuffer;
+  sU32* HashTable;
   sU32 CurrentPos;
 
   sU32 PReadPos;
   sU32 PBlockEnd;
   sBool PIsLast;
 
-  const sU8 *RawPos;
+  const sU8* RawPos;
   sU32 BitBuffer;
   sInt BitFill;
 
-  void StartRead(const sU8 *ptr);
+  void StartRead(const sU8* ptr);
 
   void Shift();
 
@@ -113,6 +117,7 @@ class sFastLzpDecompressor
   {
     BitBuffer <<= nBits;
     BitFill -= nBits;
+
     if(BitFill <= 16)
       Shift();
   }
@@ -131,7 +136,7 @@ class sFastLzpDecompressor
 
   sU32 GetExpGolomb();
 
-  sInt DecompressChunk(sU32 blockLen,sBool &last,sU8 *&ptr);
+  sInt DecompressChunk(sU32 blockLen, sBool& last, sU8*& ptr);
   void Reset();
 
   sU32 ReadLen(const sU8* ptr);
@@ -141,11 +146,11 @@ public:
   ~sFastLzpDecompressor();
 
   // EITHER: Everything at once
-  sBool Decompress(sFile *dest,sFile *src);
+  sBool Decompress(sFile* dest, sFile* src);
 
   // OR: Piecewise I/O (normal read operations)
   void StartPiecewise();
-  sBool ReadPiecewise(sFile *src,void *buffer,sDInt size);
+  sBool ReadPiecewise(sFile* src, void* buffer, sDInt size);
   void EndPiecewise();
 };
 
@@ -154,9 +159,9 @@ public:
 // File wrappers (intended to be used with serialization)
 class sFastLzpFile : public sFile
 {
-  sFastLzpCompressor *Comp;
-  sFastLzpDecompressor *Decomp;
-  sFile *Host;
+  sFastLzpCompressor* Comp;
+  sFastLzpDecompressor* Decomp;
+  sFile* Host;
   sS64 Size;
 
 public:
@@ -165,17 +170,16 @@ public:
 
   // either open for reading or writing, not both. sFastLzpFile owns host.
   // it's freed immediately if Open fails!
-  sBool Open(sFile *host,sBool writing); 
+  sBool Open(sFile* host, sBool writing);
 
-  static sFile *OpenRead(sFile *host);
-  static sFile *OpenWrite(sFile *host);
+  static sFile* OpenRead(sFile* host);
+  static sFile* OpenWrite(sFile* host);
 
   virtual sBool Close();
-  virtual sBool Read(void *data,sDInt size);
-  virtual sBool Write(const void *data,sDInt size);
+  virtual sBool Read(void* data, sDInt size);
+  virtual sBool Write(const void* data, sDInt size);
   virtual sS64 GetSize();
 };
 
 /****************************************************************************/
-
 

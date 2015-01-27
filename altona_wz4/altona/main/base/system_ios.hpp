@@ -9,7 +9,7 @@
 
 #pragma once
 
-//#include "base/types.hpp"
+// #include "base/types.hpp"
 
 /****************************************************************************/
 
@@ -18,17 +18,17 @@ void IOSInit2();
 void IOSInit3();
 void IOSResize1();
 void IOSResize2();
-void IOSRender(int ms,unsigned long long us);
+void IOSRender(int ms, unsigned long long us);
 void IOSExit();
 
-enum 
+enum
 {
   IOS_MaxTouches = 11,
 };
 
 struct IOS_TouchData
 {
-  int x,y,c;
+  int x, y, c;
 };
 
 extern IOS_TouchData IOS_Touches[IOS_MaxTouches];

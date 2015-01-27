@@ -23,30 +23,30 @@
 
 class MyApp : public sApp
 {
-  sPainter *Painter;
-  sTexture2D *Tex;
-  sCSBuffer *MCMap;
-  sMaterial *Mtrl;
-  sGeometry *Geo;
-  sVertexFormatHandle *Format;
+  sPainter* Painter;
+  sTexture2D* Tex;
+  sCSBuffer* MCMap;
+  sMaterial* Mtrl;
+  sGeometry* Geo;
+  sVertexFormatHandle* Format;
 
   sViewport View;
   sMaterialEnv Env;
 
   sTiming Timer;
-  sComputeShader *CS;
-  sComputeShader *CSWC;
-  sCSBuffer *CSVB;
-  sCSBuffer *CSIB;
-  sCSBuffer *CSCountVertex;
-  sCSBuffer *CSCountIndex;
-  sCSBuffer *CSIndirect;
-  sCSBuffer *NodeBuffer;
+  sComputeShader* CS;
+  sComputeShader* CSWC;
+  sCSBuffer* CSVB;
+  sCSBuffer* CSIB;
+  sCSBuffer* CSCountVertex;
+  sCSBuffer* CSCountIndex;
+  sCSBuffer* CSIndirect;
+  sCSBuffer* NodeBuffer;
   sFreeflightCamera Cam;
 
   // geometry
 
-  sF32 MyApp::func(const sVector31 &c);
+  sF32 MyApp::func(const sVector31& c);
 
   sF32 FineScale;
   sF32 Scale;
@@ -55,16 +55,17 @@ class MyApp : public sApp
   // build nodes
   struct nodeinfo
   {
-    sU32 x,y,z,w;
-  } *ni;
-  void BuildNode(sInt x,sInt y,sInt z,sInt d);
-  nodeinfo *Nodes;
+    sU32 x, y, z, w;
+  }* ni;
+  void BuildNode(sInt x, sInt y, sInt z, sInt d);
+  nodeinfo* Nodes;
   sInt NodeIndex;
+
 public:
   MyApp();
   ~MyApp();
   void OnPaint3D();
-  void OnInput(const sInput2Event &ie);
+  void OnInput(const sInput2Event& ie);
 };
 
 /****************************************************************************/

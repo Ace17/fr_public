@@ -20,7 +20,6 @@
 
 /****************************************************************************/
 
-
 struct WaterParticle
 {
   sVector31 NewPos;
@@ -41,7 +40,7 @@ class WaterFX
   enum Constants
   {
     HASHSIZE = 0x400,
-    HASHMASK = HASHSIZE-1,
+    HASHMASK = HASHSIZE - 1,
 
     STEPX = 1,
     STEPY = 17,
@@ -57,7 +56,7 @@ class WaterFX
   };
 
   HashIndex HashTable[HASHSIZE];
-  sArray<WaterParticle> *Parts[2];
+  sArray<WaterParticle>* Parts[2];
   sVector4 Planes[4];
   sArray<counterforcevector> CounterForce;
   sVector30 LastCounterForce;
@@ -65,16 +64,28 @@ class WaterFX
 public:
   WaterFX();
   ~WaterFX();
-  const sArray<WaterParticle> &GetArray() const { return *Parts[0]; }
-  sArray<WaterParticle> &GetArray() { return *Parts[0]; }
-  sInt GetCount() const { return Parts[0]->GetCount(); }
-  void Reset();
-  void AddRain(sInt count,sU32 color);
-  void AddDrop(sInt count,sU32 color,sF32 radius);
-  void Nudge(const sVector30 &speed);
-  void Step(class sStsManager *sched,class sStsWorkload *wl);
+  const sArray<WaterParticle>& GetArray() const
+  {
+    return *Parts[0];
+  }
 
-  void Func(sInt n,sInt threadid);
+  sArray<WaterParticle>& GetArray()
+  {
+    return *Parts[0];
+  }
+
+  sInt GetCount() const
+  {
+    return Parts[0]->GetCount();
+  }
+
+  void Reset();
+  void AddRain(sInt count, sU32 color);
+  void AddDrop(sInt count, sU32 color, sF32 radius);
+  void Nudge(const sVector30& speed);
+  void Step(class sStsManager* sched, class sStsWorkload* wl);
+
+  void Func(sInt n, sInt threadid);
 
   sF32 GravityY;
   sF32 CentralGravity;
@@ -86,49 +97,48 @@ public:
 
 class RNFR063_Water : public Wz4RenderNode
 {
-  MarchingCubes *MC;
+  MarchingCubes* MC;
   sArray<sVector31> MCParts;
-  class WaterFX *Water;
-  class WaterFX *Drop;
+  class WaterFX* Water;
+  class WaterFX* Drop;
   sInt Step;
+
 public:
   RNFR063_Water();
   ~RNFR063_Water();
   void Init();
 
-  void Simulate(Wz4RenderContext *ctx);   // execute the script. 
-  void Prepare(Wz4RenderContext *ctx);    // do simulation
-  void Render(Wz4RenderContext *ctx);     // render a pass
+  void Simulate(Wz4RenderContext* ctx);   // execute the script.
+  void Prepare(Wz4RenderContext* ctx);    // do simulation
+  void Render(Wz4RenderContext* ctx);     // render a pass
 
-  Wz4RenderParaFR063_Water Para,ParaBase; // animated parameters from op
+  Wz4RenderParaFR063_Water Para, ParaBase; // animated parameters from op
   Wz4RenderAnimFR063_Water Anim;          // information for the script engine
 
-  Wz4Mtrl *Mtrl;                          // material from inputs
+  Wz4Mtrl* Mtrl;                          // material from inputs
 };
-
 
 /****************************************************************************/
 
 class RNFR063_MultiProgress : public Wz4RenderNode
 {
-  sGeometry *Geo;
-  sSimpleMaterial *Mtrl;
+  sGeometry* Geo;
+  sSimpleMaterial* Mtrl;
+
 public:
   RNFR063_MultiProgress();
   ~RNFR063_MultiProgress();
   void Init();
 
-  void Simulate(Wz4RenderContext *ctx);   // execute the script. 
-  void Prepare(Wz4RenderContext *ctx);    // do simulation
-  void Render(Wz4RenderContext *ctx);     // render a pass
+  void Simulate(Wz4RenderContext* ctx);   // execute the script.
+  void Prepare(Wz4RenderContext* ctx);    // do simulation
+  void Render(Wz4RenderContext* ctx);     // render a pass
 
-  Wz4RenderParaFR063_MultiProgress Para,ParaBase; // animated parameters from op
+  Wz4RenderParaFR063_MultiProgress Para, ParaBase; // animated parameters from op
   Wz4RenderAnimFR063_MultiProgress Anim;          // information for the script engine
 
-//  Wz4Mtrl *Mtrl;                          // material from inputs
+// Wz4Mtrl *Mtrl;                          // material from inputs
 };
 
-
 /****************************************************************************/
-
 

@@ -21,14 +21,14 @@ class Client
 
   sBool Connected;
   void CheckConnect();
+
 public:
-  Client(sInt port,const sChar *ip);
+  Client(sInt port, const sChar* ip);
   ~Client();
 
-  sBool Test(sU32 p0,sU32 p1);
+  sBool Test(sU32 p0, sU32 p1);
   sBool Update();
 };
 
 /****************************************************************************/
-
 

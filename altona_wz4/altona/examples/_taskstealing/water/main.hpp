@@ -19,28 +19,27 @@
 
 class MyApp : public sApp
 {
-  sPainter *Painter;
-  sTexture2D *Tex;
-  sMaterial *Mtrl;
+  sPainter* Painter;
+  sTexture2D* Tex;
+  sMaterial* Mtrl;
   sFreeflightCamera Cam;
 
   sViewport View;
 
   sTiming Timer;
-  MarchingCubes *MC;
+  MarchingCubes* MC;
   sArray<sVector31> MCParts;
   sMaterialEnv Env;
 
-  class WaterFX *Water;
-  class WaterFX *Drop;
+  class WaterFX* Water;
+  class WaterFX* Drop;
+
 public:
   MyApp();
   ~MyApp();
   void OnPaint3D();
-  void OnInput(const sInput2Event &ie);
+  void OnInput(const sInput2Event& ie);
 };
 
-
 /****************************************************************************/
-
 

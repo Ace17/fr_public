@@ -29,21 +29,25 @@ public:
   sInt Value;
   sU32 Color;
   sInt Choice;
-  const sChar *ConstString;
+  const sChar* ConstString;
   sPoolString PoolString;
-  sColorGradient *Gradient;
+  sColorGradient* Gradient;
 
-  sListWindowTreeInfo<ListItem *> TreeInfo;
+  sListWindowTreeInfo<ListItem*> TreeInfo;
 
   sCLASSNAME_NONEW(ListItem);
-  ListItem(const sChar *str,sInt val,sU32 col);
+  ListItem(const sChar* str, sInt val, sU32 col);
   ListItem();
- 
-  const sChar *GetName();
+
+  const sChar* GetName();
   void Tag();
-//  void OnPaintColumn(sInt column,const sRect &client,sBool select);
-  void OnAddNotify(sWindow *w) { w->AddNotify(this,sizeof(*this)); }
-  void AddGui(sGridFrameHelper &gh);
+// void OnPaintColumn(sInt column,const sRect &client,sBool select);
+  void OnAddNotify(sWindow* w)
+  {
+    w->AddNotify(this, sizeof(*this));
+  }
+
+  void AddGui(sGridFrameHelper& gh);
 };
 
 /****************************************************************************/
@@ -56,18 +60,18 @@ enum MainWindowCommand
 
 class MainWindow : public sWindow
 {
-  class WinFrame *FrameWin;
-  class WinText *TextWin;
-  sMultiListWindow<ListItem> *ListWin;
-  sMultiTreeWindow<ListItem> *TreeWin;
-  sGridFrame *ItemWin;
+  class WinFrame* FrameWin;
+  class WinText* TextWin;
+  sMultiListWindow<ListItem>* ListWin;
+  sMultiTreeWindow<ListItem>* TreeWin;
+  sGridFrame* ItemWin;
 
 public:
   sCLASSNAME(MainWindow);
   MainWindow();
   ~MainWindow();
   void Tag();
- 
+
   void UpdateText(sDInt mode);
   void UpdateItemList();
   void UpdateItemTree();
@@ -75,7 +79,7 @@ public:
   void CmdDialog();
   void CmdComplicated();
 
-  sArray<ListItem *> Items;
+  sArray<ListItem*> Items;
 
   sInt ints[16];
   sString<8> strings[1];
@@ -86,13 +90,14 @@ public:
 
 class WinFrame : public sWireClientWindow
 {
-  sGridFrame *Grid;
+  sGridFrame* Grid;
+
 public:
   sCLASSNAME(WinFrame);
   WinFrame();
   ~WinFrame();
 
-  void InitWire(const sChar *name);
+  void InitWire(const sChar* name);
   void Reset(sDInt);
   sInt Default;
 };
@@ -100,13 +105,15 @@ public:
 class WinText : public sWireClientWindow
 {
   sTextBuffer TextBuffer;
+
 public:
   sCLASSNAME(WinText);
-  sTextWindow *TextWin;
+  sTextWindow* TextWin;
   WinText();
-  void InitWire(const sChar *name);
+  void InitWire(const sChar* name);
 
   void UpdateText(sDInt mode);
 };
 
 /****************************************************************************/
+

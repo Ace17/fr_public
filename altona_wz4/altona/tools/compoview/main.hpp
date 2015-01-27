@@ -25,19 +25,19 @@ struct Entry
 {
   sPoolString Name;
   sImage Image;
-  sTexture2D *Texture;
+  sTexture2D* Texture;
 };
 
 class MyApp : public sApp
 {
-  sPainter *Painter;
-  sTexture2D *Tex;
-  sTexture2D *TexOld;
+  sPainter* Painter;
+  sTexture2D* Tex;
+  sTexture2D* TexOld;
   sFRect GeoPos;
   sFRect GeoPosOld;
-  sMaterial *Mtrl;
-  sMaterial *CursorMtrl;
-  sGeometry *Geo;
+  sMaterial* Mtrl;
+  sMaterial* CursorMtrl;
+  sGeometry* Geo;
 
   sViewport View;
   sMaterialEnv Env;
@@ -45,7 +45,7 @@ class MyApp : public sApp
   sTiming Timer;
 
   sInt ImageId;
-  sArray<Entry *> Entries;
+  sArray<Entry*> Entries;
 
   sInt MouseX;
   sInt MouseY;
@@ -74,10 +74,10 @@ class MyApp : public sApp
 
   sArray<sDirEntry> dir;
   sPoolString Name;
+
 public:
   MyApp();
   ~MyApp();
-
 
   void LoadEntries();
   void LoadOne();
@@ -85,7 +85,7 @@ public:
   void CmdReset();
 
   void OnPaint3D();
-  void OnInput(const sInput2Event &ie);
+  void OnInput(const sInput2Event& ie);
 };
 
 /****************************************************************************/

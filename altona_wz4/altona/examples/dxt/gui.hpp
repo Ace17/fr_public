@@ -14,9 +14,9 @@
 
 class MainWindow : public sWindow
 {
-  class WinView *ViewWin;
-  class sWireGridFrame *GridWin;
-  sSingleListWindow<DocImage> *ListWin;
+  class WinView* ViewWin;
+  class sWireGridFrame* GridWin;
+  sSingleListWindow<DocImage>* ListWin;
 
 public:
   MainWindow();
@@ -40,25 +40,26 @@ public:
   sString<256> CodecString;
 };
 
-extern MainWindow *App;
+extern MainWindow* App;
 
 /****************************************************************************/
 
 class WinView : public sWireClientWindow
 {
-  DocImage *Current;
-  sImage *Decoded;
-  sImage *Difference;
+  DocImage* Current;
+  sImage* Decoded;
+  sImage* Difference;
   sInt AlphaMode;
   sInt Zoom;
 
-  void Blit(const sImage *img,const sRect &r);
+  void Blit(const sImage* img, const sRect& r);
+
 public:
   WinView();
   ~WinView();
   void Tag();
-  void InitWire(const sChar *name);
-  void SetImage(DocImage *, sBool loop = false);
+  void InitWire(const sChar* name);
+  void SetImage(DocImage*, sBool loop = false);
 
   void CmdToggleAlpha();
   void CmdZoom(sDInt dir);
@@ -68,3 +69,4 @@ public:
 };
 
 /****************************************************************************/
+

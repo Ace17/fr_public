@@ -25,10 +25,11 @@ public:
 class MyParentWin : public sHSplitFrame
 {
   sTextBuffer Text;
+
 public:
   MyParentWin();
   void MakeMenu();
 };
 
-
 /****************************************************************************/
+

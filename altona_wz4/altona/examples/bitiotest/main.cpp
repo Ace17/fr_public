@@ -22,14 +22,16 @@ static void TestBitIO()
   sPrintF(L"running in-memory writer test...\n");
   {
     sBitWriter writer;
-    writer.Start(buffer,bufferSize);
+    writer.Start(buffer, bufferSize);
     rand.Seed(seed);
-    for(sInt i=0;i<(bufferSize*8)/24;i++)
+
+    for(sInt i = 0; i < (bufferSize * 8) / 24; i++)
     {
       sInt len = rand.Int(23) + 1;
       sU32 value = rand.Int32() & ((1 << len) - 1);
-      writer.PutBits(value,len);
+      writer.PutBits(value, len);
     }
+
     sDInt bytes = writer.Finish();
     sVERIFY(bytes != -1);
   }
@@ -38,9 +40,10 @@ static void TestBitIO()
   sPrintF(L"running in-memory reader test...\n");
   {
     sBitReader reader;
-    reader.Start(buffer,bufferSize);
+    reader.Start(buffer, bufferSize);
     rand.Seed(seed);
-    for(sInt i=0;i<(bufferSize*8)/24;i++)
+
+    for(sInt i = 0; i < (bufferSize * 8) / 24; i++)
     {
       sInt len = rand.Int(23) + 1;
       sU32 checkValue = rand.Int32() & ((1 << len) - 1);
@@ -58,15 +61,16 @@ static void TestBitIO()
   sPrintF(L"running file-based writer test...\n");
   {
     sBitWriter writer;
-    sFile *file = sCreateFile(L"test.dat",sFA_WRITE);
+    sFile* file = sCreateFile(L"test.dat", sFA_WRITE);
 
     writer.Start(file);
-    rand.Seed(seed+1);
-    for(sInt i=0;i<numValues;i++)
+    rand.Seed(seed + 1);
+
+    for(sInt i = 0; i < numValues; i++)
     {
       sInt len = rand.Int(23) + 1;
       sU32 value = rand.Int32() & ((1 << len) - 1);
-      writer.PutBits(value,len);
+      writer.PutBits(value, len);
     }
 
     bytes = writer.Finish();
@@ -74,7 +78,7 @@ static void TestBitIO()
     sVERIFY(bytes == file->GetOffset());
 
     static const sChar8 endTag[] = "0123";
-    file->Write(endTag,4);
+    file->Write(endTag, 4);
 
     sDelete(file);
   }
@@ -82,12 +86,12 @@ static void TestBitIO()
   sPrintF(L"running file-based reader test...\n");
   {
     sBitReader reader;
-    sFile *file = sCreateFile(L"test.dat",sFA_READ);
+    sFile* file = sCreateFile(L"test.dat", sFA_READ);
 
     reader.Start(file);
-    rand.Seed(seed+1);
+    rand.Seed(seed + 1);
 
-    for(sInt i=0;i<numValues;i++)
+    for(sInt i = 0; i < numValues; i++)
     {
       sInt len = rand.Int(23) + 1;
       sU32 checkValue = rand.Int32() & ((1 << len) - 1);
@@ -101,7 +105,8 @@ static void TestBitIO()
 
     // now try reading the end tag bitwise
     reader.Start(file);
-    for(sInt i=0;i<4;i++)
+
+    for(sInt i = 0; i < 4; i++)
     {
       sBool ok = reader.GetBits(8) == (i + '0');
       sVERIFY(ok);
@@ -131,30 +136,31 @@ static void TestHuffman()
 
   // load test file
   sDInt size;
-  sU8 *testData = sLoadFile(L"../../main/base/types.cpp",size);
+  sU8* testData = sLoadFile(L"../../main/base/types.cpp", size);
   sVERIFY(testData != 0);
 
   // count character frequencies
   sU32 freq[256];
   sClear(freq);
-  for(sInt i=0;i<size;i++)
+
+  for(sInt i = 0; i < size; i++)
     freq[testData[i]]++;
 
   // build huffman codes
   sU32 code[256];
   sInt lens[256];
-  sBuildHuffmanCodes(code,lens,freq,256,24);
+  sBuildHuffmanCodes(code, lens, freq, 256, 24);
 
   // write file
   sBitWriter writer;
-  sFile *file = sCreateFile(L"types_huff.dat",sFA_WRITE);
+  sFile* file = sCreateFile(L"types_huff.dat", sFA_WRITE);
   writer.Start(file);
 
-  ok = sWriteHuffmanCodeLens(writer,lens,256);
+  ok = sWriteHuffmanCodeLens(writer, lens, 256);
   sVERIFY(ok);
 
-  for(sInt i=0;i<size;i++)
-    writer.PutBits(code[testData[i]],lens[testData[i]]);
+  for(sInt i = 0; i < size; i++)
+    writer.PutBits(code[testData[i]], lens[testData[i]]);
 
   sDInt bytes = writer.Finish();
   sVERIFY(bytes != -1);
@@ -164,23 +170,24 @@ static void TestHuffman()
   sPrintF(L"testing huffman decoding...\n");
 
   sDInt packedSize;
-  sU8 *packedData = sLoadFile(L"types_huff.dat",packedSize);
+  sU8* packedData = sLoadFile(L"types_huff.dat", packedSize);
   sVERIFY(packedData != 0);
 
   sBitReader reader;
-  reader.Start(packedData,packedSize);
+  reader.Start(packedData, packedSize);
 
   sInt newLens[256];
-  ok = sReadHuffmanCodeLens(reader,newLens,256);
+  ok = sReadHuffmanCodeLens(reader, newLens, 256);
   sVERIFY(ok);
-  for(sInt i=0;i<256;i++)
+
+  for(sInt i = 0; i < 256; i++)
     sVERIFY(lens[i] == newLens[i]);
 
   sFastHuffmanDecoder huffdec;
-  ok = huffdec.Init(lens,256);
+  ok = huffdec.Init(lens, 256);
   sVERIFY(ok);
 
-  for(sInt i=0;i<size;i++)
+  for(sInt i = 0; i < size; i++)
   {
     sInt sym = huffdec.DecodeSymbol(reader);
     sVERIFY(sym == testData[i]);

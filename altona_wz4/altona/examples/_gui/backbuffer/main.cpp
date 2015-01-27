@@ -21,38 +21,40 @@
 MyWindow::MyWindow()
 {
   BackBuffer = 0;
-
 }
+
 void MyWindow::OnPaint2D()
 {
   sRandom rnd;
   sRect r;
 
-  if(BackBuffer) sGui->BeginBackBuffer(Client);
-  sRect2D(Client,sGC_BACK);
+  if(BackBuffer)
+    sGui->BeginBackBuffer(Client);
 
-  for(sInt i=50;i>1;i--)
+  sRect2D(Client, sGC_BACK);
+
+  for(sInt i = 50; i > 1; i--)
   {
-    r.x0 = Client.CenterX()-Client.SizeX()*i/110;
-    r.x1 = Client.CenterX()+Client.SizeX()*i/110;
-    r.y0 = Client.CenterY()-Client.SizeY()*i/110;
-    r.y1 = Client.CenterY()+Client.SizeY()*i/110;
+    r.x0 = Client.CenterX() - Client.SizeX() * i / 110;
+    r.x1 = Client.CenterX() + Client.SizeX() * i / 110;
+    r.y0 = Client.CenterY() - Client.SizeY() * i / 110;
+    r.y1 = Client.CenterY() + Client.SizeY() * i / 110;
 
-    sRect2D(r,(i&1)?sGC_RED:sGC_GREEN);
+    sRect2D(r, (i & 1) ? sGC_RED : sGC_GREEN);
   }
 
-  if(BackBuffer) sGui->EndBackBuffer();
+  if(BackBuffer)
+    sGui->EndBackBuffer();
 
-  sGui->PropFont->Print(0,Client.x0+4,Client.y0+4,BackBuffer ? L"BackBuffer" : L"No BackBuffer");
+  sGui->PropFont->Print(0, Client.x0 + 4, Client.y0 + 4, BackBuffer ? L"BackBuffer" : L"No BackBuffer");
 }
 
 /****************************************************************************/
 
 MyParentWin::MyParentWin()
 {
-  sVSplitFrame *v;
-  MyWindow *w0,*w1;
-
+  sVSplitFrame* v;
+  MyWindow* w0, * w1;
 
   w0 = new MyWindow;
   w1 = new MyWindow;
@@ -65,9 +67,10 @@ MyParentWin::MyParentWin()
 
 void sMain()
 {
-  sInit(sISF_2D,800,600);
+  sInit(sISF_2D, 800, 600);
   sInitGui();
   sGui->AddBackWindow(new MyParentWin);
 }
 
 /****************************************************************************/
+

@@ -16,9 +16,8 @@
 class sImage;
 class sFile;
 
-sImage *sLoadImageWin32(sFile *file);
-sImage *sLoadImageWin32(const sChar *name);
+sImage* sLoadImageWin32(sFile* file);
+sImage* sLoadImageWin32(const sChar* name);
 
 /****************************************************************************/
-
 

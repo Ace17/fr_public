@@ -47,25 +47,26 @@ class sResourceManager_
   friend class sImageResource;
   friend class sTextResource;
 
-  sArray<class sFontResource *> Fonts;
-  sArray<class sImageResource *> Images;
-  sArray<class sTextResource *> Texts;
+  sArray<class sFontResource*> Fonts;
+  sArray<class sImageResource*> Images;
+  sArray<class sTextResource*> Texts;
   sFontFamily FontFamilies[sRFF_MAX];
+
 public:
   sResourceManager_();
   ~sResourceManager_();
   void Flush();               // resources are not deleted immediatly, so please flush from time to time
   void ClearTemp();           // clears temp flag
-  
-  sFontResource *NewFont(const sChar *name,sInt size,sInt style=0);
-  sFontResource *NewLogFont(sInt family,sInt logsize,sInt style=0);
-  void SetLogFont(sInt family,const sChar *name,sInt basesize);
 
-  sImageResource *NewImage(const sChar *name);
-  sTextResource *NewText(const sChar *name);
+  sFontResource* NewFont(const sChar* name, sInt size, sInt style = 0);
+  sFontResource* NewLogFont(sInt family, sInt logsize, sInt style = 0);
+  void SetLogFont(sInt family, const sChar* name, sInt basesize);
+
+  sImageResource* NewImage(const sChar* name);
+  sTextResource* NewText(const sChar* name);
 };
 
-extern sResourceManager_ *sResourceManager;
+extern sResourceManager_* sResourceManager;
 
 void sAddResourceManager();
 
@@ -75,13 +76,33 @@ class sFontResource
 {
   friend class sResourceManager_;
   sInt RefCount;
+
 public:
-  sFontResource() { RefCount = 1; sResourceManager->Fonts.AddTail(this); Font=0; }
-  ~sFontResource() { sResourceManager->Fonts.Rem(this); delete Font; }
-  void AddRef() { RefCount++; }
-  void Release() { sVERIFY(RefCount>0); RefCount--; /*if(RefCount==0) delete this;*//* do not delete! */}
-  
-  sFont2D *Font;
+  sFontResource()
+  {
+    RefCount = 1;
+    sResourceManager->Fonts.AddTail(this);
+    Font = 0;
+  }
+
+  ~sFontResource()
+  {
+    sResourceManager->Fonts.Rem(this);
+    delete Font;
+  }
+
+  void AddRef()
+  {
+    RefCount++;
+  }
+
+  void Release()
+  {
+    sVERIFY(RefCount > 0);
+    RefCount--; /*if(RefCount==0) delete this;*//* do not delete! */
+  }
+
+  sFont2D* Font;
 
   sPoolString Name;
   sInt Size;           // this is the height of the font when as REQUESTED
@@ -96,14 +117,34 @@ class sImageResource
 {
   friend class sResourceManager_;
   sInt RefCount;
+
 public:
-  sImageResource() { RefCount = 1; sResourceManager->Images.AddTail(this); Image=0; }
-  ~sImageResource() { sResourceManager->Images.Rem(this); delete Image; }
-  void AddRef() { RefCount++; }
-  void Release() { sVERIFY(RefCount>0); RefCount--; /*if(RefCount==0) delete this;*//* do not delete! */ }
+  sImageResource()
+  {
+    RefCount = 1;
+    sResourceManager->Images.AddTail(this);
+    Image = 0;
+  }
+
+  ~sImageResource()
+  {
+    sResourceManager->Images.Rem(this);
+    delete Image;
+  }
+
+  void AddRef()
+  {
+    RefCount++;
+  }
+
+  void Release()
+  {
+    sVERIFY(RefCount > 0);
+    RefCount--; /*if(RefCount==0) delete this;*//* do not delete! */
+  }
 
   sPoolString Name;
-  sImage2D *Image;
+  sImage2D* Image;
 
   sDInt Temp;          // free for user
 };
@@ -112,17 +153,36 @@ class sTextResource
 {
   friend class sResourceManager_;
   sInt RefCount;
+
 public:
-  sTextResource() { RefCount = 1; sResourceManager->Texts.AddTail(this); Text=0; }
-  ~sTextResource() { sResourceManager->Texts.Rem(this); delete Text; }
-  void AddRef() { RefCount++; }
-  void Release() { sVERIFY(RefCount>0); RefCount--; /*if(RefCount==0) delete this;*//* do not delete! */ }
+  sTextResource()
+  {
+    RefCount = 1;
+    sResourceManager->Texts.AddTail(this);
+    Text = 0;
+  }
+
+  ~sTextResource()
+  {
+    sResourceManager->Texts.Rem(this);
+    delete Text;
+  }
+
+  void AddRef()
+  {
+    RefCount++;
+  }
+
+  void Release()
+  {
+    sVERIFY(RefCount > 0);
+    RefCount--; /*if(RefCount==0) delete this;*//* do not delete! */
+  }
 
   sPoolString Name;
-  const sChar *Text;
+  const sChar* Text;
   sDInt Temp;          // free for user
 };
 
 /****************************************************************************/
-
 

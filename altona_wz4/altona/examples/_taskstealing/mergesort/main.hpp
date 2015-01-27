@@ -17,32 +17,31 @@
 
 class MyApp : public sApp
 {
-  sPainter *Painter;
-  sTexture2D *Tex;
-  sMaterial *Mtrl;
-  sGeometry *Geo;
+  sPainter* Painter;
+  sTexture2D* Tex;
+  sMaterial* Mtrl;
+  sGeometry* Geo;
 
   sViewport View;
   sMaterialEnv Env;
 
   sTiming Timer;
   sTextBuffer tb;
-  static const sInt SortCount = 1024*512;//1024*256;
+  static const sInt SortCount = 1024 * 512;// 1024*256;
 
   sArray<sU32> SortSource;
   sArray<sU32> SortDestHS;
   sArray<sU32> SortDestST;
   sArray<sU32> SortDestMT;
 
-  void Update(sTexture2D *);
+  void Update(sTexture2D*);
+
 public:
   MyApp();
   ~MyApp();
   void OnPaint3D();
-  void OnInput(const sInput2Event &ie);
+  void OnInput(const sInput2Event& ie);
 };
 
-
 /****************************************************************************/
-
 

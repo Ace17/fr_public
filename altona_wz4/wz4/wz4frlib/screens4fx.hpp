@@ -20,56 +20,54 @@
 
 class RNSiegmeister : public Wz4RenderNode
 {
-  sGeometry *Geo;
-  sSimpleMaterial *Mtrl;
+  sGeometry* Geo;
+  sSimpleMaterial* Mtrl;
 
 public:
   RNSiegmeister();
   ~RNSiegmeister();
 
-  Texture2D *Texture;
+  Texture2D* Texture;
 
-  sF32  Fade;
+  sF32 Fade;
   sBool DoBlink;
-  sU32  Color;
-  sU32  BlinkColor1;
-  sU32  BlinkColor2;
-  sF32  Alpha;
-  sF32  Spread;
+  sU32 Color;
+  sU32 BlinkColor1;
+  sU32 BlinkColor2;
+  sF32 Alpha;
+  sF32 Spread;
   sStaticArray<sFRect> Bars;
 
-  Wz4RenderParaSiegmeister ParaBase,Para;
+  Wz4RenderParaSiegmeister ParaBase, Para;
   Wz4RenderAnimSiegmeister Anim;
 
   void Init();
-  void Simulate(Wz4RenderContext *ctx);
-  void Prepare(Wz4RenderContext *ctx);
-  void Render(Wz4RenderContext *ctx);
+  void Simulate(Wz4RenderContext* ctx);
+  void Prepare(Wz4RenderContext* ctx);
+  void Render(Wz4RenderContext* ctx);
 };
-
 
 class RNCustomFullscreen2D : public Wz4RenderNode
 {
-  sGeometry *Geo;
-  sMaterial *DummyMtrl;
+  sGeometry* Geo;
+  sMaterial* DummyMtrl;
 
 public:
   RNCustomFullscreen2D();
   ~RNCustomFullscreen2D();
 
-  sMaterial *Material;
-  sFRect    UVRect;
-  sF32      Aspect;
+  sMaterial* Material;
+  sFRect UVRect;
+  sF32 Aspect;
 
-  Wz4RenderParaCustom2DFS ParaBase,Para;
+  Wz4RenderParaCustom2DFS ParaBase, Para;
   Wz4RenderAnimCustom2DFS Anim;
 
   void Init();
-  void Simulate(Wz4RenderContext *ctx);
-  void Prepare(Wz4RenderContext *ctx);
-  void Render(Wz4RenderContext *ctx);
+  void Simulate(Wz4RenderContext* ctx);
+  void Prepare(Wz4RenderContext* ctx);
+  void Render(Wz4RenderContext* ctx);
 };
 
 /****************************************************************************/
-
 

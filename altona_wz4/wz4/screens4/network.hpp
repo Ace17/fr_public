@@ -19,36 +19,39 @@
 class RPCServer
 {
   sTCPHostSocket Socket;
-  sThread *Thread;
+  sThread* Thread;
   sInt StartTime;
 
-  PlaylistMgr &PlMgr;
+  PlaylistMgr& PlMgr;
 
-  static void ThreadProxy(sThread *t, void *obj)
+  static void ThreadProxy(sThread* t, void* obj)
   {
     ((RPCServer*)obj)->ThreadFunc(t);
   }
 
-  void ThreadFunc(sThread *t);
+  void ThreadFunc(sThread* t);
 
   class Buffer
   {
-  public:
+public:
     static const int SIZE = 16384;
     sU8 Data[SIZE];
     sInt Count;
     sDNode Node;
 
-    Buffer() { Count = 0; }
+    Buffer()
+    {
+      Count = 0;
+    }
   };
 
   class Connection : public pugi::xml_writer
   {
-  public:
-    sTCPSocket *Socket;
+public:
+    sTCPSocket* Socket;
     sDNode Node;
-    
-    sDList<Buffer, &Buffer::Node> InBuffers, OutBuffers;
+
+    sDList<Buffer, & Buffer::Node> InBuffers, OutBuffers;
 
     Connection()
     {
@@ -57,51 +60,47 @@ class RPCServer
 
     ~Connection()
     {
-      if (Socket) Socket->Disconnect();
+      if(Socket)
+        Socket->Disconnect();
+
       sDeleteAll(InBuffers);
       sDeleteAll(OutBuffers);
     }
 
     // pugi::xml_writer impl
-		void write(const void* data, size_t size);
-    
+    void write(const void* data, size_t size);
   };
 
-  sDList<Connection,&Connection::Node> Connections;
+  sDList<Connection, & Connection::Node> Connections;
 
-  void OnMessage(Connection *conn, Buffer *lastbuf, const sU8 *lastptr);
+  void OnMessage(Connection* conn, Buffer* lastbuf, const sU8* lastptr);
 
-  sBool GetPlaylists(Connection *conn, pugi::xml_node &in, pugi::xml_node &out);
-  sBool SetPlaylist(pugi::xml_node &in);
-  sBool Seek(pugi::xml_node &in);
-  sBool Next(pugi::xml_node &in);
-  sBool Previous(pugi::xml_node &in);
-  sBool GetSystemInfo(pugi::xml_node &in, pugi::xml_node &out);
+  sBool GetPlaylists(Connection* conn, pugi::xml_node& in, pugi::xml_node& out);
+  sBool SetPlaylist(pugi::xml_node& in);
+  sBool Seek(pugi::xml_node& in);
+  sBool Next(pugi::xml_node& in);
+  sBool Previous(pugi::xml_node& in);
+  sBool GetSystemInfo(pugi::xml_node& in, pugi::xml_node& out);
 
 public:
-  RPCServer(PlaylistMgr &plMgr, sInt port);
+  RPCServer(PlaylistMgr& plMgr, sInt port);
   ~RPCServer();
-
 };
 
 class WebServer
 {
-
   sHTTPServer Httpd;
-  sThread *Thread;
+  sThread* Thread;
 
-  static void ThreadProxy(sThread *t, void *obj)
+  static void ThreadProxy(sThread* t, void* obj)
   {
     ((sHTTPServer*)obj)->Run(t);
   }
 
 public:
-
-  WebServer(PlaylistMgr &plMgr, sInt port);
+  WebServer(PlaylistMgr& plMgr, sInt port);
   ~WebServer();
-
 };
 
 /****************************************************************************/
-
 

@@ -22,27 +22,28 @@
 
 class MyApp : public sApp
 {
-  sPainter *Painter;
-  sTexture2D *Tex;
-  sMaterial *Mtrl;
-  sGeometry *Geo;
-  sVertexFormatHandle *Format;
+  sPainter* Painter;
+  sTexture2D* Tex;
+  sMaterial* Mtrl;
+  sGeometry* Geo;
+  sVertexFormatHandle* Format;
 
   sViewport View;
   sMaterialEnv Env;
 
   sTiming Timer;
-  sComputeShader *CS;
-  sComputeShader *CSWC;
-  sCSBuffer *CSVB;
-  sCSBuffer *CSIB;
-  sCSBuffer *CSCount;
-  sCSBuffer *CSIndirect;
+  sComputeShader* CS;
+  sComputeShader* CSWC;
+  sCSBuffer* CSVB;
+  sCSBuffer* CSIB;
+  sCSBuffer* CSCount;
+  sCSBuffer* CSIndirect;
+
 public:
   MyApp();
   ~MyApp();
   void OnPaint3D();
-  void OnInput(const sInput2Event &ie);
+  void OnInput(const sInput2Event& ie);
 };
 
 /****************************************************************************/

@@ -16,11 +16,11 @@
 #if 1
 /****************************************************************************/
 
-sEffectManager_ *sEffectManager = 0;
+sEffectManager_* sEffectManager = 0;
 
 /****************************************************************************/
 
-sEffect::sEffect() 
+sEffect::sEffect()
 {
   Valid = sFALSE;
   Active = sTRUE;
@@ -40,7 +40,7 @@ void sEffect::OnFrame(sInt)
 {
 }
 
-void sEffect::OnPaintPre(const sViewport &vp)
+void sEffect::OnPaintPre(const sViewport& vp)
 {
 }
 
@@ -52,7 +52,7 @@ void sEffect::OnPaintIPP()
 {
 }
 
-sBool sEffect::OnInput(const sInput2Event &ie)
+sBool sEffect::OnInput(const sInput2Event& ie)
 {
   return sFALSE;
 }
@@ -70,17 +70,17 @@ sEffectManager_::~sEffectManager_()
   sDeleteAll(Effects);
 }
 
-void sEffectManager_::AddEffect(sEffect *e)
+void sEffectManager_::AddEffect(sEffect* e)
 {
   Effects.AddTail(e);
 }
 
-void sEffectManager_::RemoveEffect(sEffect *e)
+void sEffectManager_::RemoveEffect(sEffect* e)
 {
-  sEffect *ei;
-  sFORALL(Effects,ei)
+  sEffect* ei;
+  sFORALL(Effects, ei)
   {
-    if (ei==e)
+    if(ei == e)
     {
       Effects.RemOrder(e);
       sDelete(e);
@@ -93,63 +93,63 @@ void sEffectManager_::RemoveEffect(sEffect *e)
 
 void sEffectManager_::OnInit()
 {
-  sEffect *e;
+  sEffect* e;
 
-  sSortUp(Effects,&sEffect::Order);
+  sSortUp(Effects, &sEffect::Order);
 
-  sFORALL(Effects,e)
-    e->Valid = e->OnInit();
+  sFORALL(Effects, e)
+  e->Valid = e->OnInit();
 }
 
 void sEffectManager_::OnFrame(sInt delta)
 {
-  sEffect *e;
+  sEffect* e;
 
-  sFORALL(Effects,e)
+  sFORALL(Effects, e)
   {
-    if (e->Valid && e->Active)
+    if(e->Valid && e->Active)
       e->OnFrame(delta);
   }
 }
 
-void sEffectManager_::OnPaintPre(const sViewport &vp)
+void sEffectManager_::OnPaintPre(const sViewport& vp)
 {
-  sEffect *e;
+  sEffect* e;
 
-  sFORALL(Effects,e)
+  sFORALL(Effects, e)
   {
-    if (e->Valid && e->Active)
+    if(e->Valid && e->Active)
       e->OnPaintPre(vp);
   }
 }
 
 void sEffectManager_::OnPaintMain()
 {
-  sEffect *e;
+  sEffect* e;
 
-  sFORALL(Effects,e)
+  sFORALL(Effects, e)
   {
-    if (e->Valid && e->Active)
+    if(e->Valid && e->Active)
       e->OnPaintMain();
   }
 }
 
 void sEffectManager_::OnPaintIPP()
 {
-  sEffect *e;
+  sEffect* e;
 
-  sFORALL(Effects,e)
+  sFORALL(Effects, e)
   {
-    if (e->Valid && e->Active)
+    if(e->Valid && e->Active)
       e->OnPaintIPP();
   }
 }
 
-sBool sEffectManager_::OnInput(const sInput2Event &ie)
+sBool sEffectManager_::OnInput(const sInput2Event& ie)
 {
-  sEffect *e;
+  sEffect* e;
 
-  sFORALL(Effects,e)
+  sFORALL(Effects, e)
   {
     if(e->Valid && e->Active && e->OnInput(ie))
       return 1;
@@ -159,13 +159,15 @@ sBool sEffectManager_::OnInput(const sInput2Event &ie)
 
 /****************************************************************************/
 
-void sEffectManager_::FullService(sInt delta, const sViewport &vp)
+void sEffectManager_::FullService(sInt delta, const sViewport& vp)
 {
   OnFrame(delta);
   OnPaintPre(vp);
   OnPaintMain();
   OnPaintIPP();
 }
+
 #endif
 /****************************************************************************/
 /****************************************************************************/
+

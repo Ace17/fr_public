@@ -10,9 +10,9 @@
 /***   (C) 2005 Dierk Ohlerich, all rights reserved                       ***/
 /***                                                                      ***/
 /****************************************************************************/
- 
+
 #define sPEDANTIC_OBSOLETE 1
-//#define sPEDANTIC_WARN 1
+// #define sPEDANTIC_WARN 1
 
 #include "main.hpp"
 #include "base/system.hpp"
@@ -23,7 +23,7 @@
 
 void sMain()
 {
-  sInit(sISF_2D|sISF_3D,800,600);
+  sInit(sISF_2D | sISF_3D, 800, 600);
   sInitGui();
   sGui->AddBackWindow(new MainWindow);
 }

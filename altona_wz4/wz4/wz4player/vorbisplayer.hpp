@@ -16,12 +16,11 @@
 class bMusicPlayer
 {
 public:
-
-  explicit bMusicPlayer(sBool seekable=sFALSE);
+  explicit bMusicPlayer(sBool seekable = sFALSE);
   ~bMusicPlayer();
 
-  void Init(const sChar *filename);
-  //void Init(void *ptr, sDInt size); disabled, needs file extension now
+  void Init(const sChar* filename);
+  // void Init(void *ptr, sDInt size); disabled, needs file extension now
   void Exit();
 
   sBool IsLoaded();
@@ -31,7 +30,7 @@ public:
   void Seek(sF32 time); // in seconds, only when seekable==sTRUE;
   void Skip(sInt samples); // in samples, only when not seekable
 
-  void SetVolume(sF32 vol, sF32 fadeduration=0);
+  void SetVolume(sF32 vol, sF32 fadeduration = 0);
   void SetLoop(sBool loop);
 
   sBool IsPlaying(); // returns if still playing
@@ -39,12 +38,9 @@ public:
                       // WARNING: starts with negative values because of latency!
 
 private:
-
   struct VerySecret;
-  VerySecret *p;
-
+  VerySecret* p;
 };
 
 /****************************************************************************/
-
 

@@ -20,8 +20,9 @@ class MainWindow : public sWindow
 {
   sString<64> Screen[16];
   sInt ScreenIndex;
-  void Print(const sChar *);
+  void Print(const sChar*);
   void CmdMidi();
+
 public:
   MainWindow();
   ~MainWindow();
@@ -30,3 +31,4 @@ public:
 };
 
 /****************************************************************************/
+

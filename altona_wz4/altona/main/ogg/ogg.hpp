@@ -23,8 +23,8 @@ class sOGGDecoder : public sMusicPlayer
   sInt Index;                     // how much of the buffer was read (in samples)
   sInt Restart;                   // this is a restart, do some cleanup
 
-//  struct sOGGStub *Stub;
-  struct stb_vorbis *dec;
+// struct sOGGStub *Stub;
+  struct stb_vorbis* dec;
 
 public:
   sOGGDecoder();
@@ -33,8 +33,9 @@ public:
   sInt ZeroStart;                 // put some zeros before start
 
   sBool Init(sInt songnr);
-  sInt Render(sS16 *stream,sInt samples);
+  sInt Render(sS16* stream, sInt samples);
   sInt GetTuneLength();
 };
 
 /****************************************************************************/
+

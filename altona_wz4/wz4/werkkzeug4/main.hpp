@@ -17,11 +17,11 @@ class Wz4FrMainWindow : public MainWindow
 protected:
   void ExtendWireRegister();
   void ExtendWireProcess();
+
 public:
   void CmdCustomEditor();
   void CmdCustomEditor2();
 };
 
 /****************************************************************************/
-
 

@@ -17,8 +17,8 @@ struct Joypad
   sF32 Analog[4];
 };
 
-void DrawRect(const sFRect &r,sU32 col);
-void DrawRect(sF32 x0,sF32 y0,sF32 x1,sF32 y1,sU32 col);
+void DrawRect(const sFRect& r, sU32 col);
+void DrawRect(sF32 x0, sF32 y0, sF32 x1, sF32 y1, sU32 col);
 void GetJoypad(struct Joypad &);
 
 /****************************************************************************/
@@ -32,22 +32,22 @@ void GetJoypad(struct Joypad &);
 
 class MyApp : public sApp
 {
-  sPainter *Painter;
-  sMaterial *Mtrl;
-  sGeometry *Geo;
+  sPainter* Painter;
+  sMaterial* Mtrl;
+  sGeometry* Geo;
 
   sViewport View;
 
   sTiming Timer;
 
-  class SoloPong *Game;
+  class SoloPong* Game;
+
 public:
   MyApp();
   ~MyApp();
   void OnPaint3D();
-  void OnInput(const sInput2Event &ie);
+  void OnInput(const sInput2Event& ie);
 };
 
 /****************************************************************************/
-
 

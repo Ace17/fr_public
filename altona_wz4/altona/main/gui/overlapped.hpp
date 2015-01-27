@@ -11,6 +11,7 @@
 class sOverlappedFrame : public sWindow
 {
   sBool BackClear;
+
 public:
   sOverlappedFrame();
   sCLASSNAME(sOverlappedFrame);
@@ -24,12 +25,13 @@ class sSizeBorder : public sWindow
 {
   sInt DragMask;
   sRect DragStart;
+
 public:
   sCLASSNAME(sSizeBorder);
   void OnCalcSize();
   void OnLayout();
   void OnPaint2D();
-  void OnDrag(const sWindowDrag &dd);
+  void OnDrag(const sWindowDrag& dd);
 };
 
 /****************************************************************************/
@@ -37,17 +39,19 @@ public:
 class sTitleBorder : public sWindow
 {
   sRect DragStart;
-  sButtonControl *CloseButton;
+  sButtonControl* CloseButton;
+
 public:
   sCLASSNAME(sTitleBorder);
-  const sChar *Title;
+  const sChar* Title;
 
-  sTitleBorder(sMessage closemsg=sMessage());
-  sTitleBorder(const sChar *title, sMessage closemsg=sMessage());
+  sTitleBorder(sMessage closemsg = sMessage());
+  sTitleBorder(const sChar* title, sMessage closemsg = sMessage());
   void OnCalcSize();
   void OnLayout();
   void OnPaint2D();
-  void OnDrag(const sWindowDrag &dd);
+  void OnDrag(const sWindowDrag& dd);
 };
 
 /****************************************************************************/
+

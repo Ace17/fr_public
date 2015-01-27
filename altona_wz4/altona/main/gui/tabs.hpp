@@ -35,6 +35,7 @@ class sTabBorderBase : public sWindow     // this is a border!
   sInt ScrollWidth;
   sInt Scroll;
   sInt DragScroll;
+
 public:
   sTabBorderBase();
   ~sTabBorderBase();
@@ -43,7 +44,7 @@ public:
   void OnLayout();
   void OnCalcSize();
   sBool OnKey(sU32 key);
-  void OnDrag(const sWindowDrag &dd);
+  void OnDrag(const sWindowDrag& dd);
 
   sInt GetTab();
   void SetTab(sInt tab);
@@ -51,25 +52,56 @@ public:
 
   sMessage ChangeMsg;
 
-  virtual sInt GetTabCount()=0;
-  virtual const sChar *GetTabName(sInt n)=0;
-  virtual void DeleteTab(sInt n) {}
-  virtual void MoveTab(sInt from,sInt to) {}
+  virtual sInt GetTabCount() = 0;
+  virtual const sChar* GetTabName(sInt n) = 0;
+  virtual void DeleteTab(sInt n)
+  {
+  }
+
+  virtual void MoveTab(sInt from, sInt to)
+  {
+  }
 };
 
-
-template <class Type> class sTabBorder : public sTabBorderBase
+template<class Type>
+class sTabBorder : public sTabBorderBase
 {
-  sArray<Type> *Tabs;
+  sArray<Type>* Tabs;
+
 public:
-  sTabBorder(sArray<Type>&t) { Tabs = &t; }
-  void Tag() { sTabBorderBase::Tag(); sNeed(*Tabs); }
-  sInt GetTabCount() { return Tabs ? Tabs->GetCount() : 0; }
-  const sChar *GetTabName(sInt n) { return (*Tabs)[n]->Label; }
-  void DeleteTab(sInt n) { Tabs->RemAtOrder(n); }
-  void MoveTab(sInt from,sInt to) { Type e=(*Tabs)[from]; Tabs->RemAtOrder(from); Tabs->AddBefore(e,to); }
+  sTabBorder(sArray<Type>& t)
+  {
+    Tabs = &t;
+  }
+
+  void Tag()
+  {
+    sTabBorderBase::Tag();
+    sNeed(*Tabs);
+  }
+
+  sInt GetTabCount()
+  {
+    return Tabs ? Tabs->GetCount() : 0;
+  }
+
+  const sChar* GetTabName(sInt n)
+  {
+    return (*Tabs)[n]->Label;
+  }
+
+  void DeleteTab(sInt n)
+  {
+    Tabs->RemAtOrder(n);
+  }
+
+  void MoveTab(sInt from, sInt to)
+  {
+    Type e = (*Tabs)[from];
+    Tabs->RemAtOrder(from);
+    Tabs->AddBefore(e, to);
+  }
 };
 
 /****************************************************************************/
-
 

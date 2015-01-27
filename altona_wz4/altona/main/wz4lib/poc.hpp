@@ -9,7 +9,6 @@
 
 #pragma once
 
-
 #include "base/types.hpp"
 #include "base/graphics.hpp"
 #include "util/image.hpp"
@@ -24,21 +23,21 @@ public:
   PocBitmap();
   ~PocBitmap();
 
-  void CopyTo(sImage *dest);
-  void CopyTo(sImageI16 *dest);
-  void CopyTo(sImageData *dest,sInt format);
+  void CopyTo(sImage* dest);
+  void CopyTo(sImageI16* dest);
+  void CopyTo(sImageData* dest, sInt format);
 
-  void CopyFrom(const PocBitmap *src);
-  wObject *Copy();
+  void CopyFrom(const PocBitmap* src);
+  wObject* Copy();
 
-  sImage *Image;
-  sTexture2D *Texture;
+  sImage* Image;
+  sTexture2D* Texture;
   sString<256> Name;
 };
 
 struct PocBitmapAtlas
 {
-  sImage *Image;
+  sImage* Image;
   sInt PosX;
   sInt PosY;
   sInt SizeX;
@@ -53,21 +52,21 @@ enum
   PBMA_VERTICAL,
 };
 
-void PocBitmapMakeAtlas(sStaticArray<PocBitmapAtlas> &in,sImage *out,sU32 emptycol, sInt mode=PBMA_AUTO);
+void PocBitmapMakeAtlas(sStaticArray<PocBitmapAtlas>& in, sImage* out, sU32 emptycol, sInt mode = PBMA_AUTO);
 
 /****************************************************************************/
 
 class PocMaterial : public wObject
 {
 public:
-  sSimpleMaterial *Material;
-  wObject *Tex[8];
-  sVertexFormatHandle *Format;
+  sSimpleMaterial* Material;
+  wObject* Tex[8];
+  sVertexFormatHandle* Format;
   sString<64> Name;
 
   PocMaterial();
   ~PocMaterial();
-  wObject *Copy();
+  wObject* Copy();
 };
 
 /****************************************************************************/
@@ -76,14 +75,14 @@ struct PocMeshVertex
 {
   sVector31 Pos;
   sVector30 Normal;
-  sF32 u,v;
+  sF32 u, v;
 };
 
-struct PocMeshCluster 
+struct PocMeshCluster
 {
   sInt StartIndex;
   sInt EndIndex;
-  PocMaterial *Mtrl;
+  PocMaterial* Mtrl;
 };
 
 class PocMesh : public wObject
@@ -91,20 +90,19 @@ class PocMesh : public wObject
 public:
   PocMesh();
   ~PocMesh();
-  void Init(sInt vc,sInt ic,sInt cl=1);
-  void Copy(PocMesh *src);
+  void Init(sInt vc, sInt ic, sInt cl = 1);
+  void Copy(PocMesh* src);
   void CacheSolid();
-  void Hit(const sRay &ray,wHitInfo &info);
-  void Wireframe(wObject *obj,wPaintInfo &pi,sGeometry *geo,sMatrix34 &mat);
-  wObject *Copy();
+  void Hit(const sRay& ray, wHitInfo& info);
+  void Wireframe(wObject* obj, wPaintInfo& pi, sGeometry* geo, sMatrix34& mat);
+  wObject* Copy();
 
   sArray<PocMeshVertex> Vertices;
   sArray<sU32> Indices;
   sArray<PocMeshCluster> Clusters;
-  
-  sGeometry *SolidGeo;
+
+  sGeometry* SolidGeo;
 };
 
 /****************************************************************************/
-
 

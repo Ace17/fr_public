@@ -69,8 +69,8 @@ class ShaderCreator
 
   struct Tex
   {
-    Texture2D *Tex2D;
-    TextureCube *TexCube;
+    Texture2D* Tex2D;
+    TextureCube* TexCube;
     sInt Slot;
     sInt Flags;
   };
@@ -79,8 +79,8 @@ class ShaderCreator
   {
     sU32 Hash;
     sInt ShaderType;
-    sShader *Shader;
-    sChar *Source;
+    sShader* Shader;
+    sChar* Source;
   };
 
   sArray<Reg> ParaReg;
@@ -92,11 +92,11 @@ class ShaderCreator
   sArray<Reg> Reqs;
   sArray<Tex> Texs;
 
-  ModMtrlParaAssign *Assign;
-  ModMtrlParaAssign *AssignInput;
+  ModMtrlParaAssign* Assign;
+  ModMtrlParaAssign* AssignInput;
 
   sString<1024> TempString;
-  sChar *TempNames[64];
+  sChar* TempNames[64];
   sInt NextTemp;
 
   sArray<CompiledShaderInfo> CompiledShaders;
@@ -105,33 +105,33 @@ public:
   ShaderCreator();
   ~ShaderCreator();
 
-  const sChar *types[SCT_MAX];
-  const sChar *binds[SCB_MAX];
-  const sChar *typeswizzle[SCT_MAX];
+  const sChar* types[SCT_MAX];
+  const sChar* binds[SCB_MAX];
+  const sChar* typeswizzle[SCT_MAX];
   sInt typesize[SCT_MAX];
-  const static sChar *swizzle[4][5];
-  const sChar *GetTemp();
+  const static sChar* swizzle[4][5];
+  const sChar* GetTemp();
   sInt ShaderType;                          // SCS_PS or SCS_VS
   sInt LightMask;                           // it is convenient to have this here.
-  ModMtrl *Mtrl;                            // it is convenient to have this here.
+  ModMtrl* Mtrl;                            // it is convenient to have this here.
 
-  void Init(ModMtrlParaAssign *ass,ModMtrlParaAssign *assi,sInt scs_shadertype,UpdateTexInfo *uptex);
-  void Shift(ModMtrlParaAssign *ass,ModMtrlParaAssign *assi,sInt scs_shadertype);
-  void RegPara(sPoolString name,sInt type,sInt offset);
+  void Init(ModMtrlParaAssign* ass, ModMtrlParaAssign* assi, sInt scs_shadertype, UpdateTexInfo* uptex);
+  void Shift(ModMtrlParaAssign* ass, ModMtrlParaAssign* assi, sInt scs_shadertype);
+  void RegPara(sPoolString name, sInt type, sInt offset);
   void SortBinds();
-  sShader *Compile(sTextBuffer &log);
-  void SetTextures(sMaterial *mtrl);
+  sShader* Compile(sTextBuffer& log);
+  void SetTextures(sMaterial* mtrl);
 
-  void Output(sPoolString name,sInt type,sInt bind,sInt bindindex=0);
-  void BindVS(sPoolString name,sInt type,sInt bind,sInt bindindex=0);
-  void BindPS(sPoolString name,sInt type,sInt bind,sInt bindindex=0);
-  void InputPS(sPoolString name,sInt type,sBool modify = 0);
+  void Output(sPoolString name, sInt type, sInt bind, sInt bindindex = 0);
+  void BindVS(sPoolString name, sInt type, sInt bind, sInt bindindex = 0);
+  void BindPS(sPoolString name, sInt type, sInt bind, sInt bindindex = 0);
+  void InputPS(sPoolString name, sInt type, sBool modify = 0);
   void Para(sPoolString name);
-  void Uniform(sPoolString name,sInt type,sInt bindindex);
-  sInt Texture(Texture2D *tex,sInt flags);
-  sInt Texture(TextureCube *tex,sInt flags);
-  void Require(sPoolString name,sInt type); // late requiries
-  sBool Requires(sPoolString text,sInt &index);
+  void Uniform(sPoolString name, sInt type, sInt bindindex);
+  sInt Texture(Texture2D* tex, sInt flags);
+  sInt Texture(TextureCube* tex, sInt flags);
+  void Require(sPoolString name, sInt type); // late requiries
+  sBool Requires(sPoolString text, sInt& index);
 
   void DoubleSided(sPoolString name);
 
@@ -144,39 +144,39 @@ public:
     Value();
     ~Value();
     sPoolString Name;                       // name of the resource
-    Fragment *First;                        // first use (input)
-    sArray<Fragment *> Modify;              // middle uses that modify
-    sArray<Fragment *> Read;                // middle uses readonly, will be put last
+    Fragment* First;                        // first use (input)
+    sArray<Fragment*> Modify;              // middle uses that modify
+    sArray<Fragment*> Read;                // middle uses readonly, will be put last
   };
   struct Fragment
   {
     Fragment();
     ~Fragment();
     sInt KillMe;
-    const sChar *Code;                      // code fragment
-    const sChar *Comment;
-    sArray<Fragment *> Depend;              // dependencies, automatically created
+    const sChar* Code;                      // code fragment
+    const sChar* Comment;
+    sArray<Fragment*> Depend;              // dependencies, automatically created
   };
 
   sTextBuffer TB;                           // print together your fragment here
 
-  sArray<Fragment *> FragVS;                // fragments for vertex shader
-  sArray<Fragment *> FragPS;                // fragments for pixel shader
-  sArray<Value *> ValueVS;
-  sArray<Value *> ValuePS;
-  sArray<Fragment *> *Frags;
-  sArray<Value *> *Values;
+  sArray<Fragment*> FragVS;                // fragments for vertex shader
+  sArray<Fragment*> FragPS;                // fragments for pixel shader
+  sArray<Value*> ValueVS;
+  sArray<Value*> ValuePS;
+  sArray<Fragment*>* Frags;
+  sArray<Value*>* Values;
 
-  Fragment *Frag;
-  UpdateTexInfo *UpdateTex;
+  Fragment* Frag;
+  UpdateTexInfo* UpdateTex;
 
   void MakeDepend();
-  sBool ResolveDepend(sTextBuffer &tb);
+  sBool ResolveDepend(sTextBuffer& tb);
   void DumpDepend();
-  Value *GetValue(sPoolString name);        // get value, create if not available
-  Fragment *MakeFragment();                 // FragBegin() + FragEnd()
-  Fragment *FragBegin(const sChar *c=0);    // prepare fragment for generation
-  Fragment *FragEnd();                      // but TB into frag, and add to list
+  Value* GetValue(sPoolString name);        // get value, create if not available
+  Fragment* MakeFragment();                 // FragBegin() + FragEnd()
+  Fragment* FragBegin(const sChar* c = 0);    // prepare fragment for generation
+  Fragment* FragEnd();                      // but TB into frag, and add to list
   void FragsInit();                         // prepare for fragment use
   void FragsSetShader();
   void FragsExit();                         // clear all values and fragments
@@ -185,18 +185,16 @@ public:
   void FragRead(sPoolString name);          // add for current frag as read dependency
 };
 
-
 /****************************************************************************/
 
 // helpers
 
-const sChar *Tex2D(sInt n,const sChar *uv,const sChar *swizzle,Texture2D *tex);
-const sChar *Tex2DLod0(sInt n,const sChar *uv,const sChar *swizzle,Texture2D *tex);
-const sChar *Tex2DProj(sInt n,const sChar *xy,const sChar *z,const sChar *w,const sChar *swizzle,Texture2D *tex);
-const sChar *Tex2DProjCmp(sInt n,const sChar *xy,const sChar *z,const sChar *w,const sChar *swizzle,Texture2D *tex);
+const sChar* Tex2D(sInt n, const sChar* uv, const sChar* swizzle, Texture2D* tex);
+const sChar* Tex2DLod0(sInt n, const sChar* uv, const sChar* swizzle, Texture2D* tex);
+const sChar* Tex2DProj(sInt n, const sChar* xy, const sChar* z, const sChar* w, const sChar* swizzle, Texture2D* tex);
+const sChar* Tex2DProjCmp(sInt n, const sChar* xy, const sChar* z, const sChar* w, const sChar* swizzle, Texture2D* tex);
 
-const sChar *Tex2D(sInt n,const sChar *uv,const sChar *swizzle,Texture2D *tex,ShaderCreator *sc);
+const sChar* Tex2D(sInt n, const sChar* uv, const sChar* swizzle, Texture2D* tex, ShaderCreator* sc);
 
 /****************************************************************************/
-
 

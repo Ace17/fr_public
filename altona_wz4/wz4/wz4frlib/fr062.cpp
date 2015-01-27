@@ -19,17 +19,17 @@ RNModSlice::~RNModSlice()
 {
 }
 
-void RNModSlice::Simulate(Wz4RenderContext *ctx)
+void RNModSlice::Simulate(Wz4RenderContext* ctx)
 {
   Para = ParaBase;
-  Anim.Bind(ctx->Script,&Para);
+  Anim.Bind(ctx->Script, &Para);
   SimulateCalc(ctx);
 
   SimulateChilds(ctx);
 
   // initialize lightenvironment
 
-  ModLightEnv *env = ModMtrlType->LightEnv[Para.Index];
+  ModLightEnv* env = ModMtrlType->LightEnv[Para.Index];
 
   env->Vector[0] = Para.Pos0;
   env->Vector[1] = Para.Pos1;
@@ -49,11 +49,9 @@ void RNModSlice::Simulate(Wz4RenderContext *ctx)
   env->Color[0].InitColor(Para.Color);
 }
 
-void RNModSlice::Render(Wz4RenderContext *ctx)
+void RNModSlice::Render(Wz4RenderContext* ctx)
 {
 }
-
-
 
 /****************************************************************************/
 

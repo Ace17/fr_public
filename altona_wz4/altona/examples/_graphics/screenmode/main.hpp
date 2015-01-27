@@ -37,19 +37,24 @@ enum Lines
 struct Resolution
 {
   sString<64> Name;
-  sInt XSize,YSize;
+  sInt XSize, YSize;
 
-  void Init(sInt x,sInt y,const sChar *name) { XSize=x; YSize=y; Name.PrintF(name,x,y); }
+  void Init(sInt x, sInt y, const sChar* name)
+  {
+    XSize = x;
+    YSize = y;
+    Name.PrintF(name, x, y);
+  }
 };
 
 class MyApp : public sApp
 {
-  sPainter *Painter;
-  sTexture2D *Tex;
-  sMaterial *Mtrl;
-  sMaterial *White;
-  sGeometry *Geo;
-  sGeometry *GeoQuad;
+  sPainter* Painter;
+  sTexture2D* Tex;
+  sMaterial* Mtrl;
+  sMaterial* White;
+  sGeometry* Geo;
+  sGeometry* GeoQuad;
 
   sMaterialEnv Env;
 
@@ -65,19 +70,20 @@ class MyApp : public sApp
   sInt SetMax[LINE_MAX];
   sInt SetStrobe[LINE_MAX];
   sString<128> SetString[LINE_MAX];
-  sChar *SetLabel[LINE_MAX];
+  sChar* SetLabel[LINE_MAX];
 
   sTiming Timer;
 
   void PaintRT(sInt time);
   void PaintCube(sInt time);
   void PaintSamplePattern(sInt time);
+
 public:
   MyApp();
   ~MyApp();
   void OnPaint3D();
   void OnPrepareFrame();
-  void OnInput(const sInput2Event &ie);
+  void OnInput(const sInput2Event& ie);
 
   void InitGui();
   void ExitGui();

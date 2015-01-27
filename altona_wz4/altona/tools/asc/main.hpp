@@ -15,19 +15,19 @@
 
 // asc shader styles...
 
-class NewCode                     // 
+class NewCode                     //
 {
 public:
   NewCode();
   ~NewCode();
 
   sInt ShaderType;                // sSTF_???
-  sU8 *DX9Code;
+  sU8* DX9Code;
   sInt DX9Size;
-  sU8 *DX11Code;
-  sInt DX11Size; 
-  sU8 *GLSLCode;                  // misused as CG right now
-  sInt GLSLSize; 
+  sU8* DX11Code;
+  sInt DX11Size;
+  sU8* GLSLCode;                  // misused as CG right now
+  sInt GLSLSize;
 };
 
 class NewShader                   // shader permutations
@@ -46,9 +46,9 @@ public:
 
   sPoolString Profile;            // shader profile string (vs_1_1)
 
-  NewCode *ByteCode;              // no permutation: this code
+  NewCode* ByteCode;              // no permutation: this code
 
-  NewCode **Permutes;             // with permutation: these codes!
+  NewCode** Permutes;             // with permutation: these codes!
   sInt PermuteCount;              // size of array
 
   sInt CompileFlags;
@@ -79,7 +79,7 @@ public:
   sPoolString New;                // insert this into constructor
   sPoolString Prepare;            // insert this into prepare code
 
-  NewShader *Shaders[MAXSHADER];
+  NewShader* Shaders[MAXSHADER];
 
   sPoolString AscHeader;          // common asc code for all shaders
 };
@@ -98,32 +98,33 @@ public:
   sScanner Scan;
   sPoolString Filename;
 
-  ACDoc *ASC;                          // the asc compiler instance
+  ACDoc* ASC;                          // the asc compiler instance
 
   sArray<sPoolString> Includes;
 
-  sArray<NewShader *> NewShaders;
-  sArray<NewMaterial *> NewMtrls;
-  sArray<NewMaterial *> ComputeShaders;
+  sArray<NewShader*> NewShaders;
+  sArray<NewMaterial*> NewMtrls;
+  sArray<NewMaterial*> ComputeShaders;
 
   sBool NoStrip;
 
-  void _Code(sPoolString &code);
-  void _CodeNoLine(sPoolString &code,sInt lineoffset);
-  void _NewShaderCodeStatement(NewShader *ns);
-  void _NewShaderCode(NewMaterial *nm,NewShader *ns);
+  void _Code(sPoolString& code);
+  void _CodeNoLine(sPoolString& code, sInt lineoffset);
+  void _NewShaderCodeStatement(NewShader* ns);
+  void _NewShaderCode(NewMaterial* nm, NewShader* ns);
   void _Material();
-  void _Shader(NewMaterial *nm,sInt ascshaderkind,sInt altonashaderkind);
+  void _Shader(NewMaterial* nm, sInt ascshaderkind, sInt altonashaderkind);
   void _Asc();
   void _Include();
   void _Global();
 
-  void OutputShader(NewShader *ns);
+  void OutputShader(NewShader* ns);
   void OutputHPP();
   void OutputCPP();
-  sBool Process(NewCode *code,NewShader *ns,sTextBuffer *errors);
-  sBool Process(NewShader *ns);
-  void Run(const sChar *filename);
+  sBool Process(NewCode* code, NewShader* ns, sTextBuffer* errors);
+  sBool Process(NewShader* ns);
+  void Run(const sChar* filename);
 };
 
 /****************************************************************************/
+

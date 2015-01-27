@@ -44,13 +44,12 @@ enum CustomTokens
 class CodeBlock
 {
 public:
-  CodeBlock(sPoolString code,sInt line);
-  void Output(sTextBuffer &,const sChar *file,sBool semi=0);
+  CodeBlock(sPoolString code, sInt line);
+  void Output(sTextBuffer &, const sChar* file, sBool semi = 0);
 
   sPoolString Code;
   sInt Line;
 };
-
 
 class External
 {
@@ -63,7 +62,7 @@ public:
   sPoolString PureType;
   sPoolString Name;
   sPoolString Para;
-  CodeBlock *Code;
+  CodeBlock* Code;
 };
 
 class Importer
@@ -88,10 +87,10 @@ public:
   sInt Flags;
   sInt GuiSets;
   sBool Virtual;
-  CodeBlock *Code;
-  CodeBlock *Header;
+  CodeBlock* Code;
+  CodeBlock* Header;
   sPoolString ColumnHeaders[31];
-  sArray<External *> Externals;
+  sArray<External*> Externals;
 };
 
 enum ExprOp
@@ -110,7 +109,7 @@ enum ExprOp
   EOP_BITOR,
   // unary
   EOP_NOT,
-  EOP_BITNOT, 
+  EOP_BITNOT,
   // special
   EOP_INT,
   EOP_SYMBOL,
@@ -120,8 +119,8 @@ enum ExprOp
 struct ExprNode
 {
   sInt Op;
-  ExprNode *Left;
-  ExprNode *Right;
+  ExprNode* Left;
+  ExprNode* Right;
 
   sInt Value;
   sPoolString Symbol;
@@ -129,12 +128,12 @@ struct ExprNode
 
 enum ParaFlag
 {
-  PF_Anim       = 0x00000001,
+  PF_Anim = 0x00000001,
   PF_LineNumber = 0x00000002,
-  PF_Narrow     = 0x00000004,
-  PF_OverLabel  = 0x00000008,
-  PF_OverBox    = 0x00000010,
-  PF_Static     = 0x00000020,
+  PF_Narrow = 0x00000004,
+  PF_OverLabel = 0x00000008,
+  PF_OverBox = 0x00000010,
+  PF_Static = 0x00000020,
 };
 
 class Parameter
@@ -148,7 +147,7 @@ public:
   sPoolString Symbol;
   sPoolString CType;
   sPoolString Format;
-  sF32 Min,Max,Step,RStep;
+  sF32 Min, Max, Step, RStep;
   sInt Count;
   sBool XYZW;
   sInt LinkMethod;
@@ -161,7 +160,7 @@ public:
   sBool DefaultStringRandom;
   sPoolString DefaultString;
   sPoolString Options;
-  ExprNode *Condition;
+  ExprNode* Condition;
   sInt LayoutFlag;      // use LayoutMsg, not ChangeMsg, only for Flags
   sInt ContinueFlag;    // do not create new variable, just new gui. for continuing Flags
   sInt FilterMode;
@@ -170,12 +169,12 @@ public:
   sInt GridLines;           // lines in grid (for text edit thingies
   sInt Flags;
 /*
-  sInt OverBoxFlag;         // width in grid
-  sInt OverLabelFlag;       // width in grid
-  sBool AnimFlag;           // this parameter is animatable
-  sBool LineNumberFlag;     // line numbers in printf's
-  sBool NarrowFlag;
-*/
+   sInt OverBoxFlag;         // width in grid
+   sInt OverLabelFlag;       // width in grid
+   sBool AnimFlag;           // this parameter is animatable
+   sBool LineNumberFlag;     // line numbers in printf's
+   sBool NarrowFlag;
+ */
   sPoolString ScriptName();
 };
 
@@ -200,7 +199,7 @@ public:
   Input();
 
   sPoolString Type;
-  sPoolString DefaultOpName,DefaultOpType;
+  sPoolString DefaultOpName, DefaultOpType;
   sBool InputFlags;
   sInt Method;
   sPoolString GuiSymbol;
@@ -222,13 +221,20 @@ struct AnimInfo
 {
   sPoolString Name;
   sInt Flags;
-  AnimInfo() { Flags = 0; }
+  AnimInfo()
+  {
+    Flags = 0;
+  }
 };
 struct ActionInfo
 {
   sPoolString Name;
   sInt Id;
-  void Init(sPoolString n,sInt i) { Name=n; Id=i; }
+  void Init(sPoolString n, sInt i)
+  {
+    Name = n;
+    Id = i;
+  }
 };
 
 struct Tie
@@ -241,22 +247,22 @@ class Op
 public:
   Op();
   ~Op();
-  
+
   sPoolString Name;
   sPoolString OutputType;     // wz4 class name of output
   sPoolString TabType;
   sPoolString OutputClass;    // c class name of output wObject derived class
   sPoolString Label;          // screen name of the op
   sInt ArrayNumbers;          // add number labeling
-  sArray<Parameter *> Parameters;
-  sArray<Parameter *> ArrayParam;
+  sArray<Parameter*> Parameters;
+  sArray<Parameter*> ArrayParam;
   sArray<AnimInfo> AnimInfos;
   sArray<ActionInfo> ActionInfos;
-  sArray<Input *> Inputs;
-  sArray<Tie *> Ties;
-  sArray<Tie *> ArrayTies;
-    
-  CodeBlock *Code;
+  sArray<Input*> Inputs;
+  sArray<Tie*> Ties;
+  sArray<Tie*> ArrayTies;
+
+  CodeBlock* Code;
   sInt Shortcut;
   sInt Column;
   sInt MaxOffset;
@@ -273,84 +279,83 @@ public:
   sPoolString Extract;
   sPoolString CustomEd;
 
-  CodeBlock *Handles;
-  CodeBlock *SetDefaultsArray;
-  CodeBlock *Actions;
-  CodeBlock *SpecialDrag;
-  CodeBlock *Description;
-  Struct *Helper;
+  CodeBlock* Handles;
+  CodeBlock* SetDefaultsArray;
+  CodeBlock* Actions;
+  CodeBlock* SpecialDrag;
+  CodeBlock* Description;
+  Struct* Helper;
 };
-
 
 class Document
 {
   // parser
 
   sMemoryPool Pool;
-  ExprNode *NewExpr(sInt op,ExprNode *left,ExprNode *right);
-  ExprNode *NewExprInt(sInt value);
+  ExprNode* NewExpr(sInt op, ExprNode* left, ExprNode* right);
+  ExprNode* NewExprInt(sInt value);
 
-  sBool FindFlag(sPoolString para,const sChar *choice,sInt &mask,sInt &value);
+  sBool FindFlag(sPoolString para, const sChar* choice, sInt& mask, sInt& value);
 
-  void _Global(); 
-  void _Include(sArray<CodeBlock *> &codes);
-  CodeBlock *_CodeBlock();
+  void _Global();
+  void _Include(sArray<CodeBlock*>& codes);
+  CodeBlock* _CodeBlock();
   void _Type();
-  sInt _Choice(const sChar *match);
-  sInt _Flag(const sChar *match);
+  sInt _Choice(const sChar* match);
+  sInt _Flag(const sChar* match);
   void _Operator();
-  void _Parameter(Op *op,ExprNode *cond,sInt &offset,sInt &stringoffset,sInt inarray,sInt &linkoffset);
-  void _Parameters(Op *op,ExprNode *cond,sInt &offset,sInt &stringoffset,sInt inarray,sInt &linkoffset);
-  void _External(sArray<External *> &list);
-  Struct *_Struct();
+  void _Parameter(Op* op, ExprNode* cond, sInt& offset, sInt& stringoffset, sInt inarray, sInt& linkoffset);
+  void _Parameters(Op* op, ExprNode* cond, sInt& offset, sInt& stringoffset, sInt inarray, sInt& linkoffset);
+  void _External(sArray<External*>& list);
+  Struct* _Struct();
 
-  ExprNode *_Literal();
-  ExprNode *_Value();
-  ExprNode *_Expr(sInt level=6);
+  ExprNode* _Literal();
+  ExprNode* _Value();
+  ExprNode* _Expr(sInt level = 6);
 
-  void HPPLine(sInt line=-1);
-  void CPPLine(sInt line=-1);
+  void HPPLine(sInt line = -1);
+  void CPPLine(sInt line = -1);
   void OutputCodeblocks();
-  void OutputExt(External *ext,const sChar *classname);
+  void OutputExt(External* ext, const sChar* classname);
   void OutputTypes1();
   void OutputTypes2();
-  void OutputParaStruct(const sChar *label,sArray<Parameter *> &pa,Op *op);
-  void OutputIf(ExprNode *cond,ExprNode **condref,sInt indent);
-  void OutputPara(sArray<Parameter *> &para,Op *op,sBool inarray);
-  void OutputTies(sArray<Tie *> &ties);
+  void OutputParaStruct(const sChar* label, sArray<Parameter*>& pa, Op* op);
+  void OutputIf(ExprNode* cond, ExprNode** condref, sInt indent);
+  void OutputPara(sArray<Parameter*>& para, Op* op, sBool inarray);
+  void OutputTies(sArray<Tie*>& ties);
   void OutputOps();
   void OutputMain();
-  void OutputExpr(ExprNode *);
-  void OutputStruct(sTextBuffer &tb,Struct *,const sChar *name);
+  void OutputExpr(ExprNode*);
+  void OutputStruct(sTextBuffer& tb, Struct*, const sChar* name);
   void OutputAnim();
 
-  sArray<CodeBlock *> HCodes;
-  sArray<CodeBlock *> HEndCodes;
-  sArray<CodeBlock *> CCodes;
-  sArray<Type *> Types;
-  sArray<Op *> Ops;
-  Op *CurrentOp;
+  sArray<CodeBlock*> HCodes;
+  sArray<CodeBlock*> HEndCodes;
+  sArray<CodeBlock*> CCodes;
+  sArray<Type*> Types;
+  sArray<Op*> Ops;
+  Op* CurrentOp;
 
 public:
   Document();
   ~Document();
   sScanner Scan;
 
-  sBool Parse(const sChar *filename);
+  sBool Parse(const sChar* filename);
   sBool Output();
   sTextBuffer CPP;
   sTextBuffer HPP;
 
   sInt Priority;
 
-  void SetNames(const sChar *name);
+  void SetNames(const sChar* name);
   sString<2048> InputFileName;
   sString<2048> CPPFileName;
   sString<2048> HPPFileName;
   sString<2048> ProjectName;
 };
- 
-extern Document *Doc;
+
+extern Document* Doc;
 
 /****************************************************************************/
 

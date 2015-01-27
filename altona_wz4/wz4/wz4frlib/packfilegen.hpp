@@ -17,21 +17,24 @@ struct sPackFileCreateEntry
   sPoolString Name;
   sBool PackEnable;
 
-  sPackFileCreateEntry() : PackEnable(sTRUE) {}
-  sPackFileCreateEntry(sPoolString name, sBool enable=sTRUE) : Name(name), PackEnable(enable) {}
+  sPackFileCreateEntry() : PackEnable(sTRUE)
+  {
+  }
 
+  sPackFileCreateEntry(sPoolString name, sBool enable = sTRUE) : Name(name), PackEnable(enable)
+  {
+  }
 };
 
 /****************************************************************************/
 
 // logs all files that are opened via sCreateFile into an array
-void sAddFileLogger(sStaticArray<sPackFileCreateEntry> &files);
+void sAddFileLogger(sStaticArray<sPackFileCreateEntry>& files);
 void sRemFileLogger();
 
 /****************************************************************************/
 
-void sCreateDemoPackFile(const sChar *packfilename, const sArray<sPackFileCreateEntry> files, sBool logfile);
+void sCreateDemoPackFile(const sChar* packfilename, const sArray<sPackFileCreateEntry> files, sBool logfile);
 
 /****************************************************************************/
-
 

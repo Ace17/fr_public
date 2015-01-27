@@ -28,8 +28,8 @@
 
 /****************************************************************************/
 
-static Config *MyConfig;
-static sDemoPackFile *PackFile=0;
+static Config* MyConfig;
+static sDemoPackFile* PackFile = 0;
 static sScreenMode ScreenMode;
 
 #define PrepareFactor 16     // every 16 beats count as (Preparefactor) ops for the progressbar
@@ -41,46 +41,48 @@ static int AppStartTime = 0;
 
 void LogTime()
 {
-	if (AppStartTime==0) AppStartTime = sGetTime();
-	sDPrintF(L"           %8.3f: ", (sGetTime()-AppStartTime)/1000.0f);
+  if(AppStartTime == 0)
+    AppStartTime = sGetTime();
+
+  sDPrintF(L"           %8.3f: ", (sGetTime() - AppStartTime) / 1000.0f);
 }
 
 /****************************************************************************/
 
 void RegisterWZ4Classes()
 {
-  for(sInt i=0;i<2;i++)
+  for(sInt i = 0; i < 2; i++)
   {
-    sREGOPS(basic,0);
-    sREGOPS(poc,1);
-    sREGOPS(chaos_font,0);        // should go away soon (detuned)
-    sREGOPS(wz3_bitmap,0);
-    sREGOPS(wz4_anim,0);
-    sREGOPS(wz4_mtrl,1);
-    sREGOPS(chaosmesh,1);         // should go away soon (detuned)
-    sREGOPS(wz4_demo2,0);
-    sREGOPS(wz4_mesh,0);
-    sREGOPS(chaosfx,0);
-    sREGOPS(easter,0);
-    sREGOPS(wz4_bsp,0);
-    sREGOPS(wz4_mtrl2,0);
-    sREGOPS(tron,1);
-    sREGOPS(wz4_ipp,0);
-    sREGOPS(wz4_audio,0);         // audio to image -> not usefull (yet)
-    sREGOPS(fxparticle,0);
-    sREGOPS(wz4_modmtrl,0);
-    sREGOPS(wz4_modmtrlmod,0);
+    sREGOPS(basic, 0);
+    sREGOPS(poc, 1);
+    sREGOPS(chaos_font, 0);        // should go away soon (detuned)
+    sREGOPS(wz3_bitmap, 0);
+    sREGOPS(wz4_anim, 0);
+    sREGOPS(wz4_mtrl, 1);
+    sREGOPS(chaosmesh, 1);         // should go away soon (detuned)
+    sREGOPS(wz4_demo2, 0);
+    sREGOPS(wz4_mesh, 0);
+    sREGOPS(chaosfx, 0);
+    sREGOPS(easter, 0);
+    sREGOPS(wz4_bsp, 0);
+    sREGOPS(wz4_mtrl2, 0);
+    sREGOPS(tron, 1);
+    sREGOPS(wz4_ipp, 0);
+    sREGOPS(wz4_audio, 0);         // audio to image -> not usefull (yet)
+    sREGOPS(fxparticle, 0);
+    sREGOPS(wz4_modmtrl, 0);
+    sREGOPS(wz4_modmtrlmod, 0);
 
-    sREGOPS(fr062,0);   // the cube
-    sREGOPS(fr063_chaos,0);   // chaos+tron
-    sREGOPS(fr063_tron,0);   // chaos+tron
-    sREGOPS(fr063_mandelbulb,0);   // chaos+tron
-    sREGOPS(fr063_sph,0);   // chaos+tron
+    sREGOPS(fr062, 0);   // the cube
+    sREGOPS(fr063_chaos, 0);   // chaos+tron
+    sREGOPS(fr063_tron, 0);   // chaos+tron
+    sREGOPS(fr063_mandelbulb, 0);   // chaos+tron
+    sREGOPS(fr063_sph, 0);   // chaos+tron
 
-    sREGOPS(adf,0);     
-    sREGOPS(pdf,0);
+    sREGOPS(adf, 0);
+    sREGOPS(pdf, 0);
 
-    sREGOPS(screens4,0);
+    sREGOPS(screens4, 0);
   }
 
   Doc->FindType(L"Scene")->Secondary = 1;
@@ -89,7 +91,7 @@ void RegisterWZ4Classes()
   Doc->FindType(L"Wz4Render")->Order = 4;
   Doc->FindType(L"Wz4Mtrl")->Order = 5;
 
-  wClass *cl = Doc->FindClass(L"MakeTexture2",L"Texture2D");
+  wClass* cl = Doc->FindClass(L"MakeTexture2", L"Texture2D");
   sVERIFY(cl);
   Doc->Classes.RemOrder(cl);
   Doc->Classes.AddHead(cl);   // order preserving!
@@ -101,12 +103,14 @@ void RegisterWZ4Classes()
 static void SetupScreenMode(Config::Resolution resolution, sBool fullscreen)
 {
   sClear(ScreenMode);
-  ScreenMode.Aspect = (float)resolution.Width/(float)resolution.Height;
+  ScreenMode.Aspect = (float)resolution.Width / (float)resolution.Height;
   ScreenMode.Display = -1;
-  if (fullscreen)
+
+  if(fullscreen)
   {
     ScreenMode.Flags |= sSM_FULLSCREEN;
   }
+
   ScreenMode.Frequency = resolution.RefreshRate;
   ScreenMode.MultiLevel = -1;
   ScreenMode.OverMultiLevel = -1;
@@ -114,31 +118,62 @@ static void SetupScreenMode(Config::Resolution resolution, sBool fullscreen)
   ScreenMode.OverY = ScreenMode.ScreenY = MyConfig->DefaultResolution.Height;
 
   // find max resolution for z buffer
-  //ScreenMode.RTZBufferX = 2048;
-  //ScreenMode.RTZBufferY = 2048;
+  // ScreenMode.RTZBufferX = 2048;
+  // ScreenMode.RTZBufferY = 2048;
   /*
-  for (sInt i=0; i<MyConfig->Keys.GetCount(); i++) if (MyConfig->Keys[i].Type == Config::SETRESOLUTION)
-  {
-    sm.RTZBufferX = sMax(sm.RTZBufferX, MyConfig->Keys[i].ParaRes.Width);
-    sm.RTZBufferY = sMax(sm.RTZBufferY, MyConfig->Keys[i].ParaRes.Height);
-  }
-  */
+     for (sInt i=0; i<MyConfig->Keys.GetCount(); i++) if (MyConfig->Keys[i].Type == Config::SETRESOLUTION)
+     {
+     sm.RTZBufferX = sMax(sm.RTZBufferX, MyConfig->Keys[i].ParaRes.Width);
+     sm.RTZBufferY = sMax(sm.RTZBufferY, MyConfig->Keys[i].ParaRes.Height);
+     }
+   */
 }
 
 /****************************************************************************/
 /****************************************************************************/
 
-template <typename T> class sAutoPtr
+template<typename T>
+class sAutoPtr
 {
 public:
-  sAutoPtr() : ptr(0) {}
-  sAutoPtr(T* obj) { ptr = obj; }
-  sAutoPtr(const sAutoPtr<T> &p) {sAddRef(ptr=p.ptr); }
-  sAutoPtr& operator= (const sAutoPtr &p) { sRelease(ptr); sAddRef(ptr=p.ptr); return *this; }
-  ~sAutoPtr() { sRelease(ptr); }
-  T* operator -> () const { return ptr; }
-  operator T*() const { return ptr; }
-  bool IsNull() const { return ptr==0; }
+  sAutoPtr() : ptr(0)
+  {
+  }
+
+  sAutoPtr(T* obj)
+  {
+    ptr = obj;
+  }
+
+  sAutoPtr(const sAutoPtr<T>& p)
+  {
+    sAddRef(ptr = p.ptr);
+  }
+
+  sAutoPtr & operator = (const sAutoPtr& p)
+  {
+    sRelease(ptr);
+    sAddRef(ptr = p.ptr);
+    return *this;
+  }
+
+  ~sAutoPtr()
+  {
+    sRelease(ptr);
+  }
+
+  T* operator -> () const
+  {
+    return ptr;
+  }
+
+  operator T* () const {
+    return ptr;
+  }
+  bool IsNull() const
+  {
+    return ptr == 0;
+  }
 
 private:
   T* ptr;
@@ -147,7 +182,10 @@ private:
 class sRandomMarkov
 {
 public:
-  sRandomMarkov() { Total=0; }
+  sRandomMarkov()
+  {
+    Total = 0;
+  }
 
   explicit sRandomMarkov(sInt max)
   {
@@ -158,8 +196,10 @@ public:
   {
     Weights.Reset();
     Weights.HintSize(n);
-    for (sInt i=0; i<n; i++)
+
+    for(sInt i = 0; i < n; i++)
       Weights.AddTail(1);
+
     Total = n;
     Rnd.Seed(sGetRandomSeed());
   }
@@ -168,23 +208,26 @@ public:
   {
     // pick random number
     sInt i;
-    sInt x = Rnd.Int32()%Total;
+    sInt x = Rnd.Int32() % Total;
     sInt n = Weights.GetCount();
-    for (i=0; x>=Weights[i] && i<n; i++) x-=Weights[i];
+
+    for(i = 0; x >= Weights[i] && i < n; i++)
+      x -= Weights[i];
 
     // update model
-    if (Weights.GetCount()>1)
+    if(Weights.GetCount() > 1)
     {
-      for (int j=0; j<n; j++) Weights[j]++;
-      Total+=n-Weights[i];
-      Weights[i]=0;
+      for(int j = 0; j < n; j++)
+        Weights[j]++;
+
+      Total += n - Weights[i];
+      Weights[i] = 0;
     }
 
-    return i;  
+    return i;
   }
 
 private:
-
   sRandomMT Rnd;
   sStaticArray<sInt> Weights;
   sInt Total;
@@ -193,25 +236,24 @@ private:
 /****************************************************************************/
 /****************************************************************************/
 
-sINITMEM(0,0);
+sINITMEM(0, 0);
 sINITDEBUGMEM(0);
 
 class MyApp : public sApp
 {
 public:
-
   sString<1024> WZ4Name;
 
   sInt PreFrames;
   sInt Loaded;
   sString<256> ErrString;
 
-  wOp *RootOp;
+  wOp* RootOp;
   sAutoPtr<Wz4Render> RootObj;
 
   sInt StartTime;
   sInt Time;
-  sPainter *Painter;
+  sPainter* Painter;
   sBool Fps;
   sBool MTMon;
   sInt FramesRendered;
@@ -219,8 +261,8 @@ public:
   sRect ScreenRect;
   wPaintInfo PaintInfo;
 
-  RPCServer *Server;
-  WebServer *Web;
+  RPCServer* Server;
+  WebServer* Web;
 
   PlaylistMgr PlMgr;
 
@@ -235,93 +277,102 @@ public:
   sArray<NamedObject> Transitions;
   sRandomMarkov RndTrans;
 
-  static wClass *CallClass;
+  static wClass* CallClass;
 
   struct RenderList
   {
-
     struct Entry
     {
       sString<256> Name;
-      sAutoPtr<Wz4Render> * Ptr;
+      sAutoPtr<Wz4Render>* Ptr;
       sInt Temp;
     };
 
     sArray<Entry> List;
-    sRandomMarkov *Random;
+    sRandomMarkov* Random;
     sBool MyRandom;
 
-    sAutoPtr<Wz4Render> GetNext(const sChar *prefix)
+    sAutoPtr<Wz4Render> GetNext(const sChar* prefix)
     {
-      if (List.IsEmpty()) return 0;
+      if(List.IsEmpty())
+        return 0;
 
-      if (prefix==0 || !prefix[0])
+      if(prefix == 0 || !prefix[0])
         return *(List[Random->Get()].Ptr);
 
       // find slides for prefix
       int plen = sGetStringLen(prefix);
       int count = List.GetCount();
       int good = 0;
-      for (int i=0; i<count; i++)
+
+      for(int i = 0; i < count; i++)
       {
-        List[i].Temp = sCmpStringILen(List[i].Name,prefix,plen)?0:1;
+        List[i].Temp = sCmpStringILen(List[i].Name, prefix, plen) ? 0 : 1;
         good += List[i].Temp;
       }
 
       // none found? try default, and if that doesn't work, random
-      if (good==0)
+      if(good == 0)
       {
-        if (prefix != MyConfig->DefaultType)
+        if(prefix != MyConfig->DefaultType)
           return GetNext(MyConfig->DefaultType);
         else // already default? well.
           return GetNext(0);
       }
 
       // now use the random until you get one that's ok to use
-      for (;;)
+      for(;;)
       {
         int rnd = Random->Get();
-        if (List[rnd].Temp)
+
+        if(List[rnd].Temp)
           return *(List[rnd].Ptr);
       }
     }
 
-    void Init(const sChar *prefix, const sChar *type, wOp *input, sRandomMarkov *random)
+    void Init(const sChar* prefix, const sChar* type, wOp* input, sRandomMarkov* random)
     {
       do
       {
-        if (!prefix || !prefix[0]) prefix=L"slide";
+        if(!prefix || !prefix[0])
+          prefix = L"slide";
 
         sString<64> realprefix = prefix;
         sAppendString(realprefix, L"_");
-        sAppendString(realprefix,type);
+        sAppendString(realprefix, type);
 
         int len = sGetStringLen(realprefix);
-        wOp *op;
+        wOp* op;
         sFORALL(Doc->Stores, op)
         {
-          if (!sCmpStringILen(realprefix,op->Name,len))
+          if(!sCmpStringILen(realprefix, op->Name, len))
           {
             Entry e;
-            e.Ptr = new sAutoPtr<Wz4Render>((Wz4Render*)Doc->CalcOp(MakeCall(op->Name,input)));
-            const sChar *rawname = ((const sChar *)op->Name)+len;
-            if (rawname[0]=='_') rawname++;
+            e.Ptr = new sAutoPtr<Wz4Render>((Wz4Render*)Doc->CalcOp(MakeCall(op->Name, input)));
+            const sChar* rawname = ((const sChar*)op->Name) + len;
+
+            if(rawname[0] == '_')
+              rawname++;
+
             e.Name = rawname;
             List.AddTail(e);
           }
         }
-        if (!sCmpString(prefix,L"slide")) break;
-        prefix = 0;
-      } while (List.IsEmpty());
 
-      if (random)
+        if(!sCmpString(prefix, L"slide"))
+          break;
+
+        prefix = 0;
+      }
+      while(List.IsEmpty());
+
+      if(random)
         Random = random;
       else
       {
         Random = new sRandomMarkov(List.GetCount());
         MyRandom = sTRUE;
       }
-      
     }
 
     RenderList()
@@ -332,35 +383,42 @@ public:
 
     ~RenderList()
     {
-      for (int i=0; i<List.GetCount(); i++)
+      for(int i = 0; i < List.GetCount(); i++)
         delete List[i].Ptr;
+
       List.Clear();
-      if (MyRandom)
+
+      if(MyRandom)
         sDelete(Random);
     }
   };
 
   struct SlideEntry
   {
-    wOp *TexOp;
+    wOp* TexOp;
     sAutoPtr<Texture2D> Tex;
 
     RenderList Pic, OpaquePic, Siegmeister, CustomFS;
 
     sMoviePlayer* Movie;
 
-    SlideEntry() : TexOp(0), Movie(0) {}
-    ~SlideEntry() { sRelease(Movie); }
+    SlideEntry() : TexOp(0), Movie(0)
+    {
+    }
 
-  } *Entry[2];
+    ~SlideEntry()
+    {
+      sRelease(Movie);
+    }
+  }* Entry[2];
 
-  const sChar *CurId;
+  const sChar* CurId;
 
   sAutoPtr<Rendertarget2D> CurRT;
   sAutoPtr<Rendertarget2D> NextRT;
 
   sAutoPtr<Wz4Render> CurShow;
-  
+
   sAutoPtr<Wz4Render> NextRender;
   sAutoPtr<Wz4Render> CurRender;
   sAutoPtr<Wz4Render> Main;
@@ -373,22 +431,22 @@ public:
 
   bMusicPlayer SoundPlayer;
 
-  sImage *ImageOut;
-  sThreadLock *ImageOutLock;
+  sImage* ImageOut;
+  sThreadLock* ImageOutLock;
 
-  sThread *PngOutThread;
-  sThreadEvent *PngOutEvent;
+  sThread* PngOutThread;
+  sThreadEvent* PngOutEvent;
 
   MyApp()
   {
-	  AppStartTime = sGetTime();
+    AppStartTime = sGetTime();
 
-    Loaded=sFALSE;
-    StartTime=0;
-    Time=0;
-    PreFrames=2;
-    RootOp=0;
-    RootObj=0;
+    Loaded = sFALSE;
+    StartTime = 0;
+    Time = 0;
+    PreFrames = 2;
+    RootOp = 0;
+    RootObj = 0;
     Fps = 0;
     MTMon = 0;
     Painter = new sPainter();
@@ -409,16 +467,17 @@ public:
 
     new wDocument;
     sAddRoot(Doc);
-    Doc->EditOptions.BackColor=0xff000000;
+    Doc->EditOptions.BackColor = 0xff000000;
 
     Server = 0;
     Web = 0;
     Rnd.Seed(sGetRandomSeed());
 
-    if (MyConfig->PngOut != L"")
+    if(MyConfig->PngOut != L"")
       PngOutThread = new sThread(PngOutProxy, -1, 0, this);
     else
       PngOutThread = 0;
+
     PngOutEvent = new sThreadEvent();
   }
 
@@ -427,12 +486,14 @@ public:
     ImageOutLock->Lock();
     sDelete(ImageOut);
     ImageOutLock->Unlock();
-    if (PngOutThread)
+
+    if(PngOutThread)
     {
       PngOutThread->Terminate();
       PngOutEvent->Signal();
       sDelete(PngOutThread);
     }
+
     sDelete(PngOutEvent);
 
     sDelete(ImageOutLock);
@@ -447,24 +508,23 @@ public:
     sRemRoot(Doc);
     delete Painter;
 
-    if (PackFile)
+    if(PackFile)
     {
       sRemFileHandler(PackFile);
       sDelete(PackFile);
     }
-  
+
     sDelete(MyConfig);
   }
 
-
-  static wOp *MakeCall(const sChar *name, wOp *input)
+  static wOp* MakeCall(const sChar* name, wOp* input)
   {
-    if (!CallClass)
-      CallClass = Doc->FindClass(L"Call",L"AnyType");
+    if(!CallClass)
+      CallClass = Doc->FindClass(L"Call", L"AnyType");
 
-    wOp *callop = new wOp;
+    wOp* callop = new wOp;
     callop->Class = CallClass;
-    sU32 *flags = new sU32[1];
+    sU32* flags = new sU32[1];
     flags[0] = 1;
     callop->EditData = flags;
     callop->Inputs.HintSize(2);
@@ -474,18 +534,18 @@ public:
     return callop;
   }
 
-  void MakeNextSlide(NewSlideData *ns)
+  void MakeNextSlide(NewSlideData* ns)
   {
-    SlideEntry *e = Entry[0];
+    SlideEntry* e = Entry[0];
 
-    if (ns->ImgData)
+    if(ns->ImgData)
     {
-      sTexture2D *tex = e->Tex->Texture->CastTex2D();
-      tex->ReInit(ns->ImgData->SizeX,ns->ImgData->SizeY,ns->ImgData->Format);
+      sTexture2D* tex = e->Tex->Texture->CastTex2D();
+      tex->ReInit(ns->ImgData->SizeX, ns->ImgData->SizeY, ns->ImgData->Format);
       tex->LoadAllMipmaps(ns->ImgData->Data);
     }
 
-    if (ns->OrgImage && MyConfig->PngOut != L"")
+    if(ns->OrgImage && MyConfig->PngOut != L"")
     {
       ImageOutLock->Lock();
       sDelete(ImageOut);
@@ -493,30 +553,32 @@ public:
       ns->OrgImage = 0;
       ImageOutLock->Unlock();
     }
-
-    switch (ns->Type)
+    switch(ns->Type)
     {
     case IMAGE:
-      if (ns->ImgOpaque)
+
+      if(ns->ImgOpaque)
       {
         NextSlide = e->OpaquePic.GetNext(ns->RenderType);
-        if (NextSlide.IsNull())
+
+        if(NextSlide.IsNull())
           NextSlide = e->Pic.GetNext(ns->RenderType);
       }
       else
         NextSlide = e->Pic.GetNext(ns->RenderType);
+
       break;
     case SIEGMEISTER_BARS:
     case SIEGMEISTER_WINNERS:
       {
         NextSlide = e->Siegmeister.GetNext(ns->RenderType);
-        RNSiegmeister *node = GetNode<RNSiegmeister>(L"Siegmeister",NextSlide);
+        RNSiegmeister* node = GetNode<RNSiegmeister>(L"Siegmeister", NextSlide);
         node->DoBlink = (ns->Type == SIEGMEISTER_WINNERS);
-        node->Fade = node->DoBlink?1:0;
-        node->Alpha=ns->SiegData->BarAlpha;
-        node->Color=ns->SiegData->BarColor;
-        node->BlinkColor1=ns->SiegData->BarBlinkColor1;
-        node->BlinkColor2=ns->SiegData->BarBlinkColor2;
+        node->Fade = node->DoBlink ? 1 : 0;
+        node->Alpha = ns->SiegData->BarAlpha;
+        node->Color = ns->SiegData->BarColor;
+        node->BlinkColor1 = ns->SiegData->BarBlinkColor1;
+        node->BlinkColor2 = ns->SiegData->BarBlinkColor2;
         node->Spread = MyConfig->BarAnimSpread;
         node->Bars.Clear();
         node->Bars.Copy(ns->SiegData->BarPositions);
@@ -528,7 +590,7 @@ public:
         e->Movie = ns->Movie;
         ns->Movie = 0; // claim ownership
 
-        RNCustomFullscreen2D *node = GetNode<RNCustomFullscreen2D>(L"Custom2DFS", NextSlide);
+        RNCustomFullscreen2D* node = GetNode<RNCustomFullscreen2D>(L"Custom2DFS", NextSlide);
         sFRect uvr;
         node->Material = e->Movie->GetFrame(uvr);
         sMovieInfo mi = e->Movie->GetInfo();
@@ -545,11 +607,11 @@ public:
     CurId = ns->Id;
   }
 
-
-  void SetChild(const sAutoPtr<Wz4Render> &node, const sAutoPtr<Wz4Render> &child, sF32 *time)
+  void SetChild(const sAutoPtr<Wz4Render>& node, const sAutoPtr<Wz4Render>& child, sF32* time)
   {
     sReleaseAll(node->RootNode->Childs);
-    if (child)
+
+    if(child)
     {
       child->RootNode->AddRef();
       node->RootNode->Childs.AddTail(child->RootNode);
@@ -561,21 +623,21 @@ public:
     }
   }
 
-  void SetRTRecursive(Wz4RenderNode *node, Rendertarget2D *rt, sInt pass)
+  void SetRTRecursive(Wz4RenderNode* node, Rendertarget2D* rt, sInt pass)
   {
-    if (!sCmpString(node->Op->Class->Name,L"Camera"))
+    if(!sCmpString(node->Op->Class->Name, L"Camera"))
     {
-      RNCamera *cam = (RNCamera*)node;
+      RNCamera* cam = (RNCamera*)node;
       sRelease(cam->Target);
-      cam->Target=rt;
+      cam->Target = rt;
       sAddRef(cam->Target);
       cam->Para.Renderpass = pass;
       return;
     }
 
-    Wz4RenderNode *child;
-    sFORALL(node->Childs,child)
-      SetRTRecursive(child,rt, pass);
+    Wz4RenderNode* child;
+    sFORALL(node->Childs, child)
+    SetRTRecursive(child, rt, pass);
   }
 
   void SetRT(const sAutoPtr<Wz4Render> node, const sAutoPtr<Rendertarget2D> rt, int pass)
@@ -583,43 +645,50 @@ public:
     SetRTRecursive(node->RootNode, rt, pass);
   }
 
-  template<class T> T* GetNodeRecursive(const sChar *classname, Wz4RenderNode *node)
+  template<class T>
+  T* GetNodeRecursive(const sChar* classname, Wz4RenderNode* node)
   {
-    if (!sCmpString(node->Op->Class->Name,classname))
+    if(!sCmpString(node->Op->Class->Name, classname))
       return (T*)node;
 
-    Wz4RenderNode *child;
-    T *ret;
-    sFORALL(node->Childs,child)
+    Wz4RenderNode* child;
+    T* ret;
+    sFORALL(node->Childs, child)
     {
       ret = GetNodeRecursive<T>(classname, child);
-      if (ret) return ret;
+
+      if(ret)
+        return ret;
     }
 
     return 0;
   }
 
-  template<class T> T* GetNode(const sChar *classname, const sAutoPtr<Wz4Render> node)
+  template<class T>
+  T* GetNode(const sChar* classname, const sAutoPtr<Wz4Render> node)
   {
-    if (!node) return 0;
+    if(!node)
+      return 0;
+
     return GetNodeRecursive<T>(classname, node->RootNode);
   }
 
-  void SetTransition(int i, sF32 duration=1.0f)
+  void SetTransition(int i, sF32 duration = 1.0f)
   {
-    const NamedObject &no = Transitions[i];
-    SetChild(Main,no.Obj,&TransTime);
+    const NamedObject& no = Transitions[i];
+    SetChild(Main, no.Obj, &TransTime);
     SetRT(NextSlide, NextRT, 200);
-    SetChild(NextRender,NextSlide,&NextRenderTime);
+    SetChild(NextRender, NextSlide, &NextRenderTime);
 
     TransTime = 0.0f;
-    TransDurMS = 1000*duration;
+    TransDurMS = 1000 * duration;
     Started = sFALSE;
   }
 
   void EndTransition()
   {
-		LogTime(); sDPrintF(L"transition done\n");
+    LogTime();
+    sDPrintF(L"transition done\n");
     CurSlide = NextSlide;
     CurRenderTime = NextRenderTime;
     NextSlide = 0;
@@ -627,38 +696,41 @@ public:
     Started = sFALSE;
 
     SetRT(CurSlide, CurRT, 100);
-    SetChild(CurRender,CurSlide,&CurRenderTime);
-    SetChild(NextRender,0,0);
-    SetChild(Main,CurShow,0);
+    SetChild(CurRender, CurSlide, &CurRenderTime);
+    SetChild(NextRender, 0, 0);
+    SetChild(Main, CurShow, 0);
 
     sRelease(Entry[0]->Movie);
-    if (Entry[1]->Movie)
+
+    if(Entry[1]->Movie)
       Entry[1]->Movie->SetVolume(MyConfig->MovieVolume);
 
     PngOutEvent->Signal();
 
-    //sMemMark(false);
+    // sMemMark(false);
   }
 
   void Load()
   {
-    sInt t1=sGetTime();
-    const sChar *rootname = L"root";
-  
+    sInt t1 = sGetTime();
+    const sChar* rootname = L"root";
+
     RootOp = Doc->FindStore(rootname);
-    if (!RootOp)
+
+    if(!RootOp)
     {
       sExit();
       return;
     }
-    RootObj=(Wz4Render*)Doc->CalcOp(RootOp);
+
+    RootObj = (Wz4Render*)Doc->CalcOp(RootOp);
 
     // the big test
     Entry[0]->TexOp = Doc->FindStore(L"Tex1");
     Entry[1]->TexOp = Doc->FindStore(L"Tex2");
-    
-    CurRT = (Rendertarget2D *)Doc->CalcOp(Doc->FindStore(L"CurRT"));
-    NextRT = (Rendertarget2D *)Doc->CalcOp(Doc->FindStore(L"NextRT"));
+
+    CurRT = (Rendertarget2D*)Doc->CalcOp(Doc->FindStore(L"CurRT"));
+    NextRT = (Rendertarget2D*)Doc->CalcOp(Doc->FindStore(L"NextRT"));
 
     CurShow = (Wz4Render*)Doc->CalcOp(Doc->FindStore(L"CurShow"));
     CurRender = (Wz4Render*)Doc->CalcOp(Doc->FindStore(L"CurRender"));
@@ -666,17 +738,16 @@ public:
     Main = (Wz4Render*)Doc->CalcOp(Doc->FindStore(L"Main"));
 
     // load transitions
-    wOp *op;
+    wOp* op;
     sString<64> tp = MyConfig->TransPrefix;
-    sAppendString(tp,L"_");
+    sAppendString(tp, L"_");
     sInt tplen = sGetStringLen(tp);
-    sFORALL(Doc->Stores,op)
+    sFORALL(Doc->Stores, op)
     {
-     
-      if (!sCmpStringILen(op->Name,tp,tplen))
+      if(!sCmpStringILen(op->Name, tp, tplen))
       {
         NamedObject no;
-        no.Name = op->Name+tplen;
+        no.Name = op->Name + tplen;
         no.Obj = (Wz4Render*)Doc->CalcOp(op);
         Transitions.AddTail(no);
       }
@@ -684,10 +755,10 @@ public:
     RndTrans.Init(Transitions.GetCount());
 
     // load slide renderers
-    for (sInt i=0; i<2; i++)
+    for(sInt i = 0; i < 2; i++)
     {
-      SlideEntry *e = Entry[i];
-      SlideEntry *e0 = i?Entry[0]:0;
+      SlideEntry* e = Entry[i];
+      SlideEntry* e0 = i ? Entry[0] : 0;
       e->Tex = (Texture2D*)Doc->CalcOp(e->TexOp);
       e->Pic.Init(MyConfig->SlidePrefix, L"pic", e->TexOp, e0 ? e0->Pic.Random : 0);
       e->OpaquePic.Init(MyConfig->SlidePrefix, L"opaquepic", e->TexOp, e0 ? e0->OpaquePic.Random : 0);
@@ -696,19 +767,17 @@ public:
     }
 
     Server = new RPCServer(PlMgr, MyConfig->Port);
-    //Web = new WebServer(PlMgr, MyConfig->HttpPort);
+    // Web = new WebServer(PlMgr, MyConfig->HttpPort);
 
-    Loaded=sTRUE;
+    Loaded = sTRUE;
   };
 
-
-  void SetPaintInfo(wPaintInfo &pi)
+  void SetPaintInfo(wPaintInfo& pi)
   {
     pi.Window = 0;
     pi.Op = RootOp;
 
     pi.Lod = Doc->DocOptions.LevelOfDetail;
-
 
     pi.Env = 0;
     pi.Grid = 0;
@@ -717,27 +786,31 @@ public:
     pi.Zoom3D = 1.0f;
   }
 
-
-  void DoPaint(wObject *obj, wPaintInfo &pi)
+  void DoPaint(wObject* obj, wPaintInfo& pi)
   {
-    sSetTarget(sTargetPara(sST_CLEARALL|sST_NOMSAA,0));
+    sSetTarget(sTargetPara(sST_CLEARALL | sST_NOMSAA, 0));
 
-    sInt sx,sy;
-    sGetRendertargetSize(sx,sy);
-    sF32 scrnaspect=sGetRendertargetAspect();
-    sF32 demoaspect=sF32(Doc->DocOptions.ScreenX)/sF32(Doc->DocOptions.ScreenY);
-    sF32 arr=scrnaspect/demoaspect;
-    sF32 w=0.5f, h=0.5f;
-    if (arr>1) w/=arr; else h*=arr;
-    ScreenRect.Init(sx*(0.5f-w)+0.5f,sy*(0.5f-h)+0.5f,sx*(0.5f+w)+0.5f,sy*(0.5f+h)+0.5f);
+    sInt sx, sy;
+    sGetRendertargetSize(sx, sy);
+    sF32 scrnaspect = sGetRendertargetAspect();
+    sF32 demoaspect = sF32(Doc->DocOptions.ScreenX) / sF32(Doc->DocOptions.ScreenY);
+    sF32 arr = scrnaspect / demoaspect;
+    sF32 w = 0.5f, h = 0.5f;
 
-    pi.Client=ScreenRect;
+    if(arr > 1)
+      w /= arr;
+    else
+      h *= arr;
+
+    ScreenRect.Init(sx * (0.5f - w) + 0.5f, sy * (0.5f - h) + 0.5f, sx * (0.5f + w) + 0.5f, sy * (0.5f + h) + 0.5f);
+
+    pi.Client = ScreenRect;
     pi.Rect.Init();
 
     if(obj)
     {
       sTargetSpec spec(ScreenRect);
-      sSetTarget(sTargetPara(sST_CLEARNONE,0,spec));
+      sSetTarget(sTargetPara(sST_CLEARNONE, 0, spec));
 
       sViewport view;
       view.SetTargetCurrent();
@@ -748,10 +821,10 @@ public:
       pi.View = &view;
       pi.Spec = spec;
 
-      obj->Type->BeforeShow(obj,pi);
+      obj->Type->BeforeShow(obj, pi);
       Doc->LastView = *pi.View;
       pi.SetCam = 0;
-      Doc->Show(obj,pi);
+      Doc->Show(obj, pi);
     }
   }
 
@@ -760,33 +833,44 @@ public:
   void SendMidiEvent(sInt ev, sInt v1, sInt v2)
   {
     sDPrintF(L"send midi %s %s %s\n", ev, v1, v2);
-    sInt start = MyConfig->MidiDevice; if (start==-1) start=0;
-    sInt end = MyConfig->MidiDevice+1; if (end==0) end=100;
-    for (int i=start; i<end && sMidiHandler->GetDeviceName(sTRUE,i); i++)
-      sMidiHandler->Output(i,ev|(MyConfig->MidiChannel-1),v1,v2);
+    sInt start = MyConfig->MidiDevice;
+
+    if(start == -1)
+      start = 0;
+
+    sInt end = MyConfig->MidiDevice + 1;
+
+    if(end == 0)
+      end = 100;
+
+    for(int i = start; i < end && sMidiHandler->GetDeviceName(sTRUE, i); i++)
+      sMidiHandler->Output(i, ev | (MyConfig->MidiChannel - 1), v1, v2);
   }
 
-  void SendMidiNote(const Config::Note &note)
+  void SendMidiNote(const Config::Note& note)
   {
     ActiveMidiNotes.HintSize(100);
-    if (note.Duration>0)
+
+    if(note.Duration > 0)
       ActiveMidiNotes.AddTail(note);
-    SendMidiEvent(0x90,note.Pitch,note.Velocity);
+
+    SendMidiEvent(0x90, note.Pitch, note.Velocity);
   }
 
   void ProcessMidiNotes(sInt tdelta)
   {
-    sF32 delta = tdelta/1000.0f;
-    for (int i=0; i<ActiveMidiNotes.GetCount(); )
+    sF32 delta = tdelta / 1000.0f;
+
+    for(int i = 0; i < ActiveMidiNotes.GetCount();)
     {
-      if (ActiveMidiNotes[i].Duration<=delta)
+      if(ActiveMidiNotes[i].Duration <= delta)
       {
-        SendMidiEvent(0x80,ActiveMidiNotes[i].Pitch,0);
+        SendMidiEvent(0x80, ActiveMidiNotes[i].Pitch, 0);
         ActiveMidiNotes.RemAt(i);
       }
       else
       {
-        ActiveMidiNotes[i].Duration-=delta;
+        ActiveMidiNotes[i].Duration -= delta;
         i++;
       }
     }
@@ -794,24 +878,24 @@ public:
 
   void OnPaint3D()
   {
-    sSetTarget(sTargetPara(sST_CLEARALL,0));
+    sSetTarget(sTargetPara(sST_CLEARALL, 0));
 
-    if (!Loaded)
+    if(!Loaded)
     {
       // load and charge
-      if (!PreFrames--)
+      if(!PreFrames--)
       {
-        PreFrames=0;
+        PreFrames = 0;
 
         sRender3DEnd();
 
-        if (!Doc->Load(WZ4Name))
+        if(!Doc->Load(WZ4Name))
         {
-          sFatal(L"could not load wz4 file %s",WZ4Name);
+          sFatal(L"could not load wz4 file %s", WZ4Name);
           return;
         }
 
-        ProgressPaintFunc=0;
+        ProgressPaintFunc = 0;
 
         Load();
 
@@ -820,19 +904,20 @@ public:
       }
     }
 
-    if (Loaded)
-    {      
+    if(Loaded)
+    {
       sInt tdelta;
-      if (!StartTime) 
+
+      if(!StartTime)
       {
-          StartTime=sGetTime();
-          Time = 0;
-          tdelta = 0;
+        StartTime = sGetTime();
+        Time = 0;
+        tdelta = 0;
       }
       else
       {
-        sInt newtime = sGetTime()-StartTime;
-        tdelta = newtime-Time;
+        sInt newtime = sGetTime() - StartTime;
+        tdelta = newtime - Time;
         Time = newtime;
       }
 
@@ -840,12 +925,13 @@ public:
       ProcessMidiNotes(tdelta);
 
       // check for slide end condition
-      const sChar *doneId = 0;
+      const sChar* doneId = 0;
       sBool doneHard = sFALSE;
       {
         // siegmeister animation ended?
-        RNSiegmeister *siegnode = GetNode<RNSiegmeister>(L"Siegmeister",CurSlide);
-        if (siegnode && !siegnode->DoBlink && siegnode->Fade >= 1)
+        RNSiegmeister* siegnode = GetNode<RNSiegmeister>(L"Siegmeister", CurSlide);
+
+        if(siegnode && !siegnode->DoBlink && siegnode->Fade >= 1)
         {
           doneId = CurId;
           doneHard = sTRUE;
@@ -853,33 +939,35 @@ public:
       }
       {
         // current movie player ended?
-        if (TransTime<0 && Entry[1]->Movie && !Entry[1]->Movie->IsPlaying())
+        if(TransTime < 0 && Entry[1]->Movie && !Entry[1]->Movie->IsPlaying())
         {
           doneId = CurId;
         }
       }
 
-      NewSlideData *newslide = PlMgr.OnFrame(tdelta/1000.0f, doneId, doneHard);
+      NewSlideData* newslide = PlMgr.OnFrame(tdelta / 1000.0f, doneId, doneHard);
 
-      if (newslide)
+      if(newslide)
       {
-			  LogTime();
-        if (!newslide->Error)
+        LogTime();
+
+        if(!newslide->Error)
         {
-					sDPrintF(L"displaying new slide (t%d)\n",newslide->TransitionId);
-          if (TransTime>=0)
+          sDPrintF(L"displaying new slide (t%d)\n", newslide->TransitionId);
+
+          if(TransTime >= 0)
             EndTransition();
 
           MakeNextSlide(newslide);
 
-          if (newslide->TransitionTime>0)
+          if(newslide->TransitionTime > 0)
           {
-            if (newslide->TransitionId >= Transitions.GetCount())
-              SetTransition(RndTrans.Get(),newslide->TransitionTime);
+            if(newslide->TransitionId >= Transitions.GetCount())
+              SetTransition(RndTrans.Get(), newslide->TransitionTime);
             else
-              SetTransition(newslide->TransitionId,newslide->TransitionTime);
+              SetTransition(newslide->TransitionId, newslide->TransitionTime);
 
-            if (newslide->MidiNote>0 && CurRenderTime > 5)
+            if(newslide->MidiNote > 0 && CurRenderTime > 5)
             {
               Config::Note note;
               note.Pitch = newslide->MidiNote;
@@ -890,30 +978,32 @@ public:
           }
           else
           {
-            
             EndTransition();
           }
         }
-        else sDPrintF(L"skipping faulty slide\n");
+        else
+          sDPrintF(L"skipping faulty slide\n");
+
         delete newslide;
       }
 
       // handle Siegmeister bar animation
-      RNSiegmeister *siegnode = GetNode<RNSiegmeister>(L"Siegmeister",CurSlide);
-      if (siegnode && !siegnode->DoBlink && Started)
+      RNSiegmeister* siegnode = GetNode<RNSiegmeister>(L"Siegmeister", CurSlide);
+
+      if(siegnode && !siegnode->DoBlink && Started)
       {
-        siegnode->Fade = sMin(1.0f,(CurRenderTime-SlideStartTime)/MyConfig->BarAnimTime);
-        
+        siegnode->Fade = sMin(1.0f, (CurRenderTime - SlideStartTime) / MyConfig->BarAnimTime);
       }
 
       // handle movie players.
       // If this breaks, we'll need to update the Material in the node once per frame
-      if (Entry[1]->Movie)
+      if(Entry[1]->Movie)
       {
         sFRect uvr;
         Entry[1]->Movie->GetFrame(uvr);
       }
-      if (Entry[0]->Movie && TransTime>=0)
+
+      if(Entry[0]->Movie && TransTime >= 0)
       {
         sFRect uvr;
         Entry[0]->Movie->GetFrame(uvr);
@@ -928,6 +1018,7 @@ public:
       static sTiming time;
 
       time.OnFrame(sGetTime());
+
       if(Fps)
       {
         PaintInfo.ViewLog = &Log;
@@ -938,51 +1029,56 @@ public:
         sString<128> b;
 
         sF32 ms = time.GetAverageDelta();
-        Log.PrintF(L"'%f' ms %f fps\n",ms,1000/ms);
+        Log.PrintF(L"'%f' ms %f fps\n", ms, 1000 / ms);
         Log.PrintF(L"'%d' batches '%k' verts %k ind %k prim %k splitters\n",
-          stat.Batches,stat.Vertices,stat.Indices,stat.Primitives,stat.Splitter);
-        sInt sec = PaintInfo.TimeMS/1000;
-        Log.PrintF(L"Beat %d  Time %dm%2ds  Frames %d\n",PaintInfo.TimeBeat/0x10000,sec/60,sec%60,FramesRendered);
+                   stat.Batches, stat.Vertices, stat.Indices, stat.Primitives, stat.Splitter);
+        sInt sec = PaintInfo.TimeMS / 1000;
+        Log.PrintF(L"Beat %d  Time %dm%2ds  Frames %d\n", PaintInfo.TimeBeat / 0x10000, sec / 60, sec % 60, FramesRendered);
       }
       else
       {
         PaintInfo.ViewLog = 0;
       }
+
       PaintInfo.CamOverride = 0;
 
-      DoPaint(RootObj,PaintInfo);
+      DoPaint(RootObj, PaintInfo);
       FramesRendered++;
 
-      if (TransTime>=0)
+      if(TransTime >= 0)
       {
-        TransTime += tdelta/TransDurMS;
-        if (TransTime>=1.0f)
+        TransTime += tdelta / TransDurMS;
+
+        if(TransTime >= 1.0f)
           EndTransition();
         else
         {
-          if (Entry[0]->Movie)
-            Entry[0]->Movie->SetVolume(MyConfig->MovieVolume*sFSqrt(1.0f-TransTime));
-          if (Entry[1]->Movie)
-            Entry[1]->Movie->SetVolume(MyConfig->MovieVolume*sFSqrt(TransTime));
+          if(Entry[0]->Movie)
+            Entry[0]->Movie->SetVolume(MyConfig->MovieVolume * sFSqrt(1.0f - TransTime));
+
+          if(Entry[1]->Movie)
+            Entry[1]->Movie->SetVolume(MyConfig->MovieVolume * sFSqrt(TransTime));
         }
       }
-      CurRenderTime += tdelta/1000.0f;
-      NextRenderTime += tdelta/1000.0f;
+
+      CurRenderTime += tdelta / 1000.0f;
+      NextRenderTime += tdelta / 1000.0f;
 
       sEnableGraphicsStats(0);
-      sSetTarget(sTargetPara(0,0,&PaintInfo.Client));
+      sSetTarget(sTargetPara(0, 0, &PaintInfo.Client));
       App2->Painter->SetTarget(PaintInfo.Client);
       App2->Painter->Begin();
-      App2->Painter->SetPrint(0,0xff000000,1,0xff000000);
-      App2->Painter->Print(10,11,Log.Get());
-      App2->Painter->Print(11,10,Log.Get());
-      App2->Painter->Print(12,11,Log.Get());
-      App2->Painter->Print(11,12,Log.Get());
-      App2->Painter->SetPrint(0,0xffc0c0c0,1,0xffffffff);
-      App2->Painter->Print(11,11,Log.Get());
+      App2->Painter->SetPrint(0, 0xff000000, 1, 0xff000000);
+      App2->Painter->Print(10, 11, Log.Get());
+      App2->Painter->Print(11, 10, Log.Get());
+      App2->Painter->Print(12, 11, Log.Get());
+      App2->Painter->Print(11, 12, Log.Get());
+      App2->Painter->SetPrint(0, 0xffc0c0c0, 1, 0xffffffff);
+      App2->Painter->Print(11, 11, Log.Get());
       App2->Painter->End();
       sEnableGraphicsStats(1);
       sSchedMon->FlipFrame();
+
       if(MTMon)
       {
         sTargetSpec ts;
@@ -991,123 +1087,131 @@ public:
     }
   }
 
-  void OnInput(const sInput2Event &ie)
+  void OnInput(const sInput2Event& ie)
   {
-    if (PlMgr.OnInput(ie))
+    if(PlMgr.OnInput(ie))
       return;
 
     sU32 key = ie.Key;
     key &= ~sKEYQ_CAPS;
-    if(key & sKEYQ_SHIFT) key |= sKEYQ_SHIFT;
-    if(key & sKEYQ_CTRL ) key |= sKEYQ_CTRL;
-    if(key & sKEYQ_ALT ) key |= sKEYQ_ALT;
 
-    Config::KeyEvent *kev;
+    if(key & sKEYQ_SHIFT)
+      key |= sKEYQ_SHIFT;
+
+    if(key & sKEYQ_CTRL)
+      key |= sKEYQ_CTRL;
+
+    if(key & sKEYQ_ALT)
+      key |= sKEYQ_ALT;
+
+    Config::KeyEvent* kev;
     sBool handled = sFALSE;
-    sFORALL(MyConfig->Keys,kev) if (key == kev->Key) switch (kev->Type)
-    {
-    case Config::PLAYSOUND:
-      SoundPlayer.Init(kev->ParaStr);
-      SoundPlayer.Play();
-      handled = sTRUE;
-      break;
-    case Config::STOPSOUND:
-      SoundPlayer.Exit();
-      handled = sTRUE;
-      break;
-    case Config::FULLSCREEN:
-      ScreenMode.Flags ^= sSM_FULLSCREEN;
-      sSetScreenMode(ScreenMode);
-      handled = sTRUE;
-      break;
-    case Config::SETRESOLUTION:
-      SetupScreenMode(kev->ParaRes,ScreenMode.Flags&sSM_FULLSCREEN);
-      sSetScreenMode(ScreenMode);
-      handled = sTRUE;
-      break;
-    case Config::MIDINOTE:
-      SendMidiNote(kev->ParaNote);
-      handled = sTRUE;
-      break;
-    }
+    sFORALL(MyConfig->Keys, kev)
 
-    if (handled) return;
+    if(key == kev->Key)
+      switch(kev->Type)
+      {
+      case Config::PLAYSOUND:
+        SoundPlayer.Init(kev->ParaStr);
+        SoundPlayer.Play();
+        handled = sTRUE;
+        break;
+      case Config::STOPSOUND:
+        SoundPlayer.Exit();
+        handled = sTRUE;
+        break;
+      case Config::FULLSCREEN:
+        ScreenMode.Flags ^= sSM_FULLSCREEN;
+        sSetScreenMode(ScreenMode);
+        handled = sTRUE;
+        break;
+      case Config::SETRESOLUTION:
+        SetupScreenMode(kev->ParaRes, ScreenMode.Flags & sSM_FULLSCREEN);
+        sSetScreenMode(ScreenMode);
+        handled = sTRUE;
+        break;
+      case Config::MIDINOTE:
+        SendMidiNote(kev->ParaNote);
+        handled = sTRUE;
+        break;
+      }
 
+    if(handled)
+      return;
     switch(key)
     {
-
     case ' ':
-      if (TransTime<0 && !Started)
+
+      if(TransTime < 0 && !Started)
       {
-        Started=1;
+        Started = 1;
         SlideStartTime = CurRenderTime;
       }
+
       break;
 
-    case sKEY_ESCAPE|sKEYQ_SHIFT:
-    case sKEY_F4|sKEYQ_ALT:
+    case sKEY_ESCAPE | sKEYQ_SHIFT:
+    case sKEY_F4 | sKEYQ_ALT:
       sExit();
       break;
 
-    case 'F'|sKEYQ_SHIFT:
+    case 'F' | sKEYQ_SHIFT:
       Fps = !Fps;
       break;
 
-    case 'M'|sKEYQ_SHIFT:
-      if(sSchedMon==0)
+    case 'M' | sKEYQ_SHIFT:
+
+      if(sSchedMon == 0)
       {
         sSchedMon = new sStsPerfMon();
       }
+
       MTMon = !MTMon;
       break;
-
     }
   }
 
-  static void PngOutProxy(sThread *t, void *obj)
+  static void PngOutProxy(sThread* t, void* obj)
   {
     ((MyApp*)obj)->PngOutFunc(t);
   }
 
-  void PngOutFunc(sThread *t)
+  void PngOutFunc(sThread* t)
   {
-    while (t->CheckTerminate())
+    while(t->CheckTerminate())
     {
-      sImage *img;
+      sImage* img;
       PngOutEvent->Wait();
       ImageOutLock->Lock();
       img = ImageOut;
       ImageOut = 0;
       ImageOutLock->Unlock();
 
-      if (img)
+      if(img)
         img->SavePNG(MyConfig->PngOut);
 
       delete img;
     }
   }
+} *App2 = 0;
 
-} *App2=0;
+wClass* MyApp::CallClass = 0;
 
-wClass *MyApp::CallClass = 0;
-
-extern void sCollector(sBool exit=sFALSE);
+extern void sCollector(sBool exit = sFALSE);
 
 /****************************************************************************/
 /****************************************************************************/
 
-//{"rpc":{"@attributes":{"type":"request","name":"get_playlists"}}
-
+// {"rpc":{"@attributes":{"type":"request","name":"get_playlists"}}
 
 static void sExitSts()
 {
   sDelete(sSched);
 }
 
-
 void sMain()
 {
-  sAddSubsystem(L"StealingTaskScheduler (wz4player style)",0x80,0,sExitSts);
+  sAddSubsystem(L"StealingTaskScheduler (wz4player style)", 0x80, 0, sExitSts);
   sAddMidi(sTRUE, sTRUE);
 
   sGetMemHandler(sAMF_HEAP)->MakeThreadSafe();
@@ -1121,7 +1225,8 @@ void sMain()
   sAddGlobalBlobHeap();
 
   MyConfig = new Config;
-  if (!MyConfig->Read(L"config.txt"))
+
+  if(!MyConfig->Read(L"config.txt"))
   {
     sFatal(MyConfig->GetError());
   }
@@ -1132,25 +1237,34 @@ void sMain()
   {
     sString<1024> pakname;
     sString<1024> programname;
-    const sChar *cmd=sGetCommandLine();
-    while (sIsSpace(*cmd) || *cmd=='"') cmd++;
-    const sChar *pstart=cmd;
-    while (*cmd && !(sIsSpace(*cmd) || *cmd=='"')) cmd++;
-    sCopyString(programname,pstart,cmd-pstart+1);
-    
-    sCopyString(sFindFileExtension(programname),L"pak",4);
-    if (sCheckFile(programname))
-      pakname=programname;
+    const sChar* cmd = sGetCommandLine();
+
+    while(sIsSpace(*cmd) || *cmd == '"')
+      cmd++;
+
+    const sChar* pstart = cmd;
+
+    while(*cmd && !(sIsSpace(*cmd) || *cmd == '"'))
+      cmd++;
+
+    sCopyString(programname, pstart, cmd - pstart + 1);
+
+    sCopyString(sFindFileExtension(programname), L"pak", 4);
+
+    if(sCheckFile(programname))
+      pakname = programname;
     else
     {
       // use first packfile from current directory
-      sLoadDir(dirlist,L".",L"*.pak");
-      if (!dirlist.IsEmpty())
-        pakname=dirlist[0].Name;       
+      sLoadDir(dirlist, L".", L"*.pak");
+
+      if(!dirlist.IsEmpty())
+        pakname = dirlist[0].Name;
+
       dirlist.Clear();
     }
 
-    if (!pakname.IsEmpty())
+    if(!pakname.IsEmpty())
     {
       PackFile = new sDemoPackFile(pakname);
       sAddFileHandler(PackFile);
@@ -1160,42 +1274,49 @@ void sMain()
   // find fitting wz4 file
   sString<1024> wz4name;
 
-  const sChar *fromcmd=sGetShellParameter(0,0); // command line?
-  if (fromcmd && sCheckFile(fromcmd))
-    wz4name=fromcmd;
+  const sChar* fromcmd = sGetShellParameter(0, 0); // command line?
+
+  if(fromcmd && sCheckFile(fromcmd))
+    wz4name = fromcmd;
   else
   {
-    const sChar *fromtxt=sLoadText(L"wz4file.txt"); // text file with name in it? (needed for packfile)
-    if (fromtxt) 
+    const sChar* fromtxt = sLoadText(L"wz4file.txt"); // text file with name in it? (needed for packfile)
+
+    if(fromtxt)
     {
-      wz4name=fromtxt;
+      wz4name = fromtxt;
       sDeleteArray(fromtxt);
     }
     else
     {
-      sLoadDir(dirlist,L".",L"*.wz4"); // wz4 file in current directory?
-      if (!dirlist.IsEmpty())
-        wz4name=dirlist[0].Name;       
+      sLoadDir(dirlist, L".", L"*.wz4"); // wz4 file in current directory?
+
+      if(!dirlist.IsEmpty())
+        wz4name = dirlist[0].Name;
+
       dirlist.Clear();
     }
   }
-  if (wz4name.IsEmpty())
+
+  if(wz4name.IsEmpty())
   {
     sFatal(L"no .suitable .wz4 file found");
   }
-  
-  // open selector and set screen mode
-  sInt flags=sISF_2D|sISF_3D|sISF_CONTINUOUS; // need 2D for text rendering
 
-  sString<256> title=sGetWindowName();
-  title.PrintAddF(L"  (player V%d.%d)",WZ4_VERSION,WZ4_REVISION);
+  // open selector and set screen mode
+  sInt flags = sISF_2D | sISF_3D | sISF_CONTINUOUS; // need 2D for text rendering
+
+  sString<256> title = sGetWindowName();
+  title.PrintAddF(L"  (player V%d.%d)", WZ4_VERSION, WZ4_REVISION);
+
   if(sCONFIG_64BIT)
     title.PrintAddF(L" (64Bit)");
+
   sSetWindowName(title);
 
-
   sInt refresh = MyConfig->DefaultResolution.RefreshRate;
-  if (MyConfig->DefaultResolution.Width==0 || MyConfig->DefaultResolution.Height==0)
+
+  if(MyConfig->DefaultResolution.Width == 0 || MyConfig->DefaultResolution.Height == 0)
   {
     sScreenInfo si;
     sGetScreenInfo(si);
@@ -1203,17 +1324,21 @@ void sMain()
     MyConfig->DefaultResolution.Height = si.CurrentYSize;
   }
 
-  SetupScreenMode(MyConfig->DefaultResolution,MyConfig->DefaultFullscreen);
+  SetupScreenMode(MyConfig->DefaultResolution, MyConfig->DefaultFullscreen);
   sSetScreenMode(ScreenMode);
-  if (ScreenMode.Flags & sSM_FULLSCREEN) flags|=sISF_FULLSCREEN;
-  sInit(flags,ScreenMode.ScreenX,ScreenMode.ScreenY);
- 
-  sSched = new sStsManager(128*1024,512,0);
+
+  if(ScreenMode.Flags & sSM_FULLSCREEN)
+    flags |= sISF_FULLSCREEN;
+
+  sInit(flags, ScreenMode.ScreenX, ScreenMode.ScreenY);
+
+  sSched = new sStsManager(128 * 1024, 512, 0);
 
   // .. and go!
-  App2=new MyApp;
+  App2 = new MyApp;
   App2->WZ4Name = wz4name;
   sSetApp(App2);
 }
 
 /****************************************************************************/
+

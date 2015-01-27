@@ -26,33 +26,33 @@ class sTextWindow : public sWindow
   sInt DragCursorStart;
   sInt DisableDrag;
   sInt GoodCursorX;
-  class sFont2D *Font;
+  class sFont2D* Font;
   sRect TextRect;
 
-  sTextBuffer *Text;              // textbuffer to edit
+  sTextBuffer* Text;              // textbuffer to edit
 
-  void GetCursorPos(sInt &x,sInt &y);
-  sInt FindCursorPos(sInt x,sInt y);
+  void GetCursorPos(sInt& x, sInt& y);
+  sInt FindCursorPos(sInt x, sInt y);
   sBool BeginMoveCursor(sBool selmode);
   void EndMoveCursor(sBool selmode);
-  void Delete(sInt pos,sInt len);
-  void Insert(sInt pos,const sChar *s,sInt len=-1);
-  void Mark(sInt start,sInt end);
+  void Delete(sInt pos, sInt len);
+  void Insert(sInt pos, const sChar* s, sInt len = -1);
+  void Mark(sInt start, sInt end);
   void MarkOff();
 
   sInt CursorTimer;
   void CmdCursorToggle();
 
-  sMessageTimer *Timer;
+  sMessageTimer* Timer;
 
   struct UndoStep
   {
     sBool Delete;
     sInt Pos;
     sInt Count;
-    sChar *Text;
+    sChar* Text;
   };
-  UndoStep *UndoBuffer;
+  UndoStep* UndoBuffer;
   sInt UndoAlloc;
   sInt UndoValid;
   sInt UndoIndex;
@@ -61,10 +61,10 @@ class sTextWindow : public sWindow
   sInt UndoCollectorValid;
   sInt UndoCollectorStart;
 
-  UndoStep *UndoGetStep();
+  UndoStep* UndoGetStep();
   void UndoFlushCollector();
-  void UndoInsert(sInt pos,const sChar *string,sInt len);
-  void UndoDelete(sInt pos,sInt size);
+  void UndoInsert(sInt pos, const sChar* string, sInt len);
+  void UndoDelete(sInt pos, sInt size);
   void Undo();
   void Redo();
 
@@ -74,19 +74,26 @@ public:
   ~sTextWindow();
   void InitCursorFlash();
   void Tag();
-  void SetText(sTextBuffer *);
-  sTextBuffer *GetText() { return Text; }
-  sBool HasSelection() { return MarkMode!=0; }
+  void SetText(sTextBuffer*);
+  sTextBuffer* GetText()
+  {
+    return Text;
+  }
+
+  sBool HasSelection()
+  {
+    return MarkMode != 0;
+  }
 
   void OnPaint2D();
   sBool OnKey(sU32 key);
-  void OnDrag(const sWindowDrag &dd);
+  void OnDrag(const sWindowDrag& dd);
   void OnCalcSize();
 
   void ResetCursorFlash();
   sBool GetCursorFlash();
 
-  sObject *TextTag;               // this tag will be hold should be object in which the textbuffer is embedded
+  sObject* TextTag;               // this tag will be hold should be object in which the textbuffer is embedded
 
   sInt TextFlags;                 // sF2P_???
   sInt EditFlags;                 // sTEF_???
@@ -104,39 +111,57 @@ public:
   void DeleteChar();
   void DeleteBlock();
   void InsertChar(sInt c);
-  void InsertString(const sChar *s);
+  void InsertString(const sChar* s);
   void IndentBlock(sInt indent);
   void OverwriteChar(sInt c);
   void TextChanged();             // react to the fact that the text changed.
   void SetCursor(sInt p);
-  void SetCursor(const sChar *p);
-  void SetFont(sFont2D *newFont);
+  void SetCursor(const sChar* p);
+  void SetFont(sFont2D* newFont);
   void ScrollToCursor();
-  sFont2D *GetFont();
-  sInt GetCursorPos() { return PrintInfo.CursorPos; }
+  sFont2D* GetFont();
+  sInt GetCursorPos()
+  {
+    return PrintInfo.CursorPos;
+  }
+
   sInt GetCursorColumn() const;
-  void Find(const sChar *string,sBool dir,sBool next);
-  void GetMark(sInt &start,sInt &end);
+  void Find(const sChar* string, sBool dir, sBool next);
+  void GetMark(sInt& start, sInt& end);
 
   void UndoClear();
-  void UndoGetStats(sInt &undos,sInt &redos);
-
+  void UndoGetStats(sInt& undos, sInt& redos);
 };
 
 enum sTextEditFlags
 {
-//  sTEF_EDIT       = 0x0001,
-  sTEF_MARK       = 0x0002,
-  sTEF_STATIC     = 0x0004,
+// sTEF_EDIT       = 0x0001,
+  sTEF_MARK = 0x0002,
+  sTEF_STATIC = 0x0004,
   sTEF_LINENUMBER = 0x0008,
 };
 
 class sWireTextWindow : public sTextWindow
 {
 public:
-  void InitWire(const sChar *name) { sWire->AddWindow(name,this); }
-  sBool OnKey(sU32 key) { if(sWire->HandleKey(this,key)) return 1; else return sTextWindow::OnKey(key); }
-  sBool OnShortcut(sU32 key) { return sWire->HandleShortcut(this,key); }
+  void InitWire(const sChar* name)
+  {
+    sWire->AddWindow(name, this);
+  }
+
+  sBool OnKey(sU32 key)
+  {
+    if(sWire->HandleKey(this, key))
+      return 1;
+    else
+      return sTextWindow::OnKey(key);
+  }
+
+  sBool OnShortcut(sU32 key)
+  {
+    return sWire->HandleShortcut(this, key);
+  }
 };
 
 /****************************************************************************/
+

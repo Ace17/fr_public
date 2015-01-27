@@ -15,11 +15,10 @@ class sImage;
 
 namespace Wz4Audiolyzer
 {
-  sBool AudioAvailable();
-  void RMSImage(sImage *out,sInt width,sInt height,sInt chunkSize);
-  void Spectogram(sImage *out,sInt width,sInt fftSize);
+sBool AudioAvailable();
+void RMSImage(sImage* out, sInt width, sInt height, sInt chunkSize);
+void Spectogram(sImage* out, sInt width, sInt fftSize);
 }
 
 /****************************************************************************/
-
 

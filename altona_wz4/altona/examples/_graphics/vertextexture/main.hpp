@@ -22,23 +22,25 @@
 
 class MyApp : public sApp
 {
-  sPainter *Painter;
-  sTexture2D *Tex;
+  sPainter* Painter;
+  sTexture2D* Tex;
 
-  TorusShader *TorusMtrl;
-  sGeometry *TorusGeo;
-  sVertexFormatHandle *TorusFormat;
+  TorusShader* TorusMtrl;
+  sGeometry* TorusGeo;
+  sVertexFormatHandle* TorusFormat;
 
   sViewport View;
 
   sTiming Timer;
 
   void CreateTorus();
+
 public:
   MyApp();
   ~MyApp();
   void OnPaint3D();
-  void OnInput(const sInput2Event &ie);
+  void OnInput(const sInput2Event& ie);
 };
 
 /****************************************************************************/
+

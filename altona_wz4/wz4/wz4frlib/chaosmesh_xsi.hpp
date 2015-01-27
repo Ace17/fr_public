@@ -12,8 +12,7 @@
 
 /****************************************************************************/
 
-sBool LoadXSI(ChaosMesh *,const sChar *file,sBool forceanim = 0,sBool forcergb = 0);
+sBool LoadXSI(ChaosMesh*, const sChar* file, sBool forceanim = 0, sBool forcergb = 0);
 
 /****************************************************************************/
-
 

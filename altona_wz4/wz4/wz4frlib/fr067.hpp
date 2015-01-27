@@ -17,7 +17,7 @@
 
 class RNFR067_IsoSplash : public Wz4RenderNode
 {
-  friend static void MarchIsoTS(sStsManager *,sStsThread *thread,sInt start,sInt count,void *data);
+  friend static void MarchIsoTS(sStsManager*, sStsThread* thread, sInt start, sInt count, void* data);
 
   enum IsoEnum
   {
@@ -25,8 +25,8 @@ class RNFR067_IsoSplash : public Wz4RenderNode
   };
   struct IsoNode
   {
-    sVector31 Min,Max;
-    sInt px,py,pz;
+    sVector31 Min, Max;
+    sInt px, py, pz;
   };
   sArray<IsoNode> Nodes;
 
@@ -53,33 +53,32 @@ class RNFR067_IsoSplash : public Wz4RenderNode
   sBool RubberEnable;
   sBool PolarEnable;
 
-  sF32 func(const sVector31 &pp,sInt x,sInt y,sInt z);
+  sF32 func(const sVector31& pp, sInt x, sInt y, sInt z);
 
   sInt Size;
-  sF32 *NoiseXY;
-  sF32 *NoiseYZ;
-  sF32 *NoiseZX;
-  sF32 *PolarPhi;
-  sMatrix34 *RubberMat;
+  sF32* NoiseXY;
+  sF32* NoiseYZ;
+  sF32* NoiseZX;
+  sF32* PolarPhi;
+  sMatrix34* RubberMat;
+
 public:
   RNFR067_IsoSplash();
   ~RNFR067_IsoSplash();
   void Init();
   void MakeNodes();
   void March();
-  void MarchTask(sStsThread *thread,sInt start,sInt count);
+  void MarchTask(sStsThread* thread, sInt start, sInt count);
 
-  void Simulate(Wz4RenderContext *ctx);   // execute the script. 
-  void Prepare(Wz4RenderContext *ctx);    // do simulation
-  void Render(Wz4RenderContext *ctx);     // render a pass
+  void Simulate(Wz4RenderContext* ctx);   // execute the script.
+  void Prepare(Wz4RenderContext* ctx);    // do simulation
+  void Render(Wz4RenderContext* ctx);     // render a pass
 
-  Wz4RenderParaFR067_IsoSplash Para,ParaBase; // animated parameters from op
+  Wz4RenderParaFR067_IsoSplash Para, ParaBase; // animated parameters from op
   Wz4RenderAnimFR067_IsoSplash Anim;          // information for the script engine
 
-  Wz4Mtrl *Mtrl[4];
+  Wz4Mtrl* Mtrl[4];
 };
 
-
 /****************************************************************************/
-
 

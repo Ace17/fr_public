@@ -10,30 +10,30 @@
 /****************************************************************************/
 /****************************************************************************/
 
-CodecAltona::CodecAltona() 
+CodecAltona::CodecAltona()
 {
 }
 
-CodecAltona::~CodecAltona() 
+CodecAltona::~CodecAltona()
 {
 }
 
-const sChar *CodecAltona::GetName()
+const sChar* CodecAltona::GetName()
 {
   return L"altona";
 }
 
 /****************************************************************************/
 
-void CodecAltona::Pack(sImage *bmp,sImageData *dxt,sInt level)      // dummy!
+void CodecAltona::Pack(sImage* bmp, sImageData* dxt, sInt level)      // dummy!
 {
-  sVERIFY((dxt->Format&sTEX_FORMAT) == level);
+  sVERIFY((dxt->Format & sTEX_FORMAT) == level);
   dxt->ConvertFrom(bmp);
 }
 
-void CodecAltona::Unpack(sImage *bmp,sImageData *dxt,sInt level)
+void CodecAltona::Unpack(sImage* bmp, sImageData* dxt, sInt level)
 {
-  sVERIFY((dxt->Format&sTEX_FORMAT) == level);
+  sVERIFY((dxt->Format & sTEX_FORMAT) == level);
   dxt->ConvertTo(bmp);
 }
 

@@ -22,24 +22,25 @@
 
 class MyApp : public sApp
 {
-  sPainter *Painter;
-  sTexture2D *Tex;
-  sMaterial *Mtrl;
-  sGeometry *Geo;
+  sPainter* Painter;
+  sTexture2D* Tex;
+  sMaterial* Mtrl;
+  sGeometry* Geo;
 
   sViewport View;
   sMaterialEnv Env;
 
   sString<64> AdapterName;
-  sStaticArray<sString<64> > ScreenNames;
+  sStaticArray<sString<64>> ScreenNames;
 
   sTiming Timer;
-  void PaintScreen(sInt screen,sInt time);
+  void PaintScreen(sInt screen, sInt time);
+
 public:
   MyApp();
   ~MyApp();
   void OnPaint3D();
-  void OnInput(const sInput2Event &ie);
+  void OnInput(const sInput2Event& ie);
 };
 
 /****************************************************************************/

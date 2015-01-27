@@ -20,9 +20,9 @@
 
 class MyApp : public sApp
 {
-  sPainter *Painter;
-  sTexture2D *Tex;
-  sMaterial *Mtrl;
+  sPainter* Painter;
+  sTexture2D* Tex;
+  sMaterial* Mtrl;
   sMaterialEnv Env;
   sTiming Timer;
   sBool EnableDraw;
@@ -30,16 +30,14 @@ class MyApp : public sApp
   sInt Gran;
 
   sFreeflightCamera Cam;
-  MarchingCubes *MC;
+  MarchingCubes* MC;
 
 public:
   MyApp();
   ~MyApp();
   void OnPaint3D();
-  void OnInput(const sInput2Event &ie);
+  void OnInput(const sInput2Event& ie);
 };
 
-
 /****************************************************************************/
-
 

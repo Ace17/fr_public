@@ -17,26 +17,23 @@ class sDemoPackFile : public sFileHandler
   struct PackHeader;
 
   sInt Count;
-  PackHeader *Dir;
-  sU8 *Data;
-  sFile *File;
+  PackHeader* Dir;
+  sU8* Data;
+  sFile* File;
 
 public:
-  sDemoPackFile(const sChar *name);
+  sDemoPackFile(const sChar* name);
   ~sDemoPackFile();
 
-  sFile *Create(const sChar *name,sFileAccess access);
+  sFile* Create(const sChar* name, sFileAccess access);
 };
-
 
 extern sBool sProgressDoCallBeginEnd;
 void sProgressBegin();
 void sProgressEnd();
-void sProgress(sInt done,sInt max);
+void sProgress(sInt done, sInt max);
 
 /****************************************************************************/
 
-
 /****************************************************************************/
-
 

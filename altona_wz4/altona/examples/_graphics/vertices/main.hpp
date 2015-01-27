@@ -22,21 +22,21 @@
 
 class MyApp : public sApp
 {
-  sPainter *Painter;
-  sTexture2D *Tex;
+  sPainter* Painter;
+  sTexture2D* Tex;
 
-  sMaterial *WaterMtrl;
-  sGeometry *WaterGeo;
-  sVertexFormatHandle *WaterFormat;
+  sMaterial* WaterMtrl;
+  sGeometry* WaterGeo;
+  sVertexFormatHandle* WaterFormat;
 
-  TorusShader *TorusMtrl;
-  sGeometry *TorusGeo;
-  sVertexFormatHandle *TorusFormat;
+  TorusShader* TorusMtrl;
+  sGeometry* TorusGeo;
+  sVertexFormatHandle* TorusFormat;
 
-  sGeometry *InstGeo;
-  sGeometry *MergeGeo;
+  sGeometry* InstGeo;
+  sGeometry* MergeGeo;
 
-  sGeometry *QuadGeo;
+  sGeometry* QuadGeo;
 
   sViewport View;
   sMaterialEnv Env;
@@ -45,11 +45,13 @@ class MyApp : public sApp
 
   void CreateWater();
   void CreateTorus();
+
 public:
   MyApp();
   ~MyApp();
   void OnPaint3D();
-  void OnInput(const sInput2Event &ie);
+  void OnInput(const sInput2Event& ie);
 };
 
 /****************************************************************************/
+

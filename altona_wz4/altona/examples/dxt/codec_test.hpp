@@ -11,14 +11,14 @@
 /****************************************************************************/
 
 class CodecTest : public DocCodec
-{             
+{
 public:
   CodecTest();
   ~CodecTest();
 
-  const sChar *GetName();
-  void Pack(sImage *bmp,sImageData *dxt,sInt level=1);
-  void Unpack(sImage *bmp,sImageData *dxt,sInt level=1);
+  const sChar* GetName();
+  void Pack(sImage* bmp, sImageData* dxt, sInt level = 1);
+  void Unpack(sImage* bmp, sImageData* dxt, sInt level = 1);
 };
 
 /****************************************************************************/

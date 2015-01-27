@@ -15,6 +15,7 @@
 class SoloPong
 {
   sInt FlashTimer;
+
 public:
   SoloPong();
   ~SoloPong();
@@ -26,5 +27,4 @@ public:
 };
 
 /****************************************************************************/
-
 

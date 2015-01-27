@@ -7,7 +7,7 @@
 
 #include "doc.hpp"
 
-Document *Doc;
+Document* Doc;
 
 /****************************************************************************/
 
@@ -24,27 +24,28 @@ Document::~Document()
   sDeleteAll(Ops);
 }
 
-void Document::SetNames(const sChar *name)
+void Document::SetNames(const sChar* name)
 {
   InputFileName = name;
 
-  if(name[0]=='.' && name[1]=='\\')
-    name+=2;
+  if(name[0] == '.' && name[1] == '\\')
+    name += 2;
 
   ProjectName = name;
-  sChar *ext = sFindFileExtension(ProjectName);
+  sChar* ext = sFindFileExtension(ProjectName);
+
   if(ext && ext[0])
     ext[-1] = 0;
   else
     InputFileName.Add(L".ops");
 
-  sSPrintF(CPPFileName,L"%s.cpp",ProjectName);
-  sSPrintF(HPPFileName,L"%s.hpp",ProjectName);
+  sSPrintF(CPPFileName, L"%s.cpp", ProjectName);
+  sSPrintF(HPPFileName, L"%s.hpp", ProjectName);
 }
 
 /****************************************************************************/
 
-CodeBlock::CodeBlock(sPoolString code,sInt line)
+CodeBlock::CodeBlock(sPoolString code, sInt line)
 {
   Code = code;
   Line = line;
@@ -118,30 +119,41 @@ Parameter::Parameter()
   GridLines = 1;
   Flags = 0;
 /*
-  OverBoxFlag = 0;
-  AnimFlag = 0;
-  OverLabelFlag = 0;
-  LineNumberFlag = 0;
-  NarrowFlag = 0;
-  */
+   OverBoxFlag = 0;
+   AnimFlag = 0;
+   OverLabelFlag = 0;
+   LineNumberFlag = 0;
+   NarrowFlag = 0;
+ */
 }
 
 sPoolString Parameter::ScriptName()
 {
   sString<256> buffer;
-  if(!Label.IsEmpty() && sIsName(Label)) buffer = Label;
-  else buffer = Symbol;
+
+  if(!Label.IsEmpty() && sIsName(Label))
+    buffer = Label;
+  else
+    buffer = Symbol;
+
   sMakeLower(buffer);
 
-  if(buffer==L"int") buffer = L"int_";
-  if(buffer==L"float") buffer = L"float_";
-  if(buffer==L"color") buffer = L"color_";
-  if(buffer==L"string") buffer = L"string_";
+  if(buffer == L"int")
+    buffer = L"int_";
+
+  if(buffer == L"float")
+    buffer = L"float_";
+
+  if(buffer == L"color")
+    buffer = L"color_";
+
+  if(buffer == L"string")
+    buffer = L"string_";
+
   // may be add more keywords...
 
   return sPoolString(buffer);
 }
-
 
 Input::Input()
 {

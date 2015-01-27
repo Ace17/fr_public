@@ -6,7 +6,6 @@
 
 #pragma once
 
-
 #include "gui/window.hpp"
 #include "gui/manager.hpp"
 #include "gui/controls.hpp"
@@ -49,6 +48,7 @@ public:
 class sSpaceBorder : public sWindow
 {
   sInt Pen;
+
 public:
   sCLASSNAME(sThinBorder);
   sSpaceBorder(sInt pen);
@@ -60,7 +60,7 @@ public:
 class sToolBorder : public sWindow
 {
 protected:
-  void OnLayout(sInt y0,sInt y1);
+  void OnLayout(sInt y0, sInt y1);
 
   enum
   {
@@ -74,9 +74,9 @@ public:
   void OnLayout();
   void OnPaint2D();
 
-  void AddMenu(sChar *name,const sMessage &msg);
-  void AddSpace(sBool rightaligned=sFALSE);
-  void AddRightAligned(sWindow *w);
+  void AddMenu(sChar* name, const sMessage& msg);
+  void AddSpace(sBool rightaligned = sFALSE);
+  void AddRightAligned(sWindow* w);
   sBool Bottom;
 };
 
@@ -90,14 +90,15 @@ class sScrollBorder : public sWindow
   sRect ButtonX;
   sRect ButtonY;
   sRect ButtonZ;
-  sBool CalcKnop(sInt &a,sInt &b,sInt client,sInt inner,sInt button,sInt scroll);
+  sBool CalcKnop(sInt& a, sInt& b, sInt client, sInt inner, sInt button, sInt scroll);
+
 public:
   sCLASSNAME(sScrollBorder);
   sScrollBorder();
   void OnCalcSize();
   void OnLayout();
   void OnPaint2D();
-  void OnDrag(const sWindowDrag &dd);
+  void OnDrag(const sWindowDrag& dd);
 };
 
 struct sStatusBorderItem
@@ -118,6 +119,7 @@ class sStatusBorder : public sWindow
   sString<1024> PrintBuffer;
   sInt Height;
   sU32 Color;
+
 public:
   sCLASSNAME(sStatusBorder);
   sStatusBorder();
@@ -127,12 +129,14 @@ public:
   void OnLayout();
   void OnPaint2D();
 
-  void AddTab(sInt width,sInt maxstring=256);
-  void Print(sInt tab,const sChar *string,sInt len=-1,sU32 color=0);
-  void SetColor(sInt tab,sU32 rgb);        // gets reset by Print/PrintF
-  void Progress(sInt tab,sInt value,sInt max);
+  void AddTab(sInt width, sInt maxstring = 256);
+  void Print(sInt tab, const sChar* string, sInt len = -1, sU32 color = 0);
+  void SetColor(sInt tab, sU32 rgb);        // gets reset by Print/PrintF
+  void Progress(sInt tab, sInt value, sInt max);
 
-  sPRINTING1(PrintF,sFormatStringBuffer buf=sFormatStringBase(PrintBuffer,format);buf,Print(arg1,PrintBuffer);,sInt);  
+  sPRINTING1(PrintF, sFormatStringBuffer buf = sFormatStringBase(PrintBuffer, format);
+             buf, Print(arg1, PrintBuffer);
+             , sInt);
 };
 
 /****************************************************************************/

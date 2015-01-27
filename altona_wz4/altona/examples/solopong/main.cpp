@@ -26,20 +26,20 @@ static sU32 Colors[RectMax];
 static sInt RectUsed;
 static sInput2Scheme* Scheme = 0;
 
-void DrawRect(const sFRect &r,sU32 col)
+void DrawRect(const sFRect& r, sU32 col)
 {
-  sVERIFY(RectUsed<RectMax);
+  sVERIFY(RectUsed < RectMax);
   Rects[RectUsed] = r;
   Colors[RectUsed] = col;
-  RectUsed ++;
+  RectUsed++;
 }
 
-void DrawRect(sF32 x0,sF32 y0,sF32 x1,sF32 y1,sU32 col)
+void DrawRect(sF32 x0, sF32 y0, sF32 x1, sF32 y1, sU32 col)
 {
-  DrawRect(sFRect(x0,y0,x1,y1),col);
+  DrawRect(sFRect(x0, y0, x1, y1), col);
 }
 
-void GetJoypad(Joypad &joy)
+void GetJoypad(Joypad& joy)
 {
   joy.Analog[0] = Scheme->Analog(0);
   joy.Analog[1] = Scheme->Analog(1);
@@ -47,12 +47,13 @@ void GetJoypad(Joypad &joy)
   joy.Analog[3] = Scheme->Analog(3);
   joy.Buttons = (Scheme->Pressed(4)) | (Scheme->Pressed(5) << 1) | (Scheme->Pressed(6) << 2) | (Scheme->Pressed(7) << 3);
 }
-void Print(sInt x,sInt y,const sChar *);
+
+void Print(sInt x, sInt y, const sChar*);
 
 /****************************************************************************/
 
 // initialize resources
- 
+
 MyApp::MyApp()
 {
   // input
@@ -72,10 +73,10 @@ MyApp::MyApp()
 
   Painter = new sPainter;
 
-  // geometry 
+  // geometry
 
   Geo = new sGeometry();
-  Geo->Init(sGF_QUADLIST,sVertexFormatSingle);
+  Geo->Init(sGF_QUADLIST, sVertexFormatSingle);
 
   // material
 
@@ -103,7 +104,7 @@ MyApp::~MyApp()
 // paint a frame
 
 void MyApp::OnPaint3D()
-{ 
+{
   sPERF_FUNCTION(0xffffff);
 
   // tick input
@@ -112,20 +113,22 @@ void MyApp::OnPaint3D()
   // Game
 
   RectUsed = 0;
-  for(sInt i=0;i<Timer.GetSlices();i++)
+
+  for(sInt i = 0; i < Timer.GetSlices(); i++)
     Game->OnTick();
-  sVERIFY(RectUsed==0);
+
+  sVERIFY(RectUsed == 0);
   Game->OnPaint();
 
   const sU32 bc = 0xff202020;
-  DrawRect(-4,-4, 4,-1,bc);
-  DrawRect(-4, 1, 4, 4,bc);
-  DrawRect(-4,-1,-1, 1,bc);
-  DrawRect( 1,-1, 4, 1,bc);
+  DrawRect(-4, -4, 4, -1, bc);
+  DrawRect(-4, 1, 4, 4, bc);
+  DrawRect(-4, -1, -1, 1, bc);
+  DrawRect(1, -1, 4, 1, bc);
 
   // set rendertarget
 
-  sSetRendertarget(0,sCLEAR_ALL,0xff405060);
+  sSetRendertarget(0, sCLEAR_ALL, 0xff405060);
 
   // get timing
 
@@ -135,9 +138,9 @@ void MyApp::OnPaint3D()
 
   View.SetTargetCurrent();
   View.SetZoom(1.0f);
-  View.Camera.l.Init(0,0,-1.4f);
+  View.Camera.l.Init(0, 0, -1.4f);
   View.Prepare();
- 
+
   // set material
 
   sCBuffer<sSimpleMaterialPara> cb;
@@ -146,33 +149,36 @@ void MyApp::OnPaint3D()
 
   // draw
 
-  if(RectUsed>0)
+  if(RectUsed > 0)
   {
-    sVertexSingle *vp=0L;
+    sVertexSingle* vp = 0L;
 
-    Geo->BeginLoadVB(RectUsed*4,sGD_STREAM,&vp);
-    for(sInt i=0;i<RectUsed;i++)
+    Geo->BeginLoadVB(RectUsed * 4, sGD_STREAM, &vp);
+
+    for(sInt i = 0; i < RectUsed; i++)
     {
-      const sFRect &r = Rects[i];
+      const sFRect& r = Rects[i];
       sU32 col = Colors[i];
-      vp[0].Init(r.x0,r.y0,0,col,0,0);
-      vp[1].Init(r.x1,r.y0,0,col,1,0);
-      vp[2].Init(r.x1,r.y1,0,col,1,1);
-      vp[3].Init(r.x0,r.y1,0,col,0,1);
-      vp+=4;
+      vp[0].Init(r.x0, r.y0, 0, col, 0, 0);
+      vp[1].Init(r.x1, r.y0, 0, col, 1, 0);
+      vp[2].Init(r.x1, r.y1, 0, col, 1, 1);
+      vp[3].Init(r.x0, r.y1, 0, col, 0, 1);
+      vp += 4;
     }
+
     Geo->EndLoadVB();
   }
+
   Geo->Draw();
 
   // debug output
   sF32 avg = Timer.GetAverageDelta();
   Painter->SetTarget();
   Painter->Begin();
-  Painter->SetPrint(0,~0,1);
-  Painter->PrintF(10,10,L"%5.2ffps %5.3fms",1000/avg,avg);
+  Painter->SetPrint(0, ~0, 1);
+  Painter->PrintF(10, 10, L"%5.2ffps %5.3fms", 1000 / avg, avg);
 
-  Painter->Print(0,10,30,~0,Game->ScoreString,-1,3);
+  Painter->Print(0, 10, 30, ~0, Game->ScoreString, -1, 3);
   Painter->End();
 }
 
@@ -180,15 +186,15 @@ void MyApp::OnPaint3D()
 
 // abort program when escape is pressed
 
-void MyApp::OnInput(const sInput2Event &ie)
+void MyApp::OnInput(const sInput2Event& ie)
 {
-  if (ie.Key==sKEY_ESCAPE) 
+  if(ie.Key == sKEY_ESCAPE)
   {
-    sExit(); 
+    sExit();
   }
-  else if (ie.Key==sKEY_F1) 
+  else if(ie.Key == sKEY_F1)
   {
-    sTogglePerfMon(); 
+    sTogglePerfMon();
   }
 }
 
@@ -196,13 +202,13 @@ void MyApp::OnInput(const sInput2Event &ie)
 
 // register application class
 
-#if sPLATFORM==sPLAT_WINDOWS
-sINITMEM(sIMF_DEBUG|sIMF_CLEAR|sIMF_NORTL,64*1024*1024);
+#if sPLATFORM == sPLAT_WINDOWS
+sINITMEM(sIMF_DEBUG | sIMF_CLEAR | sIMF_NORTL, 64 * 1024 * 1024);
 #endif
 
 void sMain()
 {
-  sInit(sISF_3D|sISF_CONTINUOUS/*|sISF_FULLSCREEN*/,640,480);
+  sInit(sISF_3D | sISF_CONTINUOUS /*|sISF_FULLSCREEN*/, 640, 480);
   sSetApp(new MyApp());
   sSetWindowName(L"Cube");
 }
