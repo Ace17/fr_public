@@ -28,12 +28,8 @@
 /***                                                                      ***/
 /****************************************************************************/
 
-#ifndef HEADER_ALTONA_UTIL_IMAGE
-#define HEADER_ALTONA_UTIL_IMAGE
-
-#ifndef __GNUC__
 #pragma once
-#endif
+
 
 
 #include "base/types.hpp"
@@ -379,4 +375,3 @@ sImageData *sConvertARGB8ToHDR(const sImageData *img, sInt format);
 /****************************************************************************/
 
 // HEADER_ALTONA_UTIL_IMAGE
-#endif

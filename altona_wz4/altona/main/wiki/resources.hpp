@@ -5,8 +5,7 @@
 /***                                                                      ***/
 /**************************************************************************+*/
 
-#ifndef FILE_LAYOUT_RESOURCES_HPP
-#define FILE_LAYOUT_RESOURCES_HPP
+#pragma once
 
 #include "base/types2.hpp"
 #include "base/windows.hpp"
@@ -126,5 +125,4 @@ public:
 
 /****************************************************************************/
 
-#endif // FILE_LAYOUT_RESOURCES_HPP
 

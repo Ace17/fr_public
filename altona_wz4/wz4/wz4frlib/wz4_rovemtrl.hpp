@@ -5,8 +5,7 @@
 /***                                                                      ***/
 /**************************************************************************+*/
 
-#ifndef FILE_WZ4FRLIB_WZ4_ROVEMTRL_HPP
-#define FILE_WZ4FRLIB_WZ4_ROVEMTRL_HPP
+#pragma once
 
 #include "base/types.hpp"
 #include "wz4frlib/wz4_rovemtrl.hpp"
@@ -47,5 +46,4 @@ public:
 
 /****************************************************************************/
 
-#endif // FILE_WZ4FRLIB_WZ4_ROVEMTRL_HPP
 

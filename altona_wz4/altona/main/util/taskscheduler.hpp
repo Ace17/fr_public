@@ -5,8 +5,7 @@
 /***                                                                      ***/
 /**************************************************************************+*/
 
-#ifndef FILE_UTIL_TASKSCHEDULER_HPP
-#define FILE_UTIL_TASKSCHEDULER_HPP
+#pragma once
 
 #include "base/types.hpp"
 #include "base/system.hpp"
@@ -299,5 +298,4 @@ extern sStsPerfMon *sSchedMon;
 
 /****************************************************************************/
 
-#endif // FILE_EXPERIMENTAL_TASK_HPP
 

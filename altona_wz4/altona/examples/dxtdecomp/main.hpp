@@ -1,7 +1,6 @@
 /****************************************************************************/
 
-#ifndef FILE_DXTDECOMP_MAIN_HPP
-#define FILE_DXTDECOMP_MAIN_HPP
+#pragma once
 
 #include "base/system.hpp"
 #include "base/graphics.hpp"
@@ -30,5 +29,4 @@ public:
 
 /****************************************************************************/
 
-#endif // FILE_DXTDECOMP_MAIN_HPP
 

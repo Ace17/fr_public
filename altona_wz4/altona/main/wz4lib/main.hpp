@@ -7,8 +7,7 @@
 /***                                                                      ***/
 /**************************************************************************+*/
 
-#ifndef FILE_WERKKZEUG4_MAIN_HPP
-#define FILE_WERKKZEUG4_MAIN_HPP
+#pragma once
 
 #include "base/types.hpp"
 
@@ -18,5 +17,4 @@
 
 /****************************************************************************/
 
-#endif // FILE_WERKKZEUG4_MAIN_HPP
 

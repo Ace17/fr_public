@@ -5,8 +5,7 @@
 /***                                                                      ***/
 /**************************************************************************+*/
 
-#ifndef FILE_WZ4FRLIB_BSPLINE_HPP
-#define FILE_WZ4FRLIB_BSPLINE_HPP
+#pragma once
 
 #include "base/types.hpp"
 #include "base/types2.hpp"
@@ -245,4 +244,3 @@ template<class T> sBool sBSpline<T>::IsConstant(sF32 relErrorThreshold) const
 
 /****************************************************************************/
 
-#endif // FILE_WZ4FRLIB_BSPLINE_HPP

@@ -5,8 +5,7 @@
 /***                                                                      ***/
 /**************************************************************************+*/
 
-#ifndef FILE_SERVER_SERVER_HPP
-#define FILE_SERVER_SERVER_HPP
+#pragma once
 
 #include "base/types.hpp"
 
@@ -16,5 +15,4 @@
 
 /****************************************************************************/
 
-#endif // FILE_SERVER_SERVER_HPP
 

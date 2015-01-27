@@ -11,12 +11,8 @@
 /***                                                                      ***/
 /****************************************************************************/
 
-#ifndef HEADER_ALTONA_UTIL_WINDOWS
-#define HEADER_ALTONA_UTIL_WINDOWS
-
-#ifndef __GNUC__
 #pragma once
-#endif
+
 
 #include "base/types.hpp"
 #include "base/serialize.hpp" // for clipboard serialize
@@ -354,6 +350,5 @@ public:
 /****************************************************************************/
 
 // HEADER_ALTONA_UTIL_WINDOWS
-#endif
 
 

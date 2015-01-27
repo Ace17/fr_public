@@ -5,8 +5,7 @@
 /***                                                                      ***/
 /**************************************************************************+*/
 
-#ifndef FILE_SCREENS4_NETWORK_HPP
-#define FILE_SCREENS4_NETWORK_HPP
+#pragma once
 
 #include "base/types.hpp"
 #include "network/sockets.hpp"
@@ -105,5 +104,4 @@ public:
 
 /****************************************************************************/
 
-#endif // FILE_SCREENS4_NETWORK_HPP
 

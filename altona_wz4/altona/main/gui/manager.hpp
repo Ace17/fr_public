@@ -4,12 +4,8 @@
 /***                                                                      ***/
 /****************************************************************************/
 
-#ifndef FILE_GUI_MANAGER_HPP
-#define FILE_GUI_MANAGER_HPP
-
-#ifndef __GNUC__
 #pragma once
-#endif
+
 
 #include "base/types2.hpp"
 #include "base/windows.hpp"
@@ -224,4 +220,3 @@ public:
 
 /****************************************************************************/
 
-#endif

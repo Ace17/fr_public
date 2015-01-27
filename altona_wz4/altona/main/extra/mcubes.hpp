@@ -5,8 +5,7 @@
 /***                                                                      ***/
 /**************************************************************************+*/
 
-#ifndef FILE_EXTRA_MCUBES_HPP
-#define FILE_EXTRA_MCUBES_HPP
+#pragma once
 
 #include "base/types.hpp"
 #include "base/graphics.hpp"
@@ -224,5 +223,4 @@ public:
 
 /****************************************************************************/
 
-#endif // FILE_EXTRA_MCUBES_HPP
 

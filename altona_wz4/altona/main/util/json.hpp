@@ -5,8 +5,7 @@
 /***                                                                      ***/
 /**************************************************************************+*/
 
-#ifndef FILE_UTIL_JSON_HPP
-#define FILE_UTIL_JSON_HPP
+#pragma once
 
 #include "base/types.hpp"
 #include "base/types2.hpp"
@@ -192,5 +191,4 @@ private:
 
 /****************************************************************************/
 
-#endif // FILE_UTIL_JSON_HPP
 

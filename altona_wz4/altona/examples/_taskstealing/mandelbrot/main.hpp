@@ -5,8 +5,7 @@
 /***                                                                      ***/
 /**************************************************************************+*/
 
-#ifndef FILE_SIMPLETASK_MAIN_HPP
-#define FILE_SIMPLETASK_MAIN_HPP
+#pragma once
 
 #include "base/types.hpp"
 #include "base/system.hpp"
@@ -41,5 +40,4 @@ public:
 
 /****************************************************************************/
 
-#endif // FILE_SIMPLETASK_MAIN_HPP
 

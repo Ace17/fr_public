@@ -5,8 +5,7 @@
 /***                                                                      ***/
 /**************************************************************************+*/
 
-#ifndef FILE_SCREENMODE_SELECTOR_WIN_HPP
-#define FILE_SCREENMODE_SELECTOR_WIN_HPP
+#pragma once
 
 #include "base/types.hpp"
 
@@ -57,5 +56,4 @@ sBool bOpenSelector(const bSelectorSetup &setup, bSelectorResult &result);
 
 /****************************************************************************/
 
-#endif // FILE_SCREENMODE_SELECTOR_WIN_HPP
 

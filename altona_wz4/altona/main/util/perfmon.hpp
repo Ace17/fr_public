@@ -5,8 +5,7 @@
 /***                                                                      ***/
 /**************************************************************************+*/
 
-#ifndef FILE_UTIL_PERFMON_HPP
-#define FILE_UTIL_PERFMON_HPP
+#pragma once
 
 #include "base/types.hpp"
 struct sThreadContext;
@@ -183,4 +182,3 @@ class sPerfScope {};
 
 /****************************************************************************/
 
-#endif // FILE_UTIL_PERFMON_HPP

@@ -11,12 +11,8 @@
 /***                                                                      ***/
 /****************************************************************************/
 
-#ifndef HEADER_ALTONA_UTIL_SHADERS
-#define HEADER_ALTONA_UTIL_SHADERS
-
-#ifndef __GNUC__
 #pragma once
-#endif
+
 
 #include "base/types2.hpp"
 #include "base/graphics.hpp"
@@ -58,4 +54,3 @@ typedef sBool (*sCompileCallback)(sExternCompileBuffer *buffer, sInt stype, sInt
 
 /****************************************************************************/
 
-#endif

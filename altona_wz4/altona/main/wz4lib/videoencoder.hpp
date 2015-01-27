@@ -1,7 +1,6 @@
 /****************************************************************************/
 
-#ifndef FILE_WZ4LIB_VIDEOENCODER_HPP
-#define FILE_WZ4LIB_VIDEOENCODER_HPP
+#pragma once
 
 #include "base/types.hpp"
 
@@ -38,4 +37,3 @@ sVideoEncoder *sCreateVideoEncoder(const sChar *filename, sF32 fps, sVideoEncode
 
 /****************************************************************************/
 
-#endif // FILE_WZ4LIB_VIDEOENCODER_HPP

@@ -5,8 +5,7 @@
 /***                                                                      ***/
 /**************************************************************************+*/
 
-#ifndef FILE_WZ4FRLIB_FR063_TRON_HPP
-#define FILE_WZ4FRLIB_FR063_TRON_HPP
+#pragma once
 #include <float.h>
 #include "base/types.hpp"
 #include "wz4frlib/tADF.hpp"
@@ -493,5 +492,4 @@ public:
 
 /****************************************************************************/
 
-#endif // FILE_WZ4FRLIB_FR063_TRON_HPP
 

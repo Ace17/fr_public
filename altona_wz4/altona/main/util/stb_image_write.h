@@ -55,8 +55,7 @@ USAGE:
    at the end of the line.)
 */
 
-#ifndef INCLUDE_STB_IMAGE_WRITE_H
-#define INCLUDE_STB_IMAGE_WRITE_H
+#pragma once
 
 #ifdef __cplusplus
 extern "C" {
@@ -528,7 +527,6 @@ int stbi_write_png(char const *filename, int x, int y, int comp, const void *dat
    return 1;
 }
 #endif
-#endif // STB_IMAGE_WRITE_IMPLEMENTATION
 
 /* Revision history
 

@@ -11,12 +11,8 @@
 /***                                                                      ***/
 /****************************************************************************/
 
-#ifndef HEADER_ALTONA_UTIL_SHADERDIS
-#define HEADER_ALTONA_UTIL_SHADERDIS
-
-#ifndef __GNUC__
 #pragma once
-#endif
+
 
 
 #include "base/types.hpp"
@@ -34,4 +30,3 @@ enum sPrintShaderFlags
 /****************************************************************************/
 
 // HEADER_ALTONA_UTIL_SHADERDIS
-#endif

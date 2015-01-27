@@ -5,8 +5,7 @@
 /***                                                                      ***/
 /**************************************************************************+*/
 
-#ifndef FILE_BASE_DEVICES_HPP
-#define FILE_BASE_DEVICES_HPP
+#pragma once
 
 #include "base/types2.hpp"
 
@@ -43,5 +42,4 @@ extern sMidiHandler_ *sMidiHandler;
 
 /****************************************************************************/
 
-#endif // FILE_BASE_DEVICES_HPP
 

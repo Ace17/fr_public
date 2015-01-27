@@ -5,8 +5,7 @@
 /***                                                                      ***/
 /**************************************************************************+*/
 
-#ifndef FILE_NETWORK_NETDEBUG_HPP
-#define FILE_NETWORK_NETDEBUG_HPP
+#pragma once
 
 #include "base/types.hpp"
 
@@ -29,5 +28,4 @@
 
 /****************************************************************************/
 
-#endif // FILE_NETWORK_NETDEBUG_HPP
 

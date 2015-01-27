@@ -5,8 +5,7 @@
 /***                                                                      ***/
 /**************************************************************************+*/
 
-#ifndef FILE_WERKKZEUG4_WZ4_SKELETON_HPP
-#define FILE_WERKKZEUG4_WZ4_SKELETON_HPP
+#pragma once
 
 #include "base/types2.hpp"
 #include "base/math.hpp"
@@ -181,5 +180,4 @@ public:
  
 /****************************************************************************/
 
-#endif // FILE_WERKKZEUG4_WZ4_SKELETON_HPP
 

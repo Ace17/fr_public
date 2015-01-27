@@ -11,12 +11,8 @@
 /***                                                                      ***/
 /****************************************************************************/
 
-#ifndef HEADER_ALTONA_BASE_MATH
-#define HEADER_ALTONA_BASE_MATH
-
-#ifndef __GNUC__
 #pragma once
-#endif
+
 
 #include "base/types.hpp"
 #include "base/serialize.hpp"
@@ -1227,4 +1223,3 @@ protected:
 /****************************************************************************/
 
 // HEADER_ALTONA_BASE_MATH
-#endif

@@ -5,8 +5,7 @@
 /***                                                                      ***/
 /**************************************************************************+*/
 
-#ifndef FILE_TITAN_MAIN_HPP
-#define FILE_TITAN_MAIN_HPP
+#pragma once
 
 #include "base/system.hpp"
 #include "util/painter.hpp"
@@ -64,5 +63,4 @@ public:
 
 /****************************************************************************/
 
-#endif // FILE_TITAN_MAIN_HPP
 

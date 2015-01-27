@@ -1,7 +1,6 @@
 /****************************************************************************/
 
-#ifndef FILE_WZ4LIB_WIKI_HPP
-#define FILE_WZ4LIB_WIKI_HPP
+#pragma once
 
 #include "base/types2.hpp"
 #include "wz4lib/doc.hpp"
@@ -59,5 +58,4 @@ public:
 
 /****************************************************************************/
 
-#endif // FILE_WZ4LIB_WIKI_HPP
 

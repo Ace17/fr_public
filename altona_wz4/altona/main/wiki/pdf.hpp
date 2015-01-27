@@ -5,8 +5,7 @@
 /***                                                                      ***/
 /**************************************************************************+*/
 
-#ifndef FILE_PLANPAD_PDF_HPP
-#define FILE_PLANPAD_PDF_HPP
+#pragma once
 
 #include "base/types2.hpp"
 
@@ -90,5 +89,4 @@ enum sPDFEnum
 
 /****************************************************************************/
 
-#endif // FILE_PLANPAD_PDF_HPP
 

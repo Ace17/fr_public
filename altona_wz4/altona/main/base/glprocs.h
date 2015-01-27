@@ -1,5 +1,4 @@
-#ifndef _GLPROCS_H_
-#define _GLPROCS_H_
+#pragma once
 
 /*
 ** GLprocs utility for getting function addresses for OpenGL(R) 1.2, 
@@ -2210,4 +2209,3 @@ static _inline void _InitExtensionProcs(_GLextensionProcs *appProcs)
 #endif
 
 
-#endif /* _GLPROCS_H_ */

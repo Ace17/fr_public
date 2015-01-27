@@ -11,8 +11,7 @@
 /***                                                                      ***/
 /****************************************************************************/
 
-#ifndef FILE_BASE_SOUND_HPP
-#define FILE_BASE_SOUND_HPP
+#pragma once
 
 #include "base/types.hpp"
 
@@ -47,4 +46,3 @@ void sUnlockSound();
 
 /****************************************************************************/
 
-#endif

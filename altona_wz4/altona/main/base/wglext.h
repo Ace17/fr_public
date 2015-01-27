@@ -1,5 +1,4 @@
-#ifndef __wglext_h_
-#define __wglext_h_
+#pragma once
 
 #ifdef __cplusplus
 extern "C" {
@@ -608,4 +607,3 @@ typedef BOOL (WINAPI * PFNWGLQUERYFRAMETRACKINGI3DPROC) (DWORD *pFrameCount, DWO
 }
 #endif
 
-#endif

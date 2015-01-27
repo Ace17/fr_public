@@ -45,8 +45,7 @@
 //  HEADER BEGINS HERE
 //
 
-#ifndef STB_VORBIS_INCLUDE_STB_VORBIS_H
-#define STB_VORBIS_INCLUDE_STB_VORBIS_H
+#pragma once
 
 #if defined(STB_VORBIS_NO_CRT) && !defined(STB_VORBIS_NO_STDIO)
 #define STB_VORBIS_NO_STDIO 1
@@ -5382,4 +5381,3 @@ int stb_vorbis_get_samples_float(stb_vorbis *f, int channels, float **buffer, in
 }
 #endif // STB_VORBIS_NO_PULLDATA_API
 
-#endif // STB_VORBIS_HEADER_ONLY

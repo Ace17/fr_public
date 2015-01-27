@@ -5,8 +5,7 @@
 /***                                                                      ***/
 /**************************************************************************+*/
 
-#ifndef FILE_WZ4FRLIB_WZ4_BSP_HPP
-#define FILE_WZ4FRLIB_WZ4_BSP_HPP
+#pragma once
 
 #include "base/types.hpp"
 #include "base/types2.hpp"
@@ -154,5 +153,4 @@ public:
 
 /****************************************************************************/
 
-#endif // FILE_WZ4FRLIB_WZ4_BSP_HPP
 

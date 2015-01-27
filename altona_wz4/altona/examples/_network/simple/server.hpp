@@ -5,8 +5,7 @@
 /***                                                                      ***/
 /**************************************************************************+*/
 
-#ifndef FILE_SIMPLE_SERVER_HPP
-#define FILE_SIMPLE_SERVER_HPP
+#pragma once
 
 #include "base/types2.hpp"
 #include "network/sockets.hpp"
@@ -61,5 +60,4 @@ public:
 
 /****************************************************************************/
 
-#endif 
 

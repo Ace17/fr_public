@@ -5,8 +5,7 @@
 /***                                                                      ***/
 /**************************************************************************+*/
 
-#ifndef FILE_WATER_WATER_HPP
-#define FILE_WATER_WATER_HPP
+#pragma once
 
 #include "base/types2.hpp"
 #include "base/math.hpp"
@@ -80,6 +79,5 @@ public:
 
 /****************************************************************************/
 
-#endif // FILE_WATER_WATER_HPP
 
 

@@ -5,8 +5,7 @@
 /***                                                                      ***/
 /**************************************************************************+*/
 
-#ifndef FILE_WZ4FRLIB_WZ4_DEMO2NODES_HPP
-#define FILE_WZ4FRLIB_WZ4_DEMO2NODES_HPP
+#pragma once
 
 #include "base/types.hpp"
 #include "wz4frlib/wz4_demo2.hpp"
@@ -390,5 +389,4 @@ public:
 
 /****************************************************************************/
 
-#endif // FILE_WZ4FRLIB_WZ4_DEMO2NODES_HPP
 

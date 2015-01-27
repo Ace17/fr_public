@@ -5,8 +5,7 @@
 /***                                                                      ***/
 /**************************************************************************+*/
 
-#ifndef FILE_WZ4OPS_MAIN_HPP
-#define FILE_WZ4OPS_MAIN_HPP
+#pragma once
 
 #include "base/types.hpp"
 
@@ -14,5 +13,4 @@
 
 /****************************************************************************/
 
-#endif // FILE_WZ4OPS_MAIN_HPP
 

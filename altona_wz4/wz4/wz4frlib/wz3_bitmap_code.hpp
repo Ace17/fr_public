@@ -5,8 +5,7 @@
 /***                                                                      ***/
 /**************************************************************************+*/
 
-#ifndef FILE_WZ4FRLIB_BITMAP_CODE_HPP
-#define FILE_WZ4FRLIB_BITMAP_CODE_HPP
+#pragma once
 
 #include "base/types.hpp"
 #include "wz4lib/basic.hpp"
@@ -137,5 +136,4 @@ sInt LoadAtlas(const sChar *name, GenBitmap *bmp);
 
 /****************************************************************************/
 
-#endif // FILE_WZ4FRLIB_BITMAP_CODE_HPP
 

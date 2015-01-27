@@ -5,8 +5,7 @@
 /***                                                                      ***/
 /**************************************************************************+*/
 
-#ifndef FILE_WZ4TRONLIB_TRON_HPP
-#define FILE_WZ4TRONLIB_TRON_HPP
+#pragma once
 
 
 #include "base/types.hpp"
@@ -385,5 +384,4 @@ void TronRTR(Wz4Mesh *out, Wz4Mesh *in1, Wz4Mesh *in2);
 /****************************************************************************/
 
 
-#endif // FILE_WZ4TRONLIB_TRON_HPP
 

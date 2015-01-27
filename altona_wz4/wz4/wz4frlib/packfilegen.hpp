@@ -5,8 +5,7 @@
 /***                                                                      ***/
 /**************************************************************************+*/
 
-#ifndef FILE_WZ4FRLIB_PACKFILEGEN_HPP
-#define FILE_WZ4FRLIB_PACKFILEGEN_HPP
+#pragma once
 
 #include "base/types.hpp"
 #include "base/types2.hpp"
@@ -35,5 +34,4 @@ void sCreateDemoPackFile(const sChar *packfilename, const sArray<sPackFileCreate
 
 /****************************************************************************/
 
-#endif // FILE_EXTRA_PACKFILEGEN_HPP
 

@@ -4,12 +4,8 @@
 /***                                                                      ***/
 /****************************************************************************/
 
-#ifndef FILE_GUI_WINDOW_HPP
-#define FILE_GUI_WINDOW_HPP
-
-#ifndef __GNUC__
 #pragma once
-#endif
+
 
 #include "base/types2.hpp"
 #include "base/windows.hpp"
@@ -231,4 +227,3 @@ enum sWindowFlag
 
 /****************************************************************************/
 
-#endif

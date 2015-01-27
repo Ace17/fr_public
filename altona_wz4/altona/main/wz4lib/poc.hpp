@@ -7,12 +7,8 @@
 /***                                                                      ***/
 /**************************************************************************+*/
 
-#ifndef FILE_WERKKZEUG4_POC_HPP
-#define FILE_WERKKZEUG4_POC_HPP
-
-#ifndef __GNUC__
 #pragma once
-#endif
+
 
 #include "base/types.hpp"
 #include "base/graphics.hpp"
@@ -111,5 +107,4 @@ public:
 
 /****************************************************************************/
 
-#endif // FILE_WERKKZEUG4_POC_HPP
 

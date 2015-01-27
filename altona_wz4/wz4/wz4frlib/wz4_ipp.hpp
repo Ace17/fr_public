@@ -5,8 +5,7 @@
 /***                                                                      ***/
 /**************************************************************************+*/
 
-#ifndef FILE_WZ4FRLIB_WZ4_IPP_HPP
-#define FILE_WZ4FRLIB_WZ4_IPP_HPP
+#pragma once
 
 #include "base/types.hpp"
 #include "wz4frlib/wz4_ipp_ops.hpp"
@@ -311,5 +310,4 @@ public:
 
 /****************************************************************************/
 
-#endif // FILE_WZ4FRLIB_WZ4_IPP_HPP
 

@@ -7,8 +7,7 @@
 /***                                                                      ***/
 /**************************************************************************+*/
 
-#ifndef FILE_WZ4LIB_SERIALS_HPP
-#define FILE_WZ4LIB_SERIALS_HPP
+#pragma once
 
 #include "base/types.hpp"
 #include "base/serialize.hpp"
@@ -68,5 +67,4 @@ namespace sSerId
 
 /****************************************************************************/
 
-#endif // FILE_WZ4LIB_SERIALS_HPP
 

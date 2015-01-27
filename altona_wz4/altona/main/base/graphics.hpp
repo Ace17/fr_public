@@ -12,12 +12,8 @@
 /****************************************************************************/
 
 
-#ifndef HEADER_ALTONA_UTIL_GRAPHICS
-#define HEADER_ALTONA_UTIL_GRAPHICS
-
-#ifndef __GNUC__
 #pragma once
-#endif
+
 
 #include "base/types.hpp"
 #include "base/math.hpp"
@@ -2398,4 +2394,3 @@ void sFastPackDXT(sU8 *d,sU32 *bmp,sInt xs,sInt ys,sInt format,sInt quality);
 /****************************************************************************/
 
 // HEADER_ALTONA_UTIL_GRAPHICS
-#endif

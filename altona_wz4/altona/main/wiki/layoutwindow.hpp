@@ -5,8 +5,7 @@
 /***                                                                      ***/
 /**************************************************************************+*/
 
-#ifndef FILE_PLANPAD_VIEW_HPP
-#define FILE_PLANPAD_VIEW_HPP
+#pragma once
 
 #include "base/types2.hpp"
 #include "gui/gui.hpp"
@@ -454,5 +453,4 @@ public:
 
 /****************************************************************************/
 
-#endif // FILE_PLANPAD_VIEW_HPP
 

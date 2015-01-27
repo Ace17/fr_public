@@ -5,8 +5,7 @@
 /***                                                                      ***/
 /**************************************************************************+*/
 
-#ifndef FILE_CLIENT_CLIENT_HPP
-#define FILE_CLIENT_CLIENT_HPP
+#pragma once
 
 #include "base/types.hpp"
 
@@ -16,5 +15,4 @@
 
 /****************************************************************************/
 
-#endif // FILE_CLIENT_CLIENT_HPP
 

@@ -5,8 +5,7 @@
 /***                                                                      ***/
 /**************************************************************************+*/
 
-#ifndef FILE_NETWORK_HTTPSERVER_HPP
-#define FILE_NETWORK_HTTPSERVER_HPP
+#pragma once
 
 #include "base/types.hpp"
 #include "base/system.hpp"
@@ -349,5 +348,4 @@ private:
 sInt sParseURL(const sChar *url, const sStringDesc &base, sURLParam *params, sInt maxparams);
 sInt sParsePOSTData(const sHTTPServer::Connection *c, sURLParam *params, sInt maxparams);
 
-#endif
 

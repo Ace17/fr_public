@@ -5,8 +5,7 @@
 /***                                                                      ***/
 /**************************************************************************+*/
 
-#ifndef FILE_BASE_GRAPHICS_OGLES2_PRIVATE_HPP
-#define FILE_BASE_GRAPHICS_OGLES2_PRIVATE_HPP
+#pragma once
 
 #include "base/types.hpp"
 
@@ -136,5 +135,4 @@ class sGpuToCpuPrivate
 
 /****************************************************************************/
 
-#endif // FILE_BASE_GRAPHICS_OGLES2_PRIVATE_HPP
 

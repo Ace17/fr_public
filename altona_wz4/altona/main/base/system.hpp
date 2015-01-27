@@ -11,12 +11,8 @@
 /***                                                                      ***/
 /****************************************************************************/
 
-#ifndef HEADER_ALTONA_BASE_SYSTEM
-#define HEADER_ALTONA_BASE_SYSTEM
-
-#ifndef __GNUC__
 #pragma once
-#endif
+
 
 #include "base/types.hpp"
 
@@ -1004,6 +1000,5 @@ sBool sGetUserName(const sStringDesc &dest, sInt joypadId);
 
 /****************************************************************************/
 
-#endif   //ALTONA_BASE_SYSTEM
 
 

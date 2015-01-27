@@ -5,8 +5,7 @@
 /***                                                                      ***/
 /**************************************************************************+*/
 
-#ifndef FILE_SOLOPONG_PONG_TEMPLATE_HPP
-#define FILE_SOLOPONG_PONG_TEMPLATE_HPP
+#pragma once
 
 #include "base/types.hpp"
 #include "main.hpp"
@@ -28,5 +27,4 @@ public:
 
 /****************************************************************************/
 
-#endif // FILE_SOLOPONG_PONG_TEMPLATE_HPP
 

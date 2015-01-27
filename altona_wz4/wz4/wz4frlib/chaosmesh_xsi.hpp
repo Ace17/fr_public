@@ -5,8 +5,7 @@
 /***                                                                      ***/
 /**************************************************************************+*/
 
-#ifndef FILE_WERKKZEUG4_CHAOSMESH_XSI_HPP
-#define FILE_WERKKZEUG4_CHAOSMESH_XSI_HPP
+#pragma once
 
 #include "base/types.hpp"
 #include "chaosmesh_code.hpp"
@@ -17,5 +16,4 @@ sBool LoadXSI(ChaosMesh *,const sChar *file,sBool forceanim = 0,sBool forcergb =
 
 /****************************************************************************/
 
-#endif // FILE_WERKKZEUG4_CHAOSMESH_XSI_HPP
 

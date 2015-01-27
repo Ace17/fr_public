@@ -7,8 +7,7 @@
 /***                                                                      ***/
 /**************************************************************************+*/
 
-#ifndef FILE_BASE_SYSTEM_IOS_HPP
-#define FILE_BASE_SYSTEM_IOS_HPP
+#pragma once
 
 //#include "base/types.hpp"
 
@@ -37,4 +36,3 @@ extern int IOS_TouchCount;
 
 /****************************************************************************/
 
-#endif

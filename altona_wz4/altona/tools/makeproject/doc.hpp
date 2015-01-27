@@ -11,12 +11,8 @@
 /***                                                                      ***/
 /****************************************************************************/
 
-#ifndef HEADER_ALTONA_TOOLS_MAKEPROJECT_DOC
-#define HEADER_ALTONA_TOOLS_MAKEPROJECT_DOC
-
-#ifndef __GNUC__
 #pragma once
-#endif
+
 
 #include "base/types2.hpp"
 #include "util/scanner.hpp"
@@ -413,4 +409,3 @@ public:
 /****************************************************************************/
 
 // HEADER_ALTONA_TOOLS_MAKEPROJECT_DOC
-#endif

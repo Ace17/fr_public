@@ -5,8 +5,7 @@
 /***                                                                      ***/
 /**************************************************************************+*/
 
-#ifndef FILE_OGG_VORBISPLAYER_HPP
-#define FILE_OGG_VORBISPLAYER_HPP
+#pragma once
 
 #include "base/types.hpp"
 
@@ -48,5 +47,4 @@ private:
 
 /****************************************************************************/
 
-#endif // FILE_OGG_VORBISPLAYER_HPP
 

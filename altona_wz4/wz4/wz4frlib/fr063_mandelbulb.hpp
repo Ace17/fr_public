@@ -5,8 +5,7 @@
 /***                                                                      ***/
 /**************************************************************************+*/
 
-#ifndef FILE_WZ4FRLIB_FR063_MANDELBULB_HPP
-#define FILE_WZ4FRLIB_FR063_MANDELBULB_HPP
+#pragma once
 
 
 #include "base/types.hpp"
@@ -403,5 +402,4 @@ public:
 /****************************************************************************/
 
 
-#endif // FILE_WZ4FRLIB_FR063_MANDELBULB_HPP
 

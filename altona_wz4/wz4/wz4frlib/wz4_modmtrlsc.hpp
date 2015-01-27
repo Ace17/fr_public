@@ -5,8 +5,7 @@
 /***                                                                      ***/
 /**************************************************************************+*/
 
-#ifndef FILE_WZ4FRLIB_WZ4_MODMTRLSC_HPP
-#define FILE_WZ4FRLIB_WZ4_MODMTRLSC_HPP
+#pragma once
 
 #include "base/types.hpp"
 
@@ -200,5 +199,4 @@ const sChar *Tex2D(sInt n,const sChar *uv,const sChar *swizzle,Texture2D *tex,Sh
 
 /****************************************************************************/
 
-#endif // FILE_WZ4FRLIB_WZ4_MODMTRLSC_HPP
 

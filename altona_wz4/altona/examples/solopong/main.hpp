@@ -5,8 +5,7 @@
 /***                                                                      ***/
 /**************************************************************************+*/
 
-#ifndef FILE_SOLOPONG_MAIN_HPP
-#define FILE_SOLOPONG_MAIN_HPP
+#pragma once
 
 #include "base/types.hpp"
 
@@ -51,5 +50,4 @@ public:
 
 /****************************************************************************/
 
-#endif // FILE_SOLOPONG_MAIN_HPP
 

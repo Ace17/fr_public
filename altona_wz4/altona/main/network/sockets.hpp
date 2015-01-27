@@ -5,8 +5,7 @@
 /***                                                                      ***/
 /**************************************************************************+*/
 
-#ifndef FILE_NETWORK_SOCKETS_HPP
-#define FILE_NETWORK_SOCKETS_HPP
+#pragma once
 
 #include "base/types.hpp"
 
@@ -222,5 +221,4 @@ private:
 
 /****************************************************************************/
 
-#endif // FILE_NETWORK_SOCKETS_HPP
 

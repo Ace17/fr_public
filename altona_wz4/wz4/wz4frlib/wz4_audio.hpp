@@ -5,8 +5,7 @@
 /***                                                                      ***/
 /**************************************************************************+*/
 
-#ifndef FILE_WZ4FRLIB_WZ4_AUDIO_HPP
-#define FILE_WZ4FRLIB_WZ4_AUDIO_HPP
+#pragma once
 
 #include "base/types.hpp"
 
@@ -23,5 +22,4 @@ namespace Wz4Audiolyzer
 
 /****************************************************************************/
 
-#endif // FILE_WZ4FRLIB_WZ4_AUDIO_HPP
 

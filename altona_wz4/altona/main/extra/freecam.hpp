@@ -5,8 +5,7 @@
 /***                                                                      ***/
 /**************************************************************************+*/
 
-#ifndef FILE_EXTRA_FREECAM_HPP
-#define FILE_EXTRA_FREECAM_HPP
+#pragma once
 
 #include "base/types.hpp"
 #include "base/math.hpp"
@@ -51,5 +50,4 @@ public:
 
 /****************************************************************************/
 
-#endif // FILE_EXTRA_FREECAM_HPP
 

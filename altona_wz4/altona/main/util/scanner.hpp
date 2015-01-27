@@ -11,12 +11,8 @@
 /***                                                                      ***/
 /****************************************************************************/
 
-#ifndef HEADER_ALTONA_UTIL_SCANNER
-#define HEADER_ALTONA_UTIL_SCANNER
-
-#ifndef __GNUC__
 #pragma once
-#endif
+
 
 #include "base/types2.hpp"
 #include "base/system.hpp"
@@ -382,4 +378,3 @@ public:
 /****************************************************************************/
 
 // HEADER_ALTONA_UTIL_SCANNER
-#endif

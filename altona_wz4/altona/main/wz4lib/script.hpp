@@ -7,8 +7,7 @@
 /***                                                                      ***/
 /**************************************************************************+*/
 
-#ifndef FILE_WZ4FRLIB_SCRIPT_HPP
-#define FILE_WZ4FRLIB_SCRIPT_HPP
+#pragma once
 
 #include "base/types2.hpp"
 #include "util/scanner.hpp"
@@ -295,5 +294,4 @@ public:
 
 /****************************************************************************/
 
-#endif // FILE_WZ4FRLIB_SCRIPT_HPP
 

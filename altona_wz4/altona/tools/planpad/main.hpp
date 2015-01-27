@@ -5,8 +5,7 @@
 /***                                                                      ***/
 /**************************************************************************+*/
 
-#ifndef FILE_PLANPAD_MAIN_HPP
-#define FILE_PLANPAD_MAIN_HPP
+#pragma once
 
 #include "base/types2.hpp"
 #include "gui/gui.hpp"
@@ -162,5 +161,4 @@ extern MainWindow *App;
 
 /****************************************************************************/
 
-#endif // FILE_PLANPAD_MAIN_HPP
 

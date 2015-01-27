@@ -7,8 +7,7 @@
 /***                                                                      ***/
 /**************************************************************************+*/
 
-#ifndef FILE_WZ4FRLIB_WZ4_SSAO_HPP
-#define FILE_WZ4FRLIB_WZ4_SSAO_HPP
+#pragma once
 
 #include "base/types.hpp"
 #include "base/types.hpp"
@@ -60,5 +59,4 @@ public:
 
 /****************************************************************************/
 
-#endif // FILE_WZ4FRLIB_WZ4_SSAO_HPP
 

@@ -5,8 +5,7 @@
 /***                                                                      ***/
 /**************************************************************************+*/
 
-#ifndef FILE_UTIL_ANIMATION_HPP
-#define FILE_UTIL_ANIMATION_HPP
+#pragma once
 
 #include "base/types.hpp"
 #if 1
@@ -40,5 +39,4 @@ public:
 
 /****************************************************************************/
 #endif
-#endif // FILE_UTIL_ANIMATION_HPP
 

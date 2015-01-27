@@ -1,8 +1,7 @@
 // .theprodukkt werkkzeug3 texture generator library
 // Updated header v1.1 (Dec 19, 2007)
 
-#ifndef __TP_W3TEXLIB_HPP__
-#define __TP_W3TEXLIB_HPP__
+#pragma once
 
 // Enumeration of image formats.
 enum W3ImageFormat
@@ -69,4 +68,3 @@ public:
   const char *GetImageName(int index) const;
 };
 
-#endif

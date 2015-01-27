@@ -11,12 +11,8 @@
 /***                                                                      ***/ 
 /****************************************************************************/
 
-#ifndef HEADER_ALTONA_BASE_TYPES
-#define HEADER_ALTONA_BASE_TYPES
-
-#ifndef __GNUC__
 #pragma once
-#endif
+
 
 #ifndef NN_COMPILER_RVCT
 ; // if this semicolon causes an error, then something is wrong BEFORE
@@ -4134,5 +4130,4 @@ public:
 /****************************************************************************/
 
 // HEADER_ALTONA_BASE_TYPES
-#endif
 

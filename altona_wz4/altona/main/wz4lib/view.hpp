@@ -1,11 +1,7 @@
 /****************************************************************************/
 
-#ifndef FILE_WZ4LIB_VIEW_HPP
-#define FILE_WZ4LIB_VIEW_HPP
-
-#ifndef __GNUC__
 #pragma once
-#endif
+
 
 #include "base/types2.hpp"
 #include "base/graphics.hpp"
@@ -125,5 +121,4 @@ public:
 
 /****************************************************************************/
 
-#endif // FILE_WZ4LIB_VIEW_HPP
 

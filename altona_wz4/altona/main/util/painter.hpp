@@ -11,12 +11,8 @@
 /***                                                                      ***/
 /****************************************************************************/
 
-#ifndef HEADER_ALTONA_UTIL_PAINTER
-#define HEADER_ALTONA_UTIL_PAINTER
-
-#ifndef __GNUC__
 #pragma once
-#endif
+
 
 
 #include "base/types.hpp"
@@ -96,4 +92,3 @@ public:
 /****************************************************************************/
 
 // HEADER_ALTONA_UTIL_PAINTER
-#endif

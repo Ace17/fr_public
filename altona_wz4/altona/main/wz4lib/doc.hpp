@@ -7,12 +7,8 @@
 /***                                                                      ***/
 /**************************************************************************+*/
 
-#ifndef FILE_WERKKZEUG4_DOC_HPP
-#define FILE_WERKKZEUG4_DOC_HPP
-
-#ifndef __GNUC__
 #pragma once
-#endif
+
 
 #include "base/types2.hpp"
 #include "gui/gui.hpp"
@@ -1056,5 +1052,4 @@ extern void (*ProgressPaintFunc)(sInt count, sInt max);
 
 /****************************************************************************/
 
-#endif // FILE_WERKKZEUG4_DOC_HPP
 

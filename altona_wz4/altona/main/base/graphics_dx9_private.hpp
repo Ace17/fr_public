@@ -5,8 +5,7 @@
 /***                                                                      ***/
 /**************************************************************************+*/
 
-#ifndef FILE_BASE_GRAPHICS_DX9_PRIVATE_HPP
-#define FILE_BASE_GRAPHICS_DX9_PRIVATE_HPP
+#pragma once
 
 #include "base/types.hpp"
 
@@ -144,5 +143,4 @@ protected:
 
 /****************************************************************************/
 
-#endif // FILE_BASE_GRAPHICS_DX9_PRIVATE_HPP
 

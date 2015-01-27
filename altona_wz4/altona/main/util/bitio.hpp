@@ -7,8 +7,7 @@
 /***                                                                      ***/
 /**************************************************************************+*/
 
-#ifndef FILE_UTIL_BITIO_HPP
-#define FILE_UTIL_BITIO_HPP
+#pragma once
 
 #include "base/types.hpp"
 
@@ -261,5 +260,4 @@ public:
 
 /****************************************************************************/
 
-#endif // FILE_UTIL_BITIO_HPP
 

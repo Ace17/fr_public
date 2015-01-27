@@ -5,8 +5,7 @@
 /***                                                                      ***/
 /**************************************************************************+*/
 
-#ifndef FILE_NETWORK_NETDEBUG_PLUGINS_HPP
-#define FILE_NETWORK_NETDEBUG_PLUGINS_HPP
+#pragma once
 
 #include "netdebug.hpp"
 #include "http.hpp"
@@ -52,4 +51,3 @@ sINLINE sInt sAddNetDebugFile(const sChar* path, const sU8* buffer, sDInt size) 
 
 #endif
 
-#endif // FILE_NETWORK_NETDEBUG_PLUGINS_HPP

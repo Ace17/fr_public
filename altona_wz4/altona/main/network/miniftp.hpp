@@ -5,8 +5,7 @@
 /***                                                                      ***/
 /**************************************************************************+*/
 
-#ifndef FILE_NETWORK_MINIFTP_HPP
-#define FILE_NETWORK_MINIFTP_HPP
+#pragma once
 
 #include "base/types.hpp"
 #include "base/types2.hpp"
@@ -164,5 +163,4 @@ private:
 
 /****************************************************************************/
 
-#endif // FILE_NETWORK_MINIFTP_HPP
 

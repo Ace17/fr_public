@@ -5,8 +5,7 @@
 /***                                                                      ***/
 /**************************************************************************+*/
 
-#ifndef FILE_WERKKZEUG4_MAIN_HPP
-#define FILE_WERKKZEUG4_MAIN_HPP
+#pragma once
 
 #include "base/types.hpp"
 #include "wz4lib/gui.hpp"
@@ -25,5 +24,4 @@ public:
 
 /****************************************************************************/
 
-#endif // FILE_WERKKZEUG4_MAIN_HPP
 

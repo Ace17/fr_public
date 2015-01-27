@@ -4,8 +4,7 @@
 /***                                                                      ***/
 /****************************************************************************/
 
-#ifndef FILE_GUI_LISTWINDOW_HPP
-#define FILE_GUI_LISTWINDOW_HPP
+#pragma once
 
 #include "gui/window.hpp"
 #include "gui/manager.hpp"
@@ -280,4 +279,3 @@ public:
 
 /****************************************************************************/
 
-#endif

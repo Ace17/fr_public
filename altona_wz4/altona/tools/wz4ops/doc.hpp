@@ -5,8 +5,7 @@
 /***                                                                      ***/
 /**************************************************************************+*/
 
-#ifndef FILE_WZ4OPS_DOC_HPP
-#define FILE_WZ4OPS_DOC_HPP
+#pragma once
 
 #include "base/types2.hpp"
 #include "util/scanner.hpp"
@@ -355,4 +354,3 @@ extern Document *Doc;
 
 /****************************************************************************/
 
-#endif // FILE_WZ4OPS_DOC_HPP

@@ -5,8 +5,7 @@
 /***                                                                      ***/
 /**************************************************************************+*/
 
-#ifndef FILE_UTIL_ALGORITHMS_HPP
-#define FILE_UTIL_ALGORITHMS_HPP
+#pragma once
 
 #include "base/types.hpp"
 
@@ -901,5 +900,4 @@ sInt sFindFirst(const Range &range,const T &x)
 
 /****************************************************************************/
 
-#endif // FILE_UTIL_ALGORITHMS_HPP
 

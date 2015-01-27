@@ -11,12 +11,8 @@
 /***                                                                      ***/
 /****************************************************************************/
 
-#ifndef HEADER_ALTONA_UTIL_EFFECT
-#define HEADER_ALTONA_UTIL_EFFECT
-
-#ifndef __GNUC__
 #pragma once
-#endif
+
 
 #include "base/types.hpp"
 #include "base/math.hpp"
@@ -76,6 +72,5 @@ extern sEffectManager_ *sEffectManager; // global effect manager is not really r
 /****************************************************************************/
 #endif
 // HEADER_ALTONA_UTIL_EFFECT
-#endif
 
 

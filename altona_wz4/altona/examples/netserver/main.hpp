@@ -5,8 +5,7 @@
 /***                                                                      ***/
 /**************************************************************************+*/
 
-#ifndef FILE_NETTEST_MAIN_HPP
-#define FILE_NETTEST_MAIN_HPP
+#pragma once
 
 #include "base/types.hpp"
 
@@ -16,5 +15,4 @@
 
 /****************************************************************************/
 
-#endif // FILE_NETTEST_MAIN_HPP
 

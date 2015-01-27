@@ -5,8 +5,7 @@
 /***                                                                      ***/
 /**************************************************************************+*/
 
-#ifndef FILE_SCREENS4_CONFIG_HPP
-#define FILE_SCREENS4_CONFIG_HPP
+#pragma once
 
 #include "base/types.hpp"
 #include "base/types2.hpp"
@@ -271,5 +270,4 @@ private:
 
 /****************************************************************************/
 
-#endif // FILE_SCREENS4_CONFIG_HPP
 

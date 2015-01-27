@@ -5,8 +5,7 @@
 /***                                                                      ***/
 /**************************************************************************+*/
 
-#ifndef FILE_WZ4FRLIB_WZ4_DEMO2_HPP
-#define FILE_WZ4FRLIB_WZ4_DEMO2_HPP
+#pragma once
 
 #include "base/types.hpp"
 #include "wz4lib/doc.hpp"
@@ -243,5 +242,4 @@ void UnitTestWz4Render(sImage &img,struct UnitTestParaUnitTestWz4 *para,Wz4Rende
 
 /****************************************************************************/
 
-#endif // FILE_WZ4FRLIB_WZ4_DEMO2_HPP
 

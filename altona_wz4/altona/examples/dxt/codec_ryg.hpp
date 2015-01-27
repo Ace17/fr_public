@@ -7,8 +7,7 @@
 /***                                                                      ***/
 /**************************************************************************+*/
 
-#ifndef FILE_DXT_CODEC_RYG_HPP
-#define FILE_DXT_CODEC_RYG_HPP
+#pragma once
 
 #include "base/types2.hpp"
 #include "doc.hpp"
@@ -25,5 +24,4 @@ public:
 
 /****************************************************************************/
 
-#endif // FILE_DXT_CODEC_RYG_HPP
 

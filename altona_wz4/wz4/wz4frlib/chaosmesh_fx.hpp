@@ -5,8 +5,7 @@
 /***                                                                      ***/
 /**************************************************************************+*/
 
-#ifndef FILE_WZ4FRLIB_CHAOSMESH_FX_HPP
-#define FILE_WZ4FRLIB_CHAOSMESH_FX_HPP
+#pragma once
 
 #include "base/types.hpp"
 
@@ -18,5 +17,4 @@ void ChaosMeshFX_SliceAndDice(ChaosMesh *mesh); // modifies the mesh!
 
 /****************************************************************************/
 
-#endif // FILE_WZ4FRLIB_CHAOSMESH_FX_HPP
 

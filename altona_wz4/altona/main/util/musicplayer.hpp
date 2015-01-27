@@ -11,12 +11,8 @@
 /***                                                                      ***/
 /****************************************************************************/
 
-#ifndef HEADER_ALTONA_UTIL_MUSICPLAYER
-#define HEADER_ALTONA_UTIL_MUSICPLAYER
-
-#ifndef __GNUC__
 #pragma once
-#endif
+
 
 #include "base/types.hpp"
 
@@ -59,4 +55,3 @@ public:
 /****************************************************************************/
 
 // HEADER_ALTONA_UTIL_MUSICPLAYER
-#endif

@@ -7,8 +7,7 @@
 /***                                                                      ***/
 /**************************************************************************+*/
 
-#ifndef FILE_CUBE_IMAGE_WIN_HPP
-#define FILE_CUBE_IMAGE_WIN_HPP
+#pragma once
 
 #include "base/types.hpp"
 
@@ -24,5 +23,4 @@ sBool  sLoadImageWin32(const sChar *name, sImage &image);
 
 /****************************************************************************/
 
-#endif // FILE_CUBE_IMAGE_WIN_HPP
 

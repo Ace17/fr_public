@@ -5,8 +5,7 @@
 /***                                                                      ***/
 /**************************************************************************+*/
 
-#ifndef FILE_WZ4FRLIB_WZ4_MESH_HPP
-#define FILE_WZ4FRLIB_WZ4_MESH_HPP
+#pragma once
 
 #define WZ4MESH_LOWMEM 1
 
@@ -319,5 +318,4 @@ void BendMatrices(sInt count,const BendKey *bk,sMatrix34 *mats,const sVector30 &
 
 /****************************************************************************/
 
-#endif // FILE_WZ4FRLIB_WZ4_MESH_HPP
 

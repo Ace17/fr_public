@@ -4,12 +4,8 @@
 /***                                                                      ***/
 /****************************************************************************/
 
-#ifndef FILE_GUI_WIRE_HPP
-#define FILE_GUI_WIRE_HPP
-
-#ifndef __GNUC__
 #pragma once
-#endif
+
 
 #include "gui/window.hpp"
 #include "gui/manager.hpp"
@@ -242,4 +238,3 @@ public:
 
 /****************************************************************************/
 
-#endif

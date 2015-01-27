@@ -5,8 +5,7 @@
 /***                                                                      ***/
 /**************************************************************************+*/
 
-#ifndef FILE_UTIL_SIMD_FLOAT_HPP
-#define FILE_UTIL_SIMD_FLOAT_HPP
+#pragma once
 
 #include "base/types.hpp"
 
@@ -154,5 +153,4 @@ static sINLINE sInt sVecMask(sSSE v)                    { return _mm_movemask_ps
 
 /****************************************************************************/
 
-#endif // FILE_UTIL_SIMD_FLOAT_HPP
 

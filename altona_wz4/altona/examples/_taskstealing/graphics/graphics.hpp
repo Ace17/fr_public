@@ -5,8 +5,7 @@
 /***                                                                      ***/
 /**************************************************************************+*/
 
-#ifndef FILE_TITAN_TITAN_HPP
-#define FILE_TITAN_TITAN_HPP
+#pragma once
 
 #include "base/types.hpp"
 
@@ -16,5 +15,4 @@
 
 /****************************************************************************/
 
-#endif // FILE_TITAN_TITAN_HPP
 

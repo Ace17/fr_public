@@ -7,8 +7,7 @@
 /***                                                                      ***/
 /**************************************************************************+*/
 
-#ifndef FILE_GUI_TABS_HPP
-#define FILE_GUI_TABS_HPP
+#pragma once
 
 #include "base/types2.hpp"
 #include "gui/gui.hpp"
@@ -73,5 +72,4 @@ public:
 
 /****************************************************************************/
 
-#endif // FILE_GUI_TABS_HPP
 

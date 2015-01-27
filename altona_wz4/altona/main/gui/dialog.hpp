@@ -4,12 +4,8 @@
 /***                                                                      ***/
 /****************************************************************************/
 
-#ifndef FILE_GUI_DIALOG_HPP
-#define FILE_GUI_DIALOG_HPP
-
-#ifndef __GNUC__
 #pragma once
-#endif
+
 
 #include "gui/window.hpp"
 #include "gui/manager.hpp"
@@ -140,4 +136,3 @@ void sOpenGuiThemeDialog(sGuiTheme *theme, sBool live=sTRUE);
 
 /****************************************************************************/
 
-#endif

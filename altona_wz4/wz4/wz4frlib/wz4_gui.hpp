@@ -5,8 +5,7 @@
 /***                                                                      ***/
 /**************************************************************************+*/
 
-#ifndef FILE_WZ4FRLIB_WZ4_GUI_HPP
-#define FILE_WZ4FRLIB_WZ4_GUI_HPP
+#pragma once
 
 #include "base/types.hpp"
 #include "wz4lib/doc.hpp"
@@ -354,5 +353,4 @@ public:
 
 /****************************************************************************/
 
-#endif // FILE_WZ4FRLIB_WZ4_GUI_HPP
 

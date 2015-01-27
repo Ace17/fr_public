@@ -4,12 +4,8 @@
 /***                                                                      ***/
 /****************************************************************************/
 
-#ifndef FILE_GUI_GUI_HPP
-#define FILE_GUI_GUI_HPP
-
-#ifndef __GNUC__
 #pragma once
-#endif
+
 
 // base
 
@@ -69,4 +65,3 @@ void sMain()
 
 */
 
-#endif

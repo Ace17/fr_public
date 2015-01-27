@@ -7,8 +7,7 @@
 /***                                                                      ***/
 /**************************************************************************+*/
 
-#ifndef FILE_UTIL_FASTCOMPRESS_HPP
-#define FILE_UTIL_FASTCOMPRESS_HPP
+#pragma once
 
 #include "base/types.hpp"
 #include "base/types2.hpp"
@@ -179,5 +178,4 @@ public:
 
 /****************************************************************************/
 
-#endif // FILE_UTIL_FASTCOMPRESS_HPP
 

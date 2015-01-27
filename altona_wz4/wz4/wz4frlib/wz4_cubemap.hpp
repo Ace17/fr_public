@@ -7,8 +7,7 @@
 /***                                                                      ***/
 /**************************************************************************+*/
 
-#ifndef FILE_WERKKZEUG4_WZ4_CUBEMAP_HPP
-#define FILE_WERKKZEUG4_WZ4_CUBEMAP_HPP
+#pragma once
 
 #include "base/types.hpp"
 #include "base/graphics.hpp"
@@ -84,5 +83,4 @@ public:
 
 /****************************************************************************/
 
-#endif // FILE_WERKKZEUG4_WZ4_CUBEMAP_HPP
 

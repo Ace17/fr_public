@@ -11,8 +11,7 @@
 /***                                                                      ***/
 /****************************************************************************/
 
-#ifndef FILE_CUBE_MAIN_HPP
-#define FILE_CUBE_MAIN_HPP
+#pragma once
 
 #include "base/system.hpp"
 #include "base/graphics.hpp"
@@ -91,4 +90,3 @@ public:
 
 /****************************************************************************/
 
-#endif // FILE_CUBE_MAIN_HPP

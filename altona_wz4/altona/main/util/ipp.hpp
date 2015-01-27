@@ -5,8 +5,7 @@
 /***                                                                      ***/
 /**************************************************************************+*/
 
-#ifndef FILE_EXTRA_IPP_HPP
-#define FILE_EXTRA_IPP_HPP
+#pragma once
 
 #include "base/types.hpp"
 #include "base/graphics.hpp"
@@ -75,5 +74,4 @@ extern sRenderTargetManager_ *sRTMan;     // automatically created on startup
 
 /****************************************************************************/
 
-#endif // FILE_EXTRA_IPP_HPP
 

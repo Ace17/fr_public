@@ -5,8 +5,7 @@
 /***                                                                      ***/
 /**************************************************************************+*/
 
-#ifndef FILE_UTIL_MOVIEPLAYER_HPP
-#define FILE_UTIL_MOVIEPLAYER_HPP
+#pragma once
 
 #include "base/types.hpp"
 
@@ -109,5 +108,4 @@ sMoviePlayer * sCreateMoviePlayer(const sChar *filename, sInt flags, sTextureBas
 
 /****************************************************************************/
 
-#endif // FILE_UTIL_MOVIEPLAYER_HPP
 

@@ -31,8 +31,7 @@
 /* }                                                                        */
 /****************************************************************************/
 
-#ifndef FILE_BASE_INPUT2_HPP
-#define FILE_BASE_INPUT2_HPP
+#pragma once
 
 #include "base/types.hpp"
 #include "base/math.hpp"
@@ -485,4 +484,3 @@ private:
 };
 
 
-#endif // FILE_BASE_INPUT2_HPP

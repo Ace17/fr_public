@@ -11,12 +11,8 @@
 /***                                                                      ***/
 /****************************************************************************/
 
-#ifndef HEADER_ALTONA_BASE_SERIALIZE
-#define HEADER_ALTONA_BASE_SERIALIZE
-
-#ifndef __GNUC__
 #pragma once
-#endif
+
 
 #include "base/types.hpp"
 #include "base/system.hpp"
@@ -397,6 +393,5 @@ namespace sSerId
 
 
 // HEADER_ALTONA_BASE_SERIALIZE
-#endif
 
 

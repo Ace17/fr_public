@@ -5,8 +5,7 @@
 /***                                                                      ***/
 /**************************************************************************+*/
 
-#ifndef FILE_LAYOUT_MARKUP_HPP
-#define FILE_LAYOUT_MARKUP_HPP
+#pragma once
 
 #include "base/types2.hpp"
 #include "wiki/resources.hpp"
@@ -495,5 +494,4 @@ public:
 
 /****************************************************************************/
 
-#endif // FILE_LAYOUT_MARKUP_HPP
 

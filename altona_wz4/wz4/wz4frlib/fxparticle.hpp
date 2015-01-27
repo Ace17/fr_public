@@ -5,8 +5,7 @@
 /***                                                                      ***/
 /**************************************************************************+*/
 
-#ifndef FILE_WZ4FRLIB_FXPARTICLE_HPP
-#define FILE_WZ4FRLIB_FXPARTICLE_HPP
+#pragma once
 
 #include "base/types.hpp"
 #include "wz4frlib/wz4_demo2.hpp"
@@ -652,5 +651,4 @@ public:
 /****************************************************************************/
 /****************************************************************************/
 
-#endif // FILE_WZ4FRLIB_FXPARTICLE_HPP
 

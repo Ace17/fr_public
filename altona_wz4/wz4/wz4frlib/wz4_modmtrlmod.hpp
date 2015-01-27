@@ -5,8 +5,7 @@
 /***                                                                      ***/
 /**************************************************************************+*/
 
-#ifndef FILE_WZ4FRLIB_WZ4_MODMTRLMOD_HPP
-#define FILE_WZ4FRLIB_WZ4_MODMTRLMOD_HPP
+#pragma once
 
 #include "base/types2.hpp"
 #include "wz4frlib/wz4_modmtrl.hpp"
@@ -419,5 +418,4 @@ public:
 /****************************************************************************/
 
 
-#endif // FILE_WZ4FRLIB_WZ4_MODMTRLMOD_HPP
 

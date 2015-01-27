@@ -4,12 +4,8 @@
 /***                                                                      ***/
 /****************************************************************************/
 
-#ifndef FILE_GUI_FRAMES_HPP
-#define FILE_GUI_FRAMES_HPP
-
-#ifndef __GNUC__
 #pragma once
-#endif
+
 
 #include "base/math.hpp"
 #include "gui/window.hpp"
@@ -387,4 +383,3 @@ enum sGridFrameTemplateTypes
 
 /****************************************************************************/
 
-#endif

@@ -5,8 +5,7 @@
 /***                                                                      ***/
 /**************************************************************************+*/
 
-#ifndef FILE_WZ4FRLIB_PACKFILE_HPP
-#define FILE_WZ4FRLIB_PACKFILE_HPP
+#pragma once
 
 #include "base/types.hpp"
 #include "base/system.hpp"
@@ -40,5 +39,4 @@ void sProgress(sInt done,sInt max);
 
 /****************************************************************************/
 
-#endif // FILE_EXTRA_PACKFILE_HPP
 

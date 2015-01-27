@@ -1,5 +1,4 @@
-#ifndef __gl_h_
-#define __gl_h_
+#pragma once
 
 #ifdef __cplusplus
 extern "C" {
@@ -1911,4 +1910,3 @@ WINGDIAPI void APIENTRY glViewport (GLint x, GLint y, GLsizei width, GLsizei hei
 }
 #endif
 
-#endif /* __gl_h_ */

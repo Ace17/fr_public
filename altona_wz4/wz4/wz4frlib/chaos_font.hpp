@@ -5,8 +5,7 @@
 /***                                                                      ***/
 /**************************************************************************+*/
 
-#ifndef FILE_WZ4FRLIB_CHAOS_FONT_HPP
-#define FILE_WZ4FRLIB_CHAOS_FONT_HPP
+#pragma once
 
 #include "base/types2.hpp"
 #include "wz4lib/basic_ops.hpp"
@@ -91,5 +90,4 @@ public:
 
 /****************************************************************************/
 
-#endif // FILE_WZ4FRLIB_CHAOS_FONT_HPP
 

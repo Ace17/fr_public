@@ -11,12 +11,8 @@
 /***                                                                      ***/
 /****************************************************************************/
 
-#ifndef HEADER_ALTONA_UTIL_CAMERA
-#define HEADER_ALTONA_UTIL_CAMERA
-
-#ifndef __GNUC__
 #pragma once
-#endif
+
 
 #include "base/types.hpp"
 #include "base/math.hpp"
@@ -138,4 +134,3 @@ class sCameraXSI : public sCamera
 /****************************************************************************/
 #endif
 // HEADER_ALTONA_UTIL_CAMERA
-#endif

@@ -7,8 +7,7 @@
 /***                                                                      ***/
 /**************************************************************************+*/
 
-#ifndef FILE_WZ4FRLIB_FR033_HPP
-#define FILE_WZ4FRLIB_FR033_HPP
+#pragma once
 
 #include "base/types.hpp"
 #include "util/image.hpp"
@@ -73,5 +72,4 @@ public:
 
 /****************************************************************************/
 
-#endif // FILE_WZ4FRLIB_FR033_HPP
 

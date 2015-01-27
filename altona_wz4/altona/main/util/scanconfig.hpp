@@ -5,8 +5,7 @@
 /***                                                                      ***/
 /**************************************************************************+*/
 
-#ifndef FILE_UTIL_SCANCONFIG_HPP
-#define FILE_UTIL_SCANCONFIG_HPP
+#pragma once
 
 #include "base/types2.hpp"
 
@@ -71,4 +70,3 @@ sInt sParseSDK(const sChar *name);    // return sSDK_?? for string, or 0
 
 /****************************************************************************/
 
-#endif // FILE_UTIL_SCANCONFIG_HPP

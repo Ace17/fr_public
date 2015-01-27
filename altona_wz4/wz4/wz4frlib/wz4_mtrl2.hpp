@@ -5,8 +5,7 @@
 /***                                                                      ***/
 /**************************************************************************+*/
 
-#ifndef FILE_WZ4FRLIB_WZ4_MTRL2_HPP
-#define FILE_WZ4FRLIB_WZ4_MTRL2_HPP
+#pragma once
 
 //#include "wz4frlib/wz4_mtrl2_ops.hpp"
 #include "base/types.hpp"
@@ -154,5 +153,4 @@ public:
 
 /****************************************************************************/
 
-#endif // FILE_WZ4FRLIB_WZ4_MTRL2_HPP
 

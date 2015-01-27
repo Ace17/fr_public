@@ -1,7 +1,6 @@
 /****************************************************************************/
 
-#ifndef FILE_WZ4LIB_VERSION_HPP
-#define FILE_WZ4LIB_VERSION_HPP
+#pragma once
 
 #include "base/types.hpp"
 
@@ -12,5 +11,4 @@
 
 /****************************************************************************/
 
-#endif // FILE_WZ4LIB_VERSION_HPP
 

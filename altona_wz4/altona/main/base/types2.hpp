@@ -16,12 +16,8 @@
 /***                                                                      ***/
 /****************************************************************************/
 
-#ifndef FILE_BASE_TYPES2_HPP
-#define FILE_BASE_TYPES2_HPP
-
-#ifndef __GNUC__
 #pragma once
-#endif
+
 
 #include "base/types.hpp"
 #include "base/serialize.hpp"
@@ -1049,6 +1045,5 @@ public:
 /***                                                                      ***/
 /****************************************************************************/
 
-#endif // FILE_BASE_TYPES2_HPP
 
 

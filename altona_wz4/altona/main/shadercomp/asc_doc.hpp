@@ -7,8 +7,7 @@
 
 /**************************************************************************+*/
 
-#ifndef FILE_ASC_ASC_DOC_HPP
-#define FILE_ASC_ASC_DOC_HPP
+#pragma once
 
 #include "base/types2.hpp"
 #include "util/scanner.hpp"
@@ -394,5 +393,4 @@ public:
 
 /****************************************************************************/
 
-#endif // FILE_ASC_ASC_DOC_HPP
 

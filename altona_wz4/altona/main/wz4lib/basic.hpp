@@ -7,12 +7,8 @@
 /***                                                                      ***/
 /**************************************************************************+*/
 
-#ifndef FILE_WERKKZEUG4_BASIC_HPP
-#define FILE_WERKKZEUG4_BASIC_HPP
-
-#ifndef __GNUC__
 #pragma once
-#endif
+
 
 #include "base/types2.hpp"
 #include "base/math.hpp"
@@ -271,5 +267,4 @@ public:
 
 /****************************************************************************/
 
-#endif // FILE_WERKKZEUG4_BASIC_HPP
 

@@ -5,8 +5,7 @@
 /***                                                                      ***/
 /**************************************************************************+*/
 
-#ifndef FILE_MANDEL_MANDEL_HPP
-#define FILE_MANDEL_MANDEL_HPP
+#pragma once
 
 #include "base/types2.hpp"
 #include "base/system.hpp"
@@ -261,5 +260,4 @@ public:
 
 /****************************************************************************/
 
-#endif // FILE_MANDEL_MANDEL_HPP
 

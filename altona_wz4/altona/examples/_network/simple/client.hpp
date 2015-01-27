@@ -5,8 +5,7 @@
 /***                                                                      ***/
 /**************************************************************************+*/
 
-#ifndef FILE_SIMPLE_CLIENT_HPP
-#define FILE_SIMPLE_CLIENT_HPP
+#pragma once
 
 #include "base/types2.hpp"
 #include "server.hpp"
@@ -32,5 +31,4 @@ public:
 
 /****************************************************************************/
 
-#endif
 

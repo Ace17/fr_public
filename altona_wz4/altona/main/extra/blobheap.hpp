@@ -5,8 +5,7 @@
 /***                                                                      ***/
 /**************************************************************************+*/
 
-#ifndef FILE_EXTRA_BLOBALLOCATOR_HPP
-#define FILE_EXTRA_BLOBALLOCATOR_HPP
+#pragma once
 
 #include "base/types2.hpp"
 
@@ -96,5 +95,4 @@ extern sBlobHeap *sGlobalBlobHeap;
 
 /****************************************************************************/
 
-#endif // FILE_EXTRA_BLOBALLOCATOR_HPP
 
